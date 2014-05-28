@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE tiles-definitions PUBLIC
+        "-//Apache Software Foundation//DTD Tiles Configuration 2.1//EN"
+        "http://tiles.apache.org/dtds/tiles-config_2_1.dtd">
+<tiles-definitions>
+    <definition name="base.definition"
+                template="/WEB-INF/pages/layout/base_layout.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="header" value="/WEB-INF/pages/layout/header.jsp"/>
+        <put-attribute name="body" value=""/>
+    </definition>
+
+    <definition name="base.definition.non.menu"
+                template="/WEB-INF/pages/layout/base_layout_non_menu.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="header" value="/WEB-INF/pages/layout/header.jsp"/>
+        <put-attribute name="body" value=""/>
+    </definition>
+
+    <definition name="base.non_secure.definition"
+                template="/WEB-INF/pages/layout/base_non_secured_layout.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="body" value=""/>
+    </definition>
+
+    <definition name="loginPage" extends="base.non_secure.definition">
+        <put-attribute name="title" value="dEmailer Login"/>
+        <put-attribute name="body" value="/WEB-INF/pages/login.jsp"/>
+    </definition>
+
+    <definition name="welcomePage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value=""/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/welcome.jsp"/>
+    </definition>
+
+    <definition name="forceChangePasswordPage" extends="base.definition.non.menu">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value=""/>
+        <put-attribute name="body" value="/WEB-INF/pages/general/force_change_password.jsp"/>
+    </definition>
+
+    <!--General Error Page-->
+    <definition name="error500Page" extends="base.definition.non.menu">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value=""/>
+        <put-attribute name="body" value="/WEB-INF/pages/errors/error500.jsp"/>
+    </definition>
+
+    <!--Illegal Access Exception Page-->
+    <definition name="illegalAccessPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value=""/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/errors/illegal_access_page.jsp"/>
+    </definition>
+
+    <!--User Management Page-->
+    <definition name="userManagementPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/user/user_list.jsp"/>
+    </definition>
+
+    <definition name="userManagementAddPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/user/user_add.jsp"/>
+    </definition>
+
+    <definition name="userManagementEditPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/user/user_edit.jsp"/>
+    </definition>
+
+</tiles-definitions>

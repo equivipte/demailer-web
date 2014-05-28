@@ -1,0 +1,7 @@
+Dear $userLoginDTO.firstName $userLoginDTO.lastName,
+
+Attached is Receipt email.
+
+
+Sincerely,
+dEmailer Admin.

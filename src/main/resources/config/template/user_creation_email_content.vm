@@ -1,0 +1,12 @@
+Dear $userRequestDTO.firstName $userRequestDTO.lastName,
+
+Welcome to dEmailer Web. Your account has been created successfully.
+
+You may login to dEmailer using the following credentials:
+
+Username : $userRequestDTO.emailAddress
+Password : $userRequestDTO.password
+
+
+Sincerely,
+dEmailer Admin
