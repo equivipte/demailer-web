@@ -14,7 +14,7 @@
         <div class="navbar-header pull-left">
             <a href="#" class="navbar-brand">
                 <small>
-                    <i class="icon-credit-card"></i>
+                    <i class="icon-envelope"></i>
                     <spring:message code="label.product.name"/>
                 </small>
             </a><!-- /.brand -->
