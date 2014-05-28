@@ -1,5 +1,4 @@
-demailer
-====================
+demailer-web
+============
 
-dEmailer Web
-
+dEmailer Web App
