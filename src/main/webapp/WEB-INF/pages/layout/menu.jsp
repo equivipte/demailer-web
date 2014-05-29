@@ -11,9 +11,23 @@
     </script>
     <ul class="nav nav-list" id="navigation-menu">
 
+        <c:if test="${currentPage.currentSubMenu == 'EMAIL_VERIFIER'}">
+        <li id="email-verifier" class="active">
+            </c:if>
+
+            <c:if test="${currentPage.currentSubMenu != 'EMAIL_VERIFIER'}">
+        <li id="email-verifier">
+            </c:if>
+            <a href="${pageContext.request.contextPath}/main/emailverifier">
+                <i class="icon-ok-sign"></i>
+                <spring:message code="label.menu.email.verifier"/>
+            </a>
+        </li>
+
         <c:if test="${currentPage.currentSubMenu == 'USER_MANAGEMENT'}">
         <li id="user-management" class="active">
             </c:if>
+
             <c:if test="${currentPage.currentSubMenu != 'USER_MANAGEMENT'}">
         <li id="user-management">
             </c:if>
