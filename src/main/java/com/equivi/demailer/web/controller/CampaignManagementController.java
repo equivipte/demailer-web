@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class CampaignManagementController {
 
-    @RequestMapping(value = "/main/campaignManagement", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/campaignmanagement", method = RequestMethod.GET)
     public String getCampaignManagementPage() {
         return "campaignManagementPage";
     }
