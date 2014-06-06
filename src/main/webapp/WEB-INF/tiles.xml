@@ -64,6 +64,38 @@
         <put-attribute name="body" value="/WEB-INF/pages/email_verifier/email_verifier.jsp"/>
     </definition>
 
+    <!--Email Collector Page-->
+    <definition name="emailCollectorPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_collector/email_collector_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector.jsp"/>
+    </definition>
+
+    <!--Campaign Management Page-->
+    <definition name="campaignManagementPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management.jsp"/>
+    </definition>
+
+    <!--Contact Management Page-->
+    <definition name="contactManagementPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/contact_management/contact_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/contact_management/contact_management.jsp"/>
+    </definition>
+
+    <!--Report Page-->
+    <definition name="reportPage" extends="base.definition">
+        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="breadcrumb" value="/WEB-INF/pages/report/report_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/report/report.jsp"/>
+    </definition>
+
     <!--User Management Page-->
     <definition name="userManagementPage" extends="base.definition">
         <put-attribute name="title" value="dEmailer"/>

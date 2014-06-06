@@ -11,6 +11,19 @@
     </script>
     <ul class="nav nav-list" id="navigation-menu">
 
+        <c:if test="${currentPage.currentSubMenu == 'EMAIL_COLLECTOR'}">
+        <li id="email-collector" class="active">
+            </c:if>
+
+            <c:if test="${currentPage.currentSubMenu != 'EMAIL_COLLECTOR'}">
+        <li id="email-collector">
+            </c:if>
+            <a href="${pageContext.request.contextPath}/main/emailcollector">
+                <i class="icon-search"></i>
+                <spring:message code="label.menu.email.collector"/>
+            </a>
+        </li>
+
         <c:if test="${currentPage.currentSubMenu == 'EMAIL_VERIFIER'}">
         <li id="email-verifier" class="active">
             </c:if>
@@ -21,6 +34,45 @@
             <a href="${pageContext.request.contextPath}/main/emailverifier">
                 <i class="icon-ok-sign"></i>
                 <spring:message code="label.menu.email.verifier"/>
+            </a>
+        </li>
+
+        <c:if test="${currentPage.currentSubMenu == 'CAMPAIGN_MANAGEMENT'}">
+        <li id="campaign-management" class="active">
+            </c:if>
+
+        <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
+        <li id="campaign-management">
+            </c:if>
+            <a href="${pageContext.request.contextPath}/main/campaignManagement">
+                <i class="icon-envelope"></i>
+                <spring:message code="label.menu.campaign"/>
+            </a>
+        </li>
+
+        <c:if test="${currentPage.currentSubMenu == 'CONTACT_MANAGEMENT'}">
+        <li id="contact-management" class="active">
+            </c:if>
+
+            <c:if test="${currentPage.currentSubMenu != 'CONTACT_MANAGEMENT'}">
+        <li id="contact-management">
+            </c:if>
+            <a href="${pageContext.request.contextPath}/main/contactmanagement">
+                <i class="icon-book"></i>
+                <spring:message code="label.menu.contact"/>
+            </a>
+        </li>
+
+        <c:if test="${currentPage.currentSubMenu == 'REPORT'}">
+        <li id="report" class="active">
+            </c:if>
+
+            <c:if test="${currentPage.currentSubMenu != 'REPORT'}">
+        <li id="report">
+            </c:if>
+            <a href="${pageContext.request.contextPath}/main/report">
+                <i class="icon-bar-chart"></i>
+                <spring:message code="label.menu.email.report"/>
             </a>
         </li>
 
