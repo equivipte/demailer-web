@@ -97,7 +97,7 @@ public class AuthenticationServiceImplTest {
         UserEntity userEntity = new UserEntity();
         userEntity.setUserName(USERNAME);
         userEntity.setPassword(PASSWORD);
-        userEntity.setUserRole(UserRole.SUPER_ADMIN_ROLE);
+        userEntity.setUserRole(UserRole.DEMAILER_ADMIN);
 
         List<UserEntity> userEntities = new ArrayList<>();
         userEntities.add(userEntity);

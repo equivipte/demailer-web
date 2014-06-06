@@ -11,6 +11,7 @@
                            http://www.springframework.org/schema/context/spring-context.xsd">
 
     <!--Import dEmailer Web Data Access-->
+    <context:component-scan base-package="com.equivi"/>
     <import resource="demailer-web-data-access.xml"/>
 
     <util:properties id="applicationProps" location="file:${catalina.home}/conf/demailer/demailer_web.properties"/>
@@ -37,9 +38,10 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>file:${catalina.home}/conf/demailer/demailer_web.properties</value>
+                <value>classpath:config/demailer_web.properties</value>
             </list>
         </property>
+        <property name="ignoreResourceNotFound" value="true"/>
     </bean>
 
 

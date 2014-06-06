@@ -141,12 +141,13 @@ public class AuthenticationServiceImpl implements AuthenticationService, UserDet
     public List<String> getRoles(UserRole userRole) {
         List<String> roles = new ArrayList<>();
 
-        if (userRole.equals(UserRole.SUPER_ADMIN_ROLE)) {
-            roles.add(UserRole.SUPER_ADMIN_ROLE.getRoleDescription());
-            roles.add(UserRole.MCD_ADMIN_USER.getRoleDescription());
-
-        } else if (userRole.equals(UserRole.MCD_ADMIN_USER)) {
-            roles.add(UserRole.MCD_ADMIN_USER.getRoleDescription());
+        if (userRole.equals(UserRole.DEMAILER_ADMIN)) {
+            roles.add(UserRole.DEMAILER_ADMIN.getRoleDescription());
+            roles.add(UserRole.DEMAILER_BASIC_USER.getRoleDescription());
+            roles.add(UserRole.DEMAILER_PROFESSIONAL_USER.getRoleDescription());
+            roles.add(UserRole.DEMAILER_ENTERPRISE_USER.getRoleDescription());
+      } else {
+            roles.add(userRole.getRoleDescription());
         }
 
         return roles;
