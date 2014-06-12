@@ -14,7 +14,7 @@
     <context:component-scan base-package="com.equivi"/>
     <import resource="demailer-web-data-access.xml"/>
 
-    <util:properties id="applicationProps" location="/opt/demailer/conf/demailer_web.properties"/>
+    <util:properties id="applicationProps" location="file:/opt/demailer/conf/demailer_web.properties"/>
 
     <context:property-placeholder properties-ref="applicationProps"/>
 
@@ -38,7 +38,7 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>classpath:config/demailer_web.properties</value>
+                <value>file:/opt/demailer/conf/demailer_web.properties</value>
             </list>
         </property>
         <property name="ignoreResourceNotFound" value="true"/>
@@ -49,7 +49,7 @@
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>file:${catalina.home}/conf/demailer/email_setup.properties</value>
+                <value>file:/opt/demailer/conf/email_setup.properties</value>
             </list>
         </property>
     </bean>
@@ -62,7 +62,7 @@
                 <prop key="file.resource.loader.class">
                     org.apache.velocity.runtime.resource.loader.FileResourceLoader
                 </prop>
-                <prop key="file.resource.loader.path">${catalina.home}/conf/demailer/template</prop>
+                <prop key="file.resource.loader.path">file:/opt/demailer/conf/template</prop>
                 <prop key="file.resource.loader.cache">false</prop>
             </props>
         </property>
