@@ -1,6 +1,9 @@
 package com.equivi.demailer.service.emailverifier;
 
 
+import com.equivi.demailer.dto.emailer.EmailVerifier;
+import com.equivi.demailer.service.emailverifier.byteplant.EmailVerifierResponse;
+
 import java.util.List;
 
 public interface VerifierService {
@@ -8,14 +11,14 @@ public interface VerifierService {
     /**
      *
      * @param emailList
-     * @return
+     * @return List of EmailVerifierResponse
      */
-    List<String> filterValidEmail(List<String> emailList);
+    List<EmailVerifierResponse> filterValidEmail(List<String> emailList);
 
     /**
      *
      * @param emailAddress
-     * @return
+     * @return EmailVerifierResponse
      */
-    String  getEmailAddressStatus(String emailAddress);
+    EmailVerifierResponse getEmailAddressStatus(String emailAddress);
 }

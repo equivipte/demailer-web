@@ -4,12 +4,17 @@ package com.equivi.demailer.service.emailverifier.byteplant;
 import com.equivi.demailer.service.constant.dEmailerWebPropertyKey;
 import com.equivi.demailer.service.emailverifier.VerifierService;
 import com.equivi.demailer.service.rest.client.DemailerRestTemplate;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,20 +32,38 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
     private Properties webProperties;
 
     @Override
-    public List<String> filterValidEmail(List<String> emailList) {
-        return null;
+    public List<EmailVerifierResponse> filterValidEmail(List<String> emailList) {
+        List<EmailVerifierResponse> emailVerifierResponseList = new ArrayList<>();
+        if (!emailList.isEmpty()) {
+            for (String emailAddress : emailList) {
+                emailVerifierResponseList.add(getEmailAddressStatus(emailAddress));
+            }
+        }
+        return new ArrayList<>();
     }
 
     @Override
-    public String getEmailAddressStatus(String emailAddress) {
+    public EmailVerifierResponse getEmailAddressStatus(String emailAddress) {
         Map<String, String> parameters = new HashMap<>();
         parameters.put("APIKey", getApiKey());
         parameters.put("EmailAddress", emailAddress);
         parameters.put("Timeout", getApiTimeout());
 
-        String result = restTemplate.getForObject(buildVerifyEmailAddressQueryString(emailAddress), String.class);
-        LOG.info("Result:" + result);
-        return result;
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+
+        ResponseEntity<String> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
+        LOG.info("Result:" + emailVerifierResponse);
+
+        try {
+            ObjectMapper objectMapper = new ObjectMapper();
+            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), EmailVerifierResponse.class);
+            emailVerifierResponseEntity.setEmailAddress(emailAddress);
+            return emailVerifierResponseEntity;
+        } catch (IOException e) {
+            LOG.error(e.getMessage(), e);
+        }
+        return null;
     }
 
     private String buildVerifyEmailAddressQueryString(String emailAddress) {

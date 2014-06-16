@@ -31,7 +31,7 @@ public class BytePlantVerifierServiceImplTest {
 
     @Test
     public void testGetEmailAddressStatus() throws Exception {
-        String result = emailVerifierService.getEmailAddressStatus("aditya.eldrid@gmail.com");
+        EmailVerifierResponse response = emailVerifierService.getEmailAddressStatus("aditya.eldrid@gmail.com");
 
     }
 }

@@ -1,16 +1,28 @@
 package com.equivi.demailer.service.emailverifier.byteplant;
 
 
+import org.codehaus.jackson.annotate.JsonIgnore;
 import org.springframework.stereotype.Component;
 
 @Component
 public class EmailVerifierResponse {
+
+    @JsonIgnore
+    private String emailAddress;
 
     private int status;
 
     private String info;
 
     private String details;
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
+
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
+    }
 
     public int getStatus() {
         return status;
@@ -35,4 +47,5 @@ public class EmailVerifierResponse {
     public void setDetails(String details) {
         this.details = details;
     }
+
 }
