@@ -1,9 +1,8 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-
+<%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-
 
 <div class="page-header">
     <h1>
@@ -17,26 +16,22 @@
     </p>
 </div>
 <div class="widget-main no-padding">
-    <form>
+    <!-- <form:form method="POST" commandName="collector" action="${pageContext.request.contextPath}/main/emailcollector/collect"> -->
         <table>
             <td>
                 <div>
-                    <input type="text"
-                           name="site"
-                           path="site"
-                           size="100"
-                           maxlength="255"
-                           placeholder="<spring:message code="label.please.type.site.search"/>"/>
+                	<spring:message code="label.please.type.site.search" var="siteSearch"/>
+                	<form:input path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
                 </div>
             </td>
             <td>
-                <button class="btn btn-sm btn-info">
+                <button id="crawling" class="btn btn-sm btn-info">
                     <i class="icon-search white bigger-120"></i>
                     <spring:message code="label.search"/>
                 </button>
             </td>
         </table>
-    </form>
+    <!-- </form:form> -->
 </div>
 &nbsp;
 &nbsp;
@@ -83,3 +78,15 @@
         z-index: 10000;
     }
 </style>
+
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.9.1.js' />"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/polling.js' /> "></script>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		var startUrl = "${context}/main/emailcollector/async/www.bethanyholylandtours.com/begin";
+		var pollUrl = "${context}/main/emailcollector/async/update";
+		var poll = new Poll();
+		poll.start(startUrl,pollUrl);
+	});
+</script>

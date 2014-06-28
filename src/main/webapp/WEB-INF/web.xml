@@ -1,7 +1,8 @@
-<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee"
-         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee
-	http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+	version="3.0">
 
     <display-name>dEmailer Web</display-name>
 
@@ -9,6 +10,7 @@
         <servlet-name>mvc-dispatcher</servlet-name>
         <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
+        <async-supported>true</async-supported>
     </servlet>
 
     <servlet-mapping>
@@ -33,13 +35,14 @@
     <filter>
         <filter-name>springSecurityFilterChain</filter-name>
         <filter-class>org.springframework.web.filter.DelegatingFilterProxy</filter-class>
+        <async-supported>true</async-supported>
     </filter>
 
     <filter-mapping>
         <filter-name>springSecurityFilterChain</filter-name>
         <url-pattern>/*</url-pattern>
     </filter-mapping>
-
+<!-- 
     <error-page>
         <error-code>500</error-code>
         <location>/error_page/error500.jsp</location>
@@ -52,5 +55,6 @@
         <error-code>403</error-code>
         <location>/error_page/error403.jsp</location>
     </error-page>
+-->
     <distributable/>
 </web-app>

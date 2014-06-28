@@ -18,7 +18,7 @@
             <c:if test="${currentPage.currentSubMenu != 'EMAIL_COLLECTOR'}">
         <li id="email-collector">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/emailcollector">
+            <a href="${pageContext.request.contextPath}/main/emailcollector/new">
                 <i class="icon-search"></i>
                 <spring:message code="label.menu.email.collector"/>
             </a>

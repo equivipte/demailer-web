@@ -104,5 +104,7 @@
             </beans:set>
         </beans:property>
     </beans:bean>
+    
+    <beans:bean id="emailCrawlerController" class="com.equivi.demailer.service.emailcollector.EmailCrawlerController"/>
 
 </beans>
