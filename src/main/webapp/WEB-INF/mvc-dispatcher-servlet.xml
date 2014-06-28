@@ -38,7 +38,7 @@
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/main/**"/>
-            <bean class="com.equivi.demailer.web.interceptor.MenuIndicatorInterceptor"/>
+            <bean class="com.equivi.mailsy.web.interceptor.MenuIndicatorInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
@@ -99,8 +99,8 @@
                 class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <beans:property name="formatters">
             <beans:set>
-                <beans:bean class="com.equivi.demailer.web.formatter.RoleFormatter"/>
-                <beans:bean class="com.equivi.demailer.web.formatter.StatusFormatter"/>
+                <beans:bean class="com.equivi.mailsy.web.formatter.RoleFormatter"/>
+                <beans:bean class="com.equivi.mailsy.web.formatter.StatusFormatter"/>
             </beans:set>
         </beans:property>
     </beans:bean>
