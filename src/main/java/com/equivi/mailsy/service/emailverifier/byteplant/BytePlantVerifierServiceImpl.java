@@ -42,33 +42,44 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
             for (String emailAddress : emailList) {
                 emailVerifierResponseList.add(getEmailAddressStatus(emailAddress));
             }
+            return emailVerifierResponseList;
         }
         return new ArrayList<>();
     }
 
     @Override
     public EmailVerifierResponse getEmailAddressStatus(String emailAddress) {
-        Map<String, String> parameters = new HashMap<>();
-        parameters.put(API_KEY, getApiKey());
-        parameters.put(EMAIL_ADDRESS, emailAddress);
-        parameters.put(TIMEOUT, getApiTimeout());
+        EmailVerifierResponse emailVerifierResponse = new EmailVerifierResponse();
+        emailVerifierResponse.setEmailAddress(emailAddress);
+        emailVerifierResponse.setInfo("Valid Email");
+        emailVerifierResponse.setDetails("VALID");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
-
-        ResponseEntity<String> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
-        LOG.info("Result:" + emailVerifierResponse);
-
-        try {
-            ObjectMapper objectMapper = new ObjectMapper();
-            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), EmailVerifierResponse.class);
-            emailVerifierResponseEntity.setEmailAddress(emailAddress);
-            return emailVerifierResponseEntity;
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e);
-        }
-        return null;
+        return emailVerifierResponse;
     }
+
+//    @Override
+//    public EmailVerifierResponse getEmailAddressStatus(String emailAddress) {
+//        Map<String, String> parameters = new HashMap<>();
+//        parameters.put(API_KEY, getApiKey());
+//        parameters.put(EMAIL_ADDRESS, emailAddress);
+//        parameters.put(TIMEOUT, getApiTimeout());
+//
+//        HttpHeaders headers = new HttpHeaders();
+//        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+//
+//        ResponseEntity<String> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
+//        LOG.info("Result:" + emailVerifierResponse);
+//
+//        try {
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), EmailVerifierResponse.class);
+//            emailVerifierResponseEntity.setEmailAddress(emailAddress);
+//            return emailVerifierResponseEntity;
+//        } catch (IOException e) {
+//            LOG.error(e.getMessage(), e);
+//        }
+//        return null;
+//    }
 
     private String buildVerifyEmailAddressQueryString(String emailAddress) {
         StringBuilder sbQueryEmailAddress = new StringBuilder();

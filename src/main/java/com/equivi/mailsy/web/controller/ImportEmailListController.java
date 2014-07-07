@@ -1,6 +1,10 @@
 package com.equivi.mailsy.web.controller;
 
 
+import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
+import com.equivi.mailsy.service.emailverifier.VerifierService;
+import com.equivi.mailsy.service.emailverifier.byteplant.BytePlantVerifierServiceImpl;
+import com.equivi.mailsy.service.emailverifier.byteplant.EmailVerifierResponse;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.context.SessionUtil;
 import org.springframework.stereotype.Controller;
@@ -15,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.List;
 
 
 @Controller
@@ -26,6 +32,12 @@ public class ImportEmailListController {
 
     @Resource
     private WebConfiguration webConfiguration;
+
+    @Resource
+    private ExcelEmailReader excelEmailReader;
+
+    @Resource(name = "bytePlantVerifierServiceImpl")
+    private VerifierService verifierService;
 
     private static final String UPLOAD_SUCCESS_MESSAGE = "label.import.upload.success.message";
 
@@ -41,28 +53,19 @@ public class ImportEmailListController {
 
     private static final String ERROR_UPLOAD_MESSAGE_KEY = "error_upload";
 
-    @RequestMapping(value = "/main/admin/imports", method = RequestMethod.GET)
-    public String importEmailVerifierController(HttpServletRequest request) {
-        return "emailVerifierPage";
-    }
-
-    @RequestMapping(value = "/main/admin/imports/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/main/emailverifier/imports/upload", method = RequestMethod.POST)
     public String handleFileUpload(@RequestParam("file") MultipartFile file, final HttpServletRequest servletRequest, Model model) {
         if (!file.isEmpty()) {
             try {
-                byte[] bytes = file.getBytes();
+                final String fileName = uploadFile(file, servletRequest);
 
-                final String fileName = file.getOriginalFilename();
-                final String targetUploadFileName = getTargetFileName(servletRequest, fileName);
+                //Get Email address list from file
+                List<String> emailAddressList = excelEmailReader.getEmailAddressList(fileName);
 
-                BufferedOutputStream stream =
-                        new BufferedOutputStream(new FileOutputStream(new File(targetUploadFileName)));
-                stream.write(bytes);
-                stream.close();
+                List<EmailVerifierResponse> emailVerifierResponses = verifierService.filterValidEmail(emailAddressList);
 
-                model.addAttribute("fileName", file.getOriginalFilename());
-                model.addAttribute(SUCCESS_UPLOAD_MESSAGE_KEY, UPLOAD_SUCCESS_MESSAGE);
-                model.addAttribute(WARNING_UPLOAD_MESSAGE_KEY, WARNING_MESSAGE_AFTER_IMPORT);
+
+                model.addAttribute("emailVerifierList", emailVerifierResponses);
 
             } catch (Exception e) {
                 model.addAttribute(ERROR_UPLOAD_MESSAGE_KEY, UPLOAD_FAILED_MESSAGE);
@@ -71,7 +74,20 @@ public class ImportEmailListController {
             model.addAttribute(ERROR_UPLOAD_MESSAGE_KEY, UPLOAD_FAILED_FILE_EMPTY_MESSAGE);
         }
 
-        return "importManagementPage";
+        return "emailVerifierPage";
+    }
+
+    private String uploadFile(MultipartFile file, HttpServletRequest servletRequest) throws IOException {
+        byte[] bytes = file.getBytes();
+
+        final String fileName = file.getOriginalFilename();
+        final String targetUploadFileName = getTargetFileName(servletRequest, fileName);
+
+        BufferedOutputStream stream =
+                new BufferedOutputStream(new FileOutputStream(new File(targetUploadFileName)));
+        stream.write(bytes);
+        stream.close();
+        return targetUploadFileName;
     }
 
 

@@ -24,33 +24,33 @@
     </definition>
 
     <definition name="loginPage" extends="base.non_secure.definition">
-        <put-attribute name="title" value="dEmailer Login"/>
+        <put-attribute name="title" value="Mailsy Login"/>
         <put-attribute name="body" value="/WEB-INF/pages/login.jsp"/>
     </definition>
 
     <definition name="welcomePage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/welcome.jsp"/>
     </definition>
 
     <definition name="forceChangePasswordPage" extends="base.definition.non.menu">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="body" value="/WEB-INF/pages/general/force_change_password.jsp"/>
     </definition>
 
     <!--General Error Page-->
     <definition name="error500Page" extends="base.definition.non.menu">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="body" value="/WEB-INF/pages/errors/error500.jsp"/>
     </definition>
 
     <!--Illegal Access Exception Page-->
     <definition name="illegalAccessPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/errors/illegal_access_page.jsp"/>
@@ -58,7 +58,7 @@
 
     <!--Email Verifier Page-->
     <definition name="emailVerifierPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_verifier/email_verifier_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_verifier/email_verifier.jsp"/>
@@ -66,7 +66,7 @@
 
     <!--Email Collector Page-->
     <definition name="emailCollectorPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_collector/email_collector_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector.jsp"/>
@@ -74,7 +74,7 @@
 
     <!--Campaign Management Page-->
     <definition name="campaignManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management.jsp"/>
@@ -82,7 +82,7 @@
 
     <!--Contact Management Page-->
     <definition name="contactManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/contact_management/contact_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/contact_management/contact_management.jsp"/>
@@ -90,7 +90,7 @@
 
     <!--Report Page-->
     <definition name="reportPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/report/report_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/report/report.jsp"/>
@@ -98,21 +98,21 @@
 
     <!--User Management Page-->
     <definition name="userManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_list.jsp"/>
     </definition>
 
     <definition name="userManagementAddPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_add.jsp"/>
     </definition>
 
     <definition name="userManagementEditPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_edit.jsp"/>
