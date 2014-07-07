@@ -23,7 +23,7 @@
 
     <mvc:annotation-driven conversion-service="conversionService"/>
 
-    <context:component-scan base-package="com.equivi.demailer"/>
+    <context:component-scan base-package="com.equivi.mailsy"/>
     <context:annotation-config/>
 
     <aop:aspectj-autoproxy/>
