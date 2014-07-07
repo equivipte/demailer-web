@@ -16,7 +16,7 @@
     </p>
 </div>
 <div class="widget-main no-padding">
-    <!-- <form:form method="POST" commandName="collector" action="${pageContext.request.contextPath}/main/emailcollector/collect"> -->
+    <form:form>
         <table>
             <td>
                 <div>
@@ -31,7 +31,7 @@
                 </button>
             </td>
         </table>
-    <!-- </form:form> -->
+    </form:form>
 </div>
 &nbsp;
 &nbsp;
