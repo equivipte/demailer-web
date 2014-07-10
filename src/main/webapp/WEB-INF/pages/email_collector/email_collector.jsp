@@ -16,22 +16,20 @@
     </p>
 </div>
 <div class="widget-main no-padding">
-    <form:form>
-        <table>
-            <td>
-                <div>
-                	<spring:message code="label.please.type.site.search" var="siteSearch"/>
-                	<form:input path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
-                </div>
-            </td>
-            <td>
-                <button id="crawling" class="btn btn-sm btn-info">
-                    <i class="icon-search white bigger-120"></i>
-                    <spring:message code="label.search"/>
-                </button>
-            </td>
-        </table>
-    </form:form>
+	<table>
+	    <td>
+	        <div>
+	        	<spring:message code="label.please.type.site.search" var="siteSearch"/>
+	        	<input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
+	        </div>
+	    </td>
+	    <td>
+	        <button id="crawling" class="btn btn-sm btn-info">
+	            <i class="icon-search white bigger-120"></i>
+	            <spring:message code="label.search"/>
+	        </button>
+	    </td>
+	</table>
 </div>
 &nbsp;
 &nbsp;
@@ -84,9 +82,13 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		var startUrl = "${context}/main/emailcollector/async/www.bethanyholylandtours.com/begin";
-		var pollUrl = "${context}/main/emailcollector/async/update";
-		var poll = new Poll();
-		poll.start(startUrl,pollUrl);
+		$("#crawling").click(function(){
+			var url = $("#url").val();
+			
+			var startUrl = "${context}/main/emailcollector/async/begin"; 
+			var pollUrl = "${context}/main/emailcollector/async/update";
+			var poll = new Poll();
+			poll.start(startUrl,pollUrl, url);
+		}); 
 	});
 </script>

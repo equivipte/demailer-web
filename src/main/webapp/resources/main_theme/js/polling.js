@@ -2,63 +2,49 @@
 var allow = true;
 var startUrl;
 var pollUrl;
+var siteUrl;
 
 
 function Poll() {
 
-	this.start = function start(start, poll) {
-
+	this.start = function start(start, poll, url) {
 		startUrl = start;
 		pollUrl = poll;
+		siteUrl = url;
 		
-		if (request) {
-			request.abort(); // abort any pending request
-		}
-
-		// fire off the request to MatchUpdateController
-		var request = $.ajax({
+		$.ajax({
 			url : startUrl,
-			type : "get",
+			type : "POST",
+			data : "{\"site\" : " + "\"" + siteUrl + "\"}",
+			contentType: 'application/json',
+			success: function() {
+				console.log("Crawling start...");
+				setInterval(function() {
+					if (allow === true) {
+						allow = false;
+						getUpdate();
+					}
+				}, 500);
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				console.log("Start - the following error occured: " + textStatus, errorThrown);
+			}
 		});
-
-		// This is jQuery 1.8+
-		// callback handler that will be called on success
-		request.done(function(reply) {
-
-			console.log("Game on..." + reply);
-			setInterval(function() {
-				if (allow === true) {
-					allow = false;
-					getUpdate();
-				}
-			}, 500);
-		});
-		
-		// callback handler that will be called on failure
-		request.fail(function(jqXHR, textStatus, errorThrown) {
-			// log the error to the console
-			console.log("Start - the following error occured: " + textStatus, errorThrown);
-		});
-		
-		
 	};
 	
 	function getUpdate() {
 		
-		console.log("Okay let's go...");
+		console.log("Get update...");
 																	
 		if (request) {
 			request.abort();	// abort any pending request
 		}
 		
-		// fire off the request to MatchUpdateController
 		var request = $.ajax({
 			url : pollUrl,
 			type : "get",
 		});
 
-		// This is jQuery 1.8+
-		// callback handler that will be called on success
 		request.done(function(message) {
 			console.log("Received a message");
 			
@@ -73,13 +59,10 @@ function Poll() {
 		};
 		
 
-		// callback handler that will be called on failure
 		request.fail(function(jqXHR, textStatus, errorThrown) {
-			// log the error to the console
 			console.log("Polling - the following error occured: " + textStatus, errorThrown);
 		});
 
-		// callback handler that will be called regardless if the request failed or succeeded
 		request.always(function() {
 			allow = true;
 		});

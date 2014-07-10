@@ -3,13 +3,17 @@ package com.equivi.mailsy.web.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import com.equivi.mailsy.dto.emailer.EmailCollector;
@@ -45,10 +49,10 @@ public class EmailCollectorController {
         return emailCollectorsList;
     }
     
-    @RequestMapping(value = "async/{site}/begin", method = RequestMethod.GET)
-    public @ResponseBody String start(@PathVariable String site) throws Exception { 
-    	emailCollectorService.subscribe("http://" + site);
-    	return "OK";
+    @RequestMapping(value = "async/begin", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseStatus(value = HttpStatus.OK)
+    public void start(@RequestBody EmailCollector emailCollector) throws Exception { 
+    	emailCollectorService.subscribe(emailCollector.getSite());
     }
     
     @RequestMapping(value = "async/update", method = RequestMethod.GET)
