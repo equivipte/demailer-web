@@ -292,7 +292,12 @@
             <artifactId>commons-validator</artifactId>
             <version>${common.validator.version}</version>
         </dependency>
-
+        
+        <dependency>
+			<groupId>edu.uci.ics</groupId>
+			<artifactId>crawler4j</artifactId>
+			<version>3.5</version>
+		</dependency>
 
     </dependencies>
 
