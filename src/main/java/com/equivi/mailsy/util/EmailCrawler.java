@@ -14,6 +14,8 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 public class EmailCrawler extends WebCrawler {
 	
+	private final String RE_MAIL = "([\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Za-z]{2,4})";
+	
 	public static final BlockingQueue<EmailCollectorMessage> queue = new LinkedBlockingQueue<>(); 
 
 	private final static Pattern FILTERS = Pattern.compile(".*(\\.(css|js|bmp|gif|jpe?g"
@@ -63,12 +65,14 @@ public class EmailCrawler extends WebCrawler {
 	}
 	
 	public void addEmail(String html) throws InterruptedException{ 
-		final String RE_MAIL = "([\\w\\-]([\\.\\w])+[\\w]+@([\\w\\-]+\\.)+[A-Za-z]{2,4})";
 	    Pattern p = Pattern.compile(RE_MAIL);
 	    Matcher m = p.matcher(html);
 
 	    while(m.find()) {
+	    	
+	    	
 	    	queue.add(new EmailCollectorMessage(m.group(1)));
+	    	
 	    	
 	    	System.out.println("Email found ---> " + m.group(1)); 
 	    }

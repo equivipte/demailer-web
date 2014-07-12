@@ -35,20 +35,14 @@
 &nbsp;
 &nbsp;
 <div id="table_result" class="table-responsive">
-    <table id="table-transaction" class="table table-striped table-bordered table-hover">
+    <table id="emailTable" class="table table-striped table-bordered table-hover">
         <thead>
         <tr>
             <th><spring:message code="label.common.emailaddress"/></th>
-            <th><spring:message code="label.emailcollector.site"/>
         </tr>
         </thead>
+        
         <tbody>
-        <c:forEach items="${resultList}" var="email">
-            <tr>
-                <td>${email.emailAddress}</td>
-                <td>${email.site}</td>
-            </tr>
-        </c:forEach>
         </tbody>
     </table>
 </div>

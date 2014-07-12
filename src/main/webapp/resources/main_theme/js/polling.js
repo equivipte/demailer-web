@@ -4,7 +4,6 @@ var startUrl;
 var pollUrl;
 var siteUrl;
 
-
 function Poll() {
 
 	this.start = function start(start, poll, url) {
@@ -48,12 +47,15 @@ function Poll() {
 		request.done(function(message) {
 			console.log("Received a message");
 			
-			console.log("Message = " + message.email);
+			var update = getUpdate(message);
+			$('#emailTable > tbody:last').append(update);
 		});
 		
 		function getUpdate(message) {
 
-			var update = "";
+			var update = "<tr>" + 
+							"<td>" + message.email + "</td>" + 
+						 "</tr>";
 			
 			return update;
 		};
@@ -65,6 +67,8 @@ function Poll() {
 
 		request.always(function() {
 			allow = true;
+			
+			index++;
 		});
 	};	
 };
