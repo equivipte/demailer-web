@@ -1,8 +1,6 @@
 package com.equivi.mailsy.service.emailverifier;
 
 
-import com.equivi.mailsy.service.emailverifier.byteplant.EmailVerifierResponse;
-
 import java.util.List;
 
 public interface VerifierService {

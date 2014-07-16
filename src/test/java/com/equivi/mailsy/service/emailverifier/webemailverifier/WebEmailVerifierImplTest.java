@@ -1,8 +1,6 @@
-package com.equivi.mailsy.service.emailverifier.byteplant;
+package com.equivi.mailsy.service.emailverifier.webemailverifier;
 
 import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
-import com.equivi.mailsy.service.emailverifier.VerifierService;
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -12,24 +10,19 @@ import javax.annotation.Resource;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:META-INF/spring-service.xml")
-public class BytePlantVerifierServiceImplTest {
+public class WebEmailVerifierImplTest {
 
-    @Resource(name = "bytePlantVerifierServiceImpl")
-    private VerifierService emailVerifierService;
+    @Resource
+    private WebEmailVerifierImpl webEmailVerifier;
 
-    @Before
-    public void setUp() throws Exception {
-
-    }
 
     @Test
     public void testFilterValidEmail() throws Exception {
-
+        EmailVerifierResponse response = webEmailVerifier.getEmailAddressStatus("zztop_aditya2@yahoo.com");
     }
 
     @Test
     public void testGetEmailAddressStatus() throws Exception {
-        EmailVerifierResponse response = emailVerifierService.getEmailAddressStatus("aditya.eldrid@gmail.com");
 
     }
 }

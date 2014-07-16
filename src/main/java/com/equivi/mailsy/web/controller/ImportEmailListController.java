@@ -3,8 +3,7 @@ package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
-import com.equivi.mailsy.service.emailverifier.byteplant.BytePlantVerifierServiceImpl;
-import com.equivi.mailsy.service.emailverifier.byteplant.EmailVerifierResponse;
+import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.context.SessionUtil;
 import org.springframework.stereotype.Controller;
@@ -36,7 +35,7 @@ public class ImportEmailListController {
     @Resource
     private ExcelEmailReader excelEmailReader;
 
-    @Resource(name = "bytePlantVerifierServiceImpl")
+    @Resource(name = "webEmailVerifierImpl")
     private VerifierService verifierService;
 
     private static final String UPLOAD_SUCCESS_MESSAGE = "label.import.upload.success.message";

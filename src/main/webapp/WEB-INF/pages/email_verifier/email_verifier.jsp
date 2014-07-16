@@ -45,13 +45,16 @@
             <tbody>
             <c:forEach items="${emailVerifierList}" var="email">
                 <tr>
-                    <td>${email.emailAddress}</td>
+                    <td>${email.address}</td>
                     <td>
-                        <c:if test="${email.details == 'VALID'}">
-                            <span class="label label-sm label-success">${email.details}</span>
+                        <c:if test="${email.status == 'Valid'}">
+                            <span class="label label-sm label-success">${email.statusCode}</span>
                         </c:if>
-                        <c:if test="${email.details == 'INVALID'}">
-                            <span class="label label-sm label-danger">${email.details}</span>
+                        <c:if test="${email.status == 'Invalid'}">
+                            <span class="label label-sm label-danger">${email.statusCode}</span>
+                        </c:if>
+                        <c:if test="${email.status == 'Unknown'}">
+                            <span class="label label-sm label-grey">${email.statusCode}</span>
                         </c:if>
                     </td>
                 </tr>
