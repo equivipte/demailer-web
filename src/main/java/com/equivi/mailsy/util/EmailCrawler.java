@@ -69,11 +69,7 @@ public class EmailCrawler extends WebCrawler {
 	    Matcher m = p.matcher(html);
 
 	    while(m.find()) {
-	    	
-	    	
 	    	queue.add(new EmailCollectorMessage(m.group(1)));
-	    	
-	    	
 	    	System.out.println("Email found ---> " + m.group(1)); 
 	    }
 	}

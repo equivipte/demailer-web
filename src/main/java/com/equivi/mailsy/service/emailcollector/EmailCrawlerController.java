@@ -16,25 +16,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 public class EmailCrawlerController implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(EmailCrawlerController.class);
 	
-	private volatile boolean start = true;
-	
 	private String site;
-	
-	public void start() throws Exception {
-		if (start) {
-			synchronized (this) {
-				if (start) {
-					start = false;
-					System.out.println("Starting EmailCrawlerController ...");
-					
-					Thread thread = new Thread(this, "EmailCrawling");
-					thread.start();
-				}
-			}
-		} else {
-			System.out.println("Crawling in progress");
-		}
-	}
 	
 	@Override
 	public void run() {
@@ -69,9 +51,8 @@ public class EmailCrawlerController implements Runnable {
 			e.printStackTrace();
 		}
 
-		start = true;
-                
         System.out.println("Finished crawling");
+        
 	}
 
 	public void setSite(String site) {

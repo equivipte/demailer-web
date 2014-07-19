@@ -2,6 +2,18 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
+<script type="text/javascript" src="<c:url value='/resources/js/pace.min.js' />"></script>
+<link href="${pageContext.request.contextPath}/resources/css/pace.css" rel="stylesheet" type="text/css"/>
+
+<script>
+		paceOptions = {  
+		  // Configuration goes here. Example:  
+		  elements: false,  
+		  restartOnPushState: false,  
+		  restartOnRequestAfter: false  
+		};  	
+</script>
+
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 
 <div class="page-header">
@@ -72,17 +84,20 @@
 </style>
 
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.9.1.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/polling.js' /> "></script>
+<script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
 		$("#crawling").click(function(){
+			$("#emailTable").find("tr:gt(0)").remove();
+			
 			var url = $("#url").val();
 			
 			var startUrl = "${context}/main/emailcollector/async/begin"; 
 			var pollUrl = "${context}/main/emailcollector/async/update";
+			var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
 			var poll = new Poll();
-			poll.start(startUrl,pollUrl, url);
+			poll.start(startUrl,pollUrl, url, crawlingStatusUrl);
 		}); 
 	});
 </script>

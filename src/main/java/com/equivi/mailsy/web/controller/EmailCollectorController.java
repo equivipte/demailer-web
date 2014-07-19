@@ -4,11 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,6 +16,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
+import com.equivi.mailsy.dto.emailer.EmailCollectorStatusMessage;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
 import com.google.common.collect.Lists;
 
@@ -61,5 +60,10 @@ public class EmailCollectorController {
     	emailCollectorService.getUpdate(result);
         return result;
     	
+    }
+    
+    @RequestMapping(value = "updateCrawlingStatus", method = RequestMethod.GET)
+    public @ResponseBody EmailCollectorStatusMessage getUpdateCrawlingStatus() {
+    	return new EmailCollectorStatusMessage(emailCollectorService.getUpdateCrawlingStatus());
     }
 }

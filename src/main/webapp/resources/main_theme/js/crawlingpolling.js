@@ -3,13 +3,16 @@ var allow = true;
 var startUrl;
 var pollUrl;
 var siteUrl;
+var crawlingStatusUrl;
 
 function Poll() {
 
-	this.start = function start(start, poll, url) {
+	this.start = function start(start, poll, url, crawlingStatus) {
+		allow = true;
 		startUrl = start;
 		pollUrl = poll;
 		siteUrl = url;
+		crawlingStatusUrl = crawlingStatus;
 		
 		$.ajax({
 			url : startUrl,
@@ -36,7 +39,7 @@ function Poll() {
 		console.log("Get update...");
 																	
 		if (request) {
-			request.abort();	// abort any pending request
+			request.abort();	// abort any pending request      
 		}
 		
 		var request = $.ajax({
@@ -66,9 +69,34 @@ function Poll() {
 		});
 
 		request.always(function() {
-			allow = true;
-			
-			index++;
+			getUpdateCrawlerStatus();
 		});
+		
+		function getUpdateCrawlerStatus() {
+			console.log("Get update crawling status");
+			
+			var requestComplete = $.ajax({
+				url : crawlingStatusUrl,
+				type : "get",
+			});
+			
+			requestComplete.done(function(message) {
+				console.log("Received status");
+				
+				var status = message.status;
+				
+				if(status) {
+					allow = false;
+				} else {
+					allow = true;
+				}
+			});
+			
+			requestComplete.fail(function(jqXHR, textStatus, errorThrown) {
+				console.log("Polling - the following error occured: " + textStatus, errorThrown);
+			});
+			
+		};
+
 	};	
 };

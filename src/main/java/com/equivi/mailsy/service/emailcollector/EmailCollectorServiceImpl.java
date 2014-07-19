@@ -1,12 +1,13 @@
 package com.equivi.mailsy.service.emailcollector;
 
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -28,11 +29,9 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	@Autowired
 	private ShutdownService shutdownService;
 	
-	@Autowired
-	@Qualifier("emailCrawlerController")
-	private EmailCrawlerController emailCrawlerController;
-	
 	private Hook hook;
+	
+	private ExecutorService executor;
 	
 	@Override
 	public void run() {
@@ -58,9 +57,13 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 		logger.info("Starting email crawler...");
 		System.out.println("Starting email crawler...");
 		
+		EmailCrawlerController emailCrawlerController = new EmailCrawlerController();
 		emailCrawlerController.setSite(site); 
-		emailCrawlerController.start();
-        
+		
+		executor = Executors.newSingleThreadExecutor();
+		executor.execute(emailCrawlerController); 
+		executor.shutdown();
+		
         startThread();
 	}
 	
@@ -80,5 +83,16 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	@Override
 	public void getUpdate(DeferredResult<EmailCollectorMessage> result) {
 		resultQueue.add(result);
+	}
+
+	@Override
+	public boolean getUpdateCrawlingStatus() {
+		boolean terminated = executor.isTerminated();
+		
+		if(terminated) {
+			resultQueue.clear();
+		}
+		
+		return terminated;
 	}
 }

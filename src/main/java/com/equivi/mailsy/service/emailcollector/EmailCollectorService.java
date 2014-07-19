@@ -8,4 +8,6 @@ public interface EmailCollectorService {
 	void subscribe(String site) throws Exception;
 	
 	void getUpdate(DeferredResult<EmailCollectorMessage> deferredResult);
+	
+	boolean getUpdateCrawlingStatus();
 }
