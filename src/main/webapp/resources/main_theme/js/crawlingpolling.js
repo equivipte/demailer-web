@@ -87,6 +87,11 @@ function Poll() {
 				
 				if(status) {
 					allow = false;
+					$("#progress").removeClass("show");
+					$("#progress").addClass("hide");
+					$("#url").prop('disabled', false);
+					$("#crawlingsearch").toggleClass("hide");
+					$("#crawlingcancel").toggleClass("hide");
 				} else {
 					allow = true;
 				}

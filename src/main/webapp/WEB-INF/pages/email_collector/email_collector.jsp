@@ -2,9 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
-<script type="text/javascript" src="<c:url value='/resources/js/pace.min.js' />"></script>
-<link href="${pageContext.request.contextPath}/resources/css/pace.css" rel="stylesheet" type="text/css"/>
-
 <script>
 		paceOptions = {  
 		  // Configuration goes here. Example:  
@@ -27,6 +24,13 @@
         Nothing to select
     </p>
 </div>
+
+<div id="progress" class="hide">
+	<h2>
+		<span class="blink red">Crawling in progress ...</span>
+	</h2>
+</div>
+
 <div class="widget-main no-padding">
 	<table>
 	    <td>
@@ -36,10 +40,17 @@
 	        </div>
 	    </td>
 	    <td>
-	        <button id="crawling" class="btn btn-sm btn-info">
-	            <i class="icon-search white bigger-120"></i>
-	            <spring:message code="label.search"/>
-	        </button>
+           <div id="crawlingsearch">
+           		<button id="crawling" class="btn btn-sm btn-info">
+	           		<i class="icon-search white bigger-120 crawlingsearch"></i>
+	            	<spring:message code="label.search"/>
+            	</button>
+           </div>
+           <div id="crawlingcancel" class="hide">
+           		<button id="cancelcrawling" class="btn btn-sm btn-info">
+           			<spring:message code="label.cancel"/>
+           		</button>
+           </div>
 	    </td>
 	</table>
 </div>
@@ -84,11 +95,21 @@
 </style>
 
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.9.1.js' />"></script>
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-blink.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 
 <script type="text/javascript">
 	$(document).ready(function() {
+		
 		$("#crawling").click(function(){
+			$("#progress").removeClass("hide");
+			$("#progress").addClass("show");
+			$("#url").prop('disabled', true);
+			$("#crawlingsearch").toggleClass("hide");
+			$("#crawlingcancel").toggleClass("hide");
+			
+			$('.blink').blink();
+			
 			$("#emailTable").find("tr:gt(0)").remove();
 			
 			var url = $("#url").val();
