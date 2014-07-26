@@ -26,9 +26,16 @@
 </div>
 
 <div id="progress" class="hide">
-	<h2>
-		<span class="blink red">Crawling in progress ...</span>
-	</h2>
+    <div class="spinner">
+      <div class="rect1"></div>
+      <div class="rect2"></div>
+      <div class="rect3"></div>
+      <div class="rect4"></div>
+      <div class="rect5"></div>
+    </div>
+
+    <span class="scanning">Scanning: <span id="urltext"></span></span>
+
 </div>
 
 <div class="widget-main no-padding">
@@ -97,6 +104,7 @@
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-1.9.1.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-blink.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
+<link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
 	$(document).ready(function() {

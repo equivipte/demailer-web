@@ -51,7 +51,7 @@ public class EmailCrawlerController implements Runnable {
 			e.printStackTrace();
 		}
 
-        System.out.println("Finished crawling");
+        logger.info("Finished crawling");
         
 	}
 

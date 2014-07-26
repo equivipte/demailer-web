@@ -48,7 +48,7 @@ public class EmailCrawler extends WebCrawler {
 	public void visit(Page page) {
 		String url = page.getWebURL().getURL();
 
-		System.out.println("URL: " + url);
+		logger.info("Scanning URL: " + url);
 
 		if (page.getParseData() instanceof HtmlParseData) {
 			HtmlParseData htmlParseData = (HtmlParseData) page.getParseData();
@@ -61,7 +61,7 @@ public class EmailCrawler extends WebCrawler {
 			}
 		}
 
-		System.out.println("=============");
+		logger.info("=============");
 	}
 	
 	public void addEmail(String html) throws InterruptedException{ 
@@ -70,7 +70,7 @@ public class EmailCrawler extends WebCrawler {
 
 	    while(m.find()) {
 	    	queue.add(new EmailCollectorMessage(m.group(1)));
-	    	System.out.println("Email found ---> " + m.group(1)); 
+	    	logger.info("Email found ---> " + m.group(1));
 	    }
 	}
 }

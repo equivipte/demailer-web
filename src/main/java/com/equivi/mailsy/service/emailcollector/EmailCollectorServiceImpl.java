@@ -46,7 +46,7 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 				result.setResult(message);
 				
 			} catch (InterruptedException e) {
-				System.out.println("Interrupted when waiting for latest update. "
+				logger.warn("Interrupted when waiting for latest update. "
 						+ e.getMessage());
 			}
 		}
@@ -55,12 +55,11 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	@Override
 	public void subscribe(String site) throws Exception { 
 		logger.info("Starting email crawler...");
-		System.out.println("Starting email crawler...");
-		
+
 		EmailCrawlerController emailCrawlerController = new EmailCrawlerController();
 		emailCrawlerController.setSite(site); 
 		
-		executor = Executors.newSingleThreadExecutor();
+		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		executor.execute(emailCrawlerController); 
 		executor.shutdown();
 		
