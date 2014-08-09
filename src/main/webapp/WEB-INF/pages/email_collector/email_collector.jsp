@@ -34,7 +34,7 @@
       <div class="rect5"></div>
     </div>
 
-    <span class="scanning">Scanning: <span id="urltext"></span></span>
+    <span class="scanning">Scanning: <span></span></span>
 
 </div>
 
@@ -124,9 +124,10 @@
 			
 			var startUrl = "${context}/main/emailcollector/async/begin"; 
 			var pollUrl = "${context}/main/emailcollector/async/update";
+			var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
 			var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
 			var poll = new Poll();
-			poll.start(startUrl,pollUrl, url, crawlingStatusUrl);
+			poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
 		}); 
 	});
 </script>

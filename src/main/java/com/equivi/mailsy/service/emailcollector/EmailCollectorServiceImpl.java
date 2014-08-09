@@ -5,6 +5,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,8 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	private static final Logger logger = LoggerFactory.getLogger(EmailCollectorServiceImpl.class);
 
 	private final BlockingQueue<DeferredResult<EmailCollectorMessage>> resultQueue = new LinkedBlockingQueue<>();
-	
+    private final BlockingQueue<EmailCollectorMessage> duplicateQueue = new LinkedBlockingQueue<>();
+
 	private Thread thread;
 	
 	private volatile boolean start = true;
@@ -36,18 +38,20 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	@Override
 	public void run() {
 		logger.info("EmailCollectorServiceImpl - Thread running");
-		System.out.println("EmailCollectorServiceImpl - Thread running");
 		while(hook.keepRunning()) {
 			try {
 				DeferredResult<EmailCollectorMessage> result = resultQueue.take();
-				
 				EmailCollectorMessage message = EmailCrawler.queue.take();
-				
-				result.setResult(message);
-				
+
+                if(duplicateQueue.isEmpty() || !duplicateQueue.contains(message)) {
+                    result.setResult(message);
+                }
+
+                duplicateQueue.add(message);
+
 			} catch (InterruptedException e) {
 				logger.warn("Interrupted when waiting for latest update. "
-						+ e.getMessage());
+                        + e.getMessage());
 			}
 		}
 	}
@@ -62,7 +66,7 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		executor.execute(emailCrawlerController); 
 		executor.shutdown();
-		
+
         startThread();
 	}
 	
@@ -84,12 +88,14 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 		resultQueue.add(result);
 	}
 
-	@Override
+    @Override
 	public boolean getUpdateCrawlingStatus() {
 		boolean terminated = executor.isTerminated();
 		
 		if(terminated) {
 			resultQueue.clear();
+            EmailCrawler.queue.clear();
+            duplicateQueue.clear();
 		}
 		
 		return terminated;

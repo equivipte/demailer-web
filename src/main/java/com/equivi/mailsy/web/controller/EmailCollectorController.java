@@ -2,6 +2,8 @@ package com.equivi.mailsy.web.controller;
 
 import java.util.List;
 
+import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
+import com.equivi.mailsy.service.emailcollector.EmailScanningService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -28,6 +30,9 @@ public class EmailCollectorController {
     
     @Autowired
     private EmailCollectorService emailCollectorService;
+
+    @Autowired
+    private EmailScanningService emailScanningService;
     
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
     public String loadNewPage(Model model) {
@@ -52,6 +57,7 @@ public class EmailCollectorController {
     @ResponseStatus(value = HttpStatus.OK)
     public void start(@RequestBody EmailCollector emailCollector) throws Exception { 
     	emailCollectorService.subscribe(emailCollector.getSite());
+        emailScanningService.subscribe();
     }
     
     @RequestMapping(value = "async/update", method = RequestMethod.GET)
@@ -61,9 +67,22 @@ public class EmailCollectorController {
         return result;
     	
     }
+
+    @RequestMapping(value = "async/updateUrlScanning", method = RequestMethod.GET)
+    public @ResponseBody DeferredResult<EmailCollectorUrlMessage> getUpdateUrlScanning() {
+    	final DeferredResult<EmailCollectorUrlMessage> result = new DeferredResult<>();
+    	emailScanningService.getUrlScanningUpdate(result);
+        return result;
+    }
     
     @RequestMapping(value = "updateCrawlingStatus", method = RequestMethod.GET)
     public @ResponseBody EmailCollectorStatusMessage getUpdateCrawlingStatus() {
-    	return new EmailCollectorStatusMessage(emailCollectorService.getUpdateCrawlingStatus());
+        boolean crawlingStatus = emailCollectorService.getUpdateCrawlingStatus();
+
+        if(crawlingStatus) {
+            emailScanningService.getQueue().clear();
+        }
+
+        return new EmailCollectorStatusMessage(crawlingStatus);
     }
 }
