@@ -50,16 +50,16 @@
             </a>
         </li>
 
-        <c:if test="${currentPage.currentSubMenu == 'CONTACT_MANAGEMENT'}">
+        <c:if test="${currentPage.currentSubMenu == 'SUBSCRIBER_MANAGEMENT'}">
         <li id="contact-management" class="active">
             </c:if>
 
-            <c:if test="${currentPage.currentSubMenu != 'CONTACT_MANAGEMENT'}">
+            <c:if test="${currentPage.currentSubMenu != 'SUBSCRIBER_MANAGEMENT'}">
         <li id="contact-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/contactmanagement">
+            <a href="${pageContext.request.contextPath}/main/subscriber_management/1">
                 <i class="icon-book"></i>
-                <spring:message code="label.menu.contact"/>
+                <spring:message code="label.menu.subscriber"/>
             </a>
         </li>
 

@@ -2,4 +2,4 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<li class="active"><a href="#"><spring:message code="label.menu.contact.breadcrumb"/></a></li>
+<li class="active"><a href="#"><spring:message code="label.menu.subscriber.breadcrumb"/></a></li>

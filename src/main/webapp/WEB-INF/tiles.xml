@@ -80,12 +80,30 @@
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management.jsp"/>
     </definition>
 
-    <!--Contact Management Page-->
-    <definition name="contactManagementPage" extends="base.definition">
+    <!--Subcriber Management Page-->
+    <definition name="subscriberManagementPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
-        <put-attribute name="breadcrumb" value="/WEB-INF/pages/contact_management/contact_management_breadcrumb.jsp"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
-        <put-attribute name="body" value="/WEB-INF/pages/contact_management/contact_management.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management.jsp"/>
+    </definition>
+
+
+    <definition name="subscriberManagementAddPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management_add.jsp"/>
+    </definition>
+
+    <definition name="subscriberManagementEditPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management_edit.jsp"/>
     </definition>
 
     <!--Report Page-->
