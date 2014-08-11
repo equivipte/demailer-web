@@ -1,7 +1,9 @@
 package com.equivi.mailsy.service.user;
 
 import com.equivi.mailsy.dto.user.UserRequestDTO;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.mail.MailService;
+import com.equivi.mailsy.util.WebConfigUtil;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
@@ -34,10 +36,6 @@ public class UserMailServiceImpl implements UserMailService {
     @Resource
     private VelocityEngine velocityEngine;
 
-
-    @Resource(name = "dEmailerWebProperties")
-    private Properties dEmailerWebProperties;
-
     @Override
     public void sendEmailForUserCreation(UserRequestDTO userRequestDTO) {
         Map model = new HashMap();
@@ -46,7 +44,7 @@ public class UserMailServiceImpl implements UserMailService {
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(
                 velocityEngine, CREATE_USER_EMAIL_TEMPLATE, "UTF-8", model);
 
-        final String newUserEmailSubject = dEmailerWebProperties.getProperty(CREATE_USER_SUBJECT_KEY);
+        final String newUserEmailSubject = WebConfigUtil.getValue(dEmailerWebPropertyKey.NEW_USER_EMAIL_SUBJECT);
 
         mailService.sendMailPlain(Arrays.asList(userRequestDTO.getEmailAddress()), null, null, newUserEmailSubject, messageContent);
 
@@ -60,7 +58,7 @@ public class UserMailServiceImpl implements UserMailService {
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(
                 velocityEngine, PASSWORD_CHANGED_EMAIL_TEMPLATE, "UTF-8", model);
 
-        final String passwordChangedEmailSubject = dEmailerWebProperties.getProperty(PASSWORD_CHANGED_SUBJECT_KEY);
+        final String passwordChangedEmailSubject = WebConfigUtil.getValue(dEmailerWebPropertyKey.PASSWORD_CHANGED_EMAIL_SUBJECT);
 
         mailService.sendMailPlain(Arrays.asList(userRequestDTO.getEmailAddress()), null, null, passwordChangedEmailSubject, messageContent);
     }
@@ -73,7 +71,7 @@ public class UserMailServiceImpl implements UserMailService {
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(
                 velocityEngine, FORGOT_PASSWORD_EMAIL_TEMPLATE, "UTF-8", model);
 
-        final String forgotPasswordEmailSubject = dEmailerWebProperties.getProperty(FORGOT_PASSWORD_EMAIL_SUBJECT_KEY);
+        final String forgotPasswordEmailSubject = WebConfigUtil.getValue(dEmailerWebPropertyKey.PASSWORD_CHANGED_EMAIL_SUBJECT);
 
         mailService.sendMailPlain(Arrays.asList(userRequestDTO.getEmailAddress()), null, null, forgotPasswordEmailSubject, messageContent);
 

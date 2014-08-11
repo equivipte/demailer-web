@@ -10,12 +10,13 @@ public enum dEmailerWebPropertyKey {
     EMAIL_VERIFIER_IMPORT_LOCATION("email.verifier.import.location"),
     EMAIL_VERIFIER_API_KEY("email.verifier.api.key"),
     EMAIL_VERIFIER_API_TIMEOUT("email.verifier.api.timeout"),
-    EMAIL_VERIFIER_URL("email.verifier.url");
+    EMAIL_VERIFIER_URL("email.verifier.url"),
+    EMAIL_CRAWLING_STORAGE("email.crawling.storage.dir");
 
 
     private String keyName;
 
-    dEmailerWebPropertyKey(String keyName) {
+    private dEmailerWebPropertyKey(String keyName) {
 
         this.keyName = keyName;
     }
@@ -23,4 +24,6 @@ public enum dEmailerWebPropertyKey {
     public String getKeyName() {
         return keyName;
     }
+
+
 }

@@ -1,5 +1,7 @@
 package com.equivi.mailsy.service.mail;
 
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
+import com.equivi.mailsy.util.WebConfigUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailParseException;
 import org.springframework.mail.SimpleMailMessage;
@@ -21,15 +23,11 @@ public class MailServiceImpl implements MailService {
     @Autowired
     private JavaMailSender mailSender;
 
-
-    @Resource(name = "dEmailerWebProperties")
-    private Properties dEmailerWebProperties;
-
     @Override
     public void sendMailPlain(List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        String mailFrom = (String) dEmailerWebProperties.get("mail.sender");
+        String mailFrom = WebConfigUtil.getValue(dEmailerWebPropertyKey.NEW_USER_EMAIL_SUBJECT);
         mailMessage.setFrom(mailFrom);
 
         if (recipientList != null && recipientList.size() > 0) {
@@ -55,7 +53,7 @@ public class MailServiceImpl implements MailService {
     public void sendMailPlainSync(List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        String mailFrom = (String) dEmailerWebProperties.get("mail.sender");
+        String mailFrom = WebConfigUtil.getValue(dEmailerWebPropertyKey.NEW_USER_EMAIL_SUBJECT);
         mailMessage.setFrom(mailFrom);
 
         if (recipientList != null && recipientList.size() > 0) {
@@ -81,7 +79,7 @@ public class MailServiceImpl implements MailService {
     public void sendMailWithAttachment(final List<String> recipientList, final List<Attachment> attachmentList, final List<String> ccList, final List<String> bccList, final String subject, final String message) {
         MimeMessage mimeMessage = mailSender.createMimeMessage();
 
-        String mailFrom = (String) dEmailerWebProperties.get("mail.sender");
+        String mailFrom = WebConfigUtil.getValue(dEmailerWebPropertyKey.NEW_USER_EMAIL_SUBJECT);
 
 
         try {

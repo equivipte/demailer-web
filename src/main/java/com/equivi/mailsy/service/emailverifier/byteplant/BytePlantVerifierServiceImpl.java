@@ -5,6 +5,7 @@ import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
+import com.equivi.mailsy.util.WebConfigUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -25,9 +26,6 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
 
     @Resource
     private DemailerRestTemplate restTemplate;
-
-    @Resource(name = "dEmailerWebProperties")
-    private Properties webProperties;
 
     @Override
     public List<EmailVerifierResponse> filterValidEmail(List<String> emailList) {
@@ -88,14 +86,14 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
     }
 
     private String getApiKey() {
-        return webProperties.getProperty(dEmailerWebPropertyKey.EMAIL_VERIFIER_API_KEY.getKeyName());
+        return WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_API_KEY);
     }
 
     private String getApiTimeout() {
-        return webProperties.getProperty(dEmailerWebPropertyKey.EMAIL_VERIFIER_API_TIMEOUT.getKeyName());
+        return WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_API_TIMEOUT);
     }
 
     private String getVerifierApiUrl() {
-        return webProperties.getProperty(dEmailerWebPropertyKey.EMAIL_VERIFIER_URL.getKeyName());
+        return WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_URL);
     }
 }

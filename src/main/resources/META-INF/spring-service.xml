@@ -34,17 +34,6 @@
         </property>
     </bean>
 
-    <bean id="dEmailerWebProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <list>
-                <value>file:/opt/demailer/conf/demailer_web.properties</value>
-            </list>
-        </property>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
-
-
     <bean id="dEmailerEmailProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">

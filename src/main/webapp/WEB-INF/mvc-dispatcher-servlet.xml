@@ -105,6 +105,4 @@
         </beans:property>
     </beans:bean>
     
-    <!-- <beans:bean id="emailCrawlerController" class="com.equivi.mailsy.service.emailcollector.EmailCrawlerController"/> -->
-
 </beans>
