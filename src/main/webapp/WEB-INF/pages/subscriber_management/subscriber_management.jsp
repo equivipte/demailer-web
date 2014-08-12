@@ -20,7 +20,7 @@
 </br>
 </br>
 <div class="table-responsive">
-<table id="table-user" class="table table-striped table-bordered table-hover">
+<table id="table-subscriber" class="table table-striped table-bordered table-hover">
 <thead>
 <tr>
     <th><spring:message code="label.subscriber.subscriber_group"/></th>
@@ -152,7 +152,7 @@
     });
 
     function redirectToEdit(id) {
-        window.location.replace("${context}/main/subscriber/" + id);
+        window.location.replace("${context}/main/subscriber_management/subscriber_list/"+id+"/1");
     }
 
     function deleteSubscriberGroup(id) {

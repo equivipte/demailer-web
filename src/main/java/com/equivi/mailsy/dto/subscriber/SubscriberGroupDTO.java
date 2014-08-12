@@ -17,7 +17,7 @@ public class SubscriberGroupDTO implements Serializable {
 
     private String subscriberLastUpdateDate;
 
-    private List<String> subscriberList;
+    private List<SubscriberDTO> subscriberList;
 
     public Long getId() {
         return id;
@@ -51,11 +51,11 @@ public class SubscriberGroupDTO implements Serializable {
         this.subscriberLastUpdateDate = subscriberLastUpdateDate;
     }
 
-    public List<String> getSubscriberList() {
+    public List<SubscriberDTO> getSubscriberList() {
         return subscriberList;
     }
 
-    public void setSubscriberList(List<String> subscriberList) {
+    public void setSubscriberList(List<SubscriberDTO> subscriberList) {
         this.subscriberList = subscriberList;
     }
 }

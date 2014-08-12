@@ -28,7 +28,7 @@
 
 <div class="page-header">
     <h1>
-        <spring:message code="label.subscriber.subscriber_group.add"/>
+        <spring:message code="label.subscriber.subscriber_group.edit"/>
     </h1>
 </div>
 
@@ -36,12 +36,12 @@
 <div class="row">
     <div class="col-xs-12">
 
-        <c:url var="url" value="/main/subscriber_management/saveAddSubscriberGroup"/>
+        <c:url var="url" value="/main/subscriber_management/saveUpdateSubscriberGroup"/>
 
         <!-- #dialog-confirm -->
-        <form:form id="subscriberGroupAddForm"
+        <form:form id="subscriberGroupUpdateForm"
                    class="form-horizontal"
-                   commandName="subscriber"
+                   commandName="subscriberGroupDTO"
                    action="${url}"
                    method="POST" cssClass="form-horizontal">
             <div class="form-group">
@@ -51,13 +51,48 @@
                 <div class="col-sm-9">
                     <form:input
                             id="form-subscribe-group-name"
-                            path="subscribeGroup"
+                            path="subscriberGroupName"
                             value="${subscriberGroupDTO.subscriberGroupName}"
                             placeholder="${subscriberGroupName}"
                             maxlength="50"
                             class="col-xs-10 col-sm-5"/>
                 </div>
             </div>
+
+            </br>
+
+            <h3 class="header smaller lighter blue"><spring:message code="label.subscriber.list"/></h3>
+
+            <table id="table-subscriber" name="table-user" class="table table-striped table-bordered table-hover"
+                   width="500px">
+                <thead>
+                <tr>
+                    <th><spring:message code="label.subscriber.email_address"/></th>
+                    <th><spring:message code="label.subscriber.status"/></th>
+                    <th><spring:message code="label.subscriber.subscriber_date"/></th>
+                    <th><spring:message code="label.action"/></th>
+                </tr>
+                </thead>
+                <tbody>
+                <c:forEach items="${subscriberDTOList}" var="subscriber">
+                    <tr>
+                        <td>${subscriber.emailAddress}</td>
+                        <c:if test="${subscriber.subscriberStatus == 'SUBSCRIBED'}">
+                            <span class="label label-sm label-success">Subscribed</span>
+                        </c:if>
+                        <c:if test="${subscriber.subscriberStatus == 'UNSUBSCRIBED'}">
+                            <span class="label label-sm label-grey">Unsubscribed</span>
+                        </c:if>
+                        <td>
+                            <button id="btnEdit" class="btn btn-xs btn-edit btnEdit" type="button"><i
+                                    class="icon-edit bigger-120"></i></button>
+                            <button id="btnDeleteTrash" class="btn btn-xs btn-danger btnDelete" type="button"><i
+                                    class="icon-trash bigger-120"></i></button>
+                        </td>
+                    </tr>
+                </c:forEach>
+                </tbody>
+            </table>
             <div class="clearfix form-actions">
                 <div class="col-md-offset-3 col-md-9">
                     <button id="id-btn-save" class="btn btn-info" type="submit">
@@ -66,9 +101,9 @@
                     </button>
 
                     &nbsp; &nbsp; &nbsp;
-                    <button id="back_to_user_id_list" class="btn" onclick="backToSubcriberList()" type="reset">
+                    <button id="back_to_subscriber_list" class="btn" onclick="backToSubcriberList()" type="reset">
                         <i class="icon-undo bigger-110"></i>
-                        <spring:message code="label.subscriber.subscriber_group.subscriber_list"/>
+                        <spring:message code="label.subscriber.subscriber_group.subscriber_group_list"/>
                     </button>
                 </div>
             </div>

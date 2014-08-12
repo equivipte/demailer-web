@@ -8,6 +8,7 @@ import com.equivi.mailsy.data.entity.QSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
+import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
@@ -35,6 +36,12 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     private SubscriberDao subscriberDao;
 
     @Resource
+    private SubscriberService subscriberService;
+
+    @Resource
+    private SubscriberConverter subscriberConverter;
+
+    @Resource
     private SubscriberGroupValidator subscriberGroupValidator;
 
     @Override
@@ -55,6 +62,13 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     }
 
     @Override
+    public SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId, int pageNumber, int maxRecords) {
+        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
+        Page<SubscriberEntity> subscriberEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId, pageNumber, maxRecords);
+        return subscriberConverter.convertToSubscribeGroupDTO(subscriberGroupEntity, subscriberEntityList.getContent());
+    }
+
+    @Override
     public void deleteSubscriberGroup(Long subscriberGroupId) {
         subscriberGroupDao.delete(subscriberGroupId);
     }
@@ -63,7 +77,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     public SubscriberGroupEntity saveSubscriberGroup(SubscriberGroupDTO subscriberGroupDTO) {
         SubscriberGroupEntity subscriberGroupEntity = convertToEntity(subscriberGroupDTO);
 
-        subscriberGroupValidator.validate(subscriberGroupEntity,subscriberGroupDTO);
+        subscriberGroupValidator.validate(subscriberGroupEntity, subscriberGroupDTO);
 
         subscriberGroupEntity.setLastUpdatedDateTime(new Date());
         return subscriberGroupDao.save(subscriberGroupEntity);
@@ -122,11 +136,12 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         return subscriberGroupEntity;
     }
 
-    private List<SubscriberEntity> getSubscriberList(SubscriberGroupEntity subscriberGroupEntity, List<String> emailAddressList) {
+    private List<SubscriberEntity> getSubscriberList(SubscriberGroupEntity subscriberGroupEntity, List<SubscriberDTO> subscriberDTOList) {
 
         List<SubscriberEntity> subscriberEntityList = new ArrayList<>();
-        if (emailAddressList != null && !emailAddressList.isEmpty()) {
-            for (String emailAddress : emailAddressList) {
+        if (subscriberDTOList != null && !subscriberDTOList.isEmpty()) {
+            for (SubscriberDTO subscriberDTO : subscriberDTOList) {
+                String emailAddress = subscriberDTO.getEmailAddress();
                 SubscriberEntity subscriberEntity = getSubscriberByEmailAddress(emailAddress);
                 if (subscriberEntity != null) {
                     subscriberEntityList.add(subscriberEntity);
@@ -158,4 +173,6 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         String[] splitEmailDomain = emailAddress.split("@");
         return splitEmailDomain[1];
     }
+
+
 }

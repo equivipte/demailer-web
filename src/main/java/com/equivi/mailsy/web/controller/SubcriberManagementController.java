@@ -108,13 +108,14 @@ public class SubcriberManagementController extends AbstractController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/main/subscriber_management/subscriber_list/{subscriber_group_id}/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView) {
+    @RequestMapping(value = "/main/subscriber_management/subscriber_list/{subscriberGroupId}/{pageNumber}", method = RequestMethod.GET)
+    public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView, @PathVariable Long subscriberGroupId, @PathVariable Integer pageNumber) {
 
-        SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
-
+        SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId,pageNumber,webConfiguration.getMaxRecordsPerPage());
         setPredefinedData(modelAndView, subscriberGroupDTO);
 
+        modelAndView.addObject("subscriberDTOList",subscriberGroupDTO.getSubscriberList());
+        modelAndView.addObject("subscriberGroupDTO",subscriberGroupDTO);
         modelAndView.setViewName("subscriberManagementEditPage");
         return modelAndView;
     }
