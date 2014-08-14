@@ -1,12 +1,13 @@
 package com.equivi.mailsy.service.subsriber;
 
-import com.equivi.mailsy.data.dao.SubscriberDao;
+import com.equivi.mailsy.data.dao.ContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.GenericStatus;
-import com.equivi.mailsy.data.entity.QSubscriberEntity;
+import com.equivi.mailsy.data.entity.QContactEntity;
+import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.QSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
-import com.equivi.mailsy.data.entity.SubscriberEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
@@ -33,7 +34,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     private SubscriberGroupDao subscriberGroupDao;
 
     @Resource
-    private SubscriberDao subscriberDao;
+    private ContactDao subscriberDao;
 
     @Resource
     private SubscriberService subscriberService;
@@ -64,7 +65,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     @Override
     public SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId, int pageNumber, int maxRecords) {
         SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
-        Page<SubscriberEntity> subscriberEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId, pageNumber, maxRecords);
+        Page<ContactEntity> subscriberEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId, pageNumber, maxRecords);
         return subscriberConverter.convertToSubscribeGroupDTO(subscriberGroupEntity, subscriberEntityList.getContent());
     }
 
@@ -100,13 +101,13 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         }
 
         if (filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) != null) {
-            QSubscriberEntity qSubscriberEntity = QSubscriberEntity.subscriberEntity;
-            Predicate emailPredicate = qSubscriberEntity.emailAddress.like("%" + filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) + "%");
+            QSubscriberContactEntity qSubscriberEntity = QSubscriberContactEntity.subscriberContactEntity;
+            Predicate emailPredicate = qSubscriberEntity.contactEntity.emailAddress.like("%" + filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) + "%");
 
-            Iterable<SubscriberEntity> subscriberEntityList = subscriberDao.findAll(emailPredicate);
+            Iterable<ContactEntity> subscriberEntityList = subscriberDao.findAll(emailPredicate);
 
             if (subscriberEntityList.iterator().hasNext()) {
-                for (SubscriberEntity subscriberEntity : subscriberEntityList) {
+                for (ContactEntity subscriberEntity : subscriberEntityList) {
                     booleanMerchantPredicateBuilder.and(qSubscriberGroupEntity.subscribeEntityList.contains(subscriberEntity));
                 }
             } else {
@@ -129,20 +130,20 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         subscriberGroupEntity.setGroupName(subscriberGroupDTO.getSubscriberGroupName());
         subscriberGroupEntity.setStatus(GenericStatus.getStatusByDescription(subscriberGroupDTO.getSubscriberGroupStatus()));
 
-        List<SubscriberEntity> subscriberEntityList = getSubscriberList(subscriberGroupEntity, subscriberGroupDTO.getSubscriberList());
+        List<ContactEntity> subscriberEntityList = getSubscriberList(subscriberGroupEntity, subscriberGroupDTO.getSubscriberList());
 
         subscriberGroupEntity.setSubscribeEntityList(subscriberEntityList);
 
         return subscriberGroupEntity;
     }
 
-    private List<SubscriberEntity> getSubscriberList(SubscriberGroupEntity subscriberGroupEntity, List<SubscriberDTO> subscriberDTOList) {
+    private List<ContactEntity> getSubscriberList(SubscriberGroupEntity subscriberGroupEntity, List<SubscriberDTO> subscriberDTOList) {
 
-        List<SubscriberEntity> subscriberEntityList = new ArrayList<>();
+        List<ContactEntity> subscriberEntityList = new ArrayList<>();
         if (subscriberDTOList != null && !subscriberDTOList.isEmpty()) {
             for (SubscriberDTO subscriberDTO : subscriberDTOList) {
                 String emailAddress = subscriberDTO.getEmailAddress();
-                SubscriberEntity subscriberEntity = getSubscriberByEmailAddress(emailAddress);
+                ContactEntity subscriberEntity = getSubscriberByEmailAddress(emailAddress);
                 if (subscriberEntity != null) {
                     subscriberEntityList.add(subscriberEntity);
                 } else {
@@ -153,20 +154,19 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         return subscriberEntityList;
     }
 
-    private SubscriberEntity getSubscriberByEmailAddress(String emailAddress) {
+    private ContactEntity getSubscriberByEmailAddress(String emailAddress) {
 
-        QSubscriberEntity qSubscriberEntity = QSubscriberEntity.subscriberEntity;
-        return subscriberDao.findOne(qSubscriberEntity.emailAddress.eq(emailAddress));
+        QContactEntity qContactEntity = QContactEntity.contactEntity;
+        return subscriberDao.findOne(qContactEntity.emailAddress.eq(emailAddress));
 
     }
 
-    private SubscriberEntity createNewSubscriber(SubscriberGroupEntity subscriberGroupEntity, String emailAddress) {
-        SubscriberEntity subscriberEntity = new SubscriberEntity();
-        subscriberEntity.setEmailAddress(emailAddress);
-        subscriberEntity.setDomainName(getDomainName(emailAddress));
-        subscriberEntity.setSubscriberGroupEntity(subscriberGroupEntity);
-        subscriberEntity.setSubscribeStatus(SubscribeStatus.SUBSCRIBED);
-        return subscriberEntity;
+    private ContactEntity createNewSubscriber(SubscriberGroupEntity subscriberGroupEntity, String emailAddress) {
+        ContactEntity contactEntity = new ContactEntity();
+        contactEntity.setEmailAddress(emailAddress);
+        contactEntity.setDomainName(getDomainName(emailAddress));
+        contactEntity.setSubscribeStatus(SubscribeStatus.SUBSCRIBED);
+        return contactEntity;
     }
 
     private String getDomainName(String emailAddress) {

@@ -1,7 +1,6 @@
 package com.equivi.mailsy.service.subsriber;
 
 
-import com.equivi.mailsy.data.entity.SubscriberEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import org.springframework.data.domain.Page;

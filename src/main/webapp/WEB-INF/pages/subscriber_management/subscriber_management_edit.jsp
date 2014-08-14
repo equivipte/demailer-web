@@ -59,9 +59,31 @@
                 </div>
             </div>
 
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-subscribe-status">Active</label>
+
+                <div class="col-sm-9">
+                    <input id=form-subscribe-status" checked="" type="checkbox" class="ace ace-switch ace-switch-5" />
+                    <span class="lbl middle"></span>
+                </div>
+            </div>
+
             </br>
 
             <h3 class="header smaller lighter blue"><spring:message code="label.subscriber.list"/></h3>
+
+            <table>
+                <td>
+                    <a href="#" class="add-subscribe-button">
+                        <button class="btn btn-info" type="button">
+                            <i class="icon-plus-sign white bigger-120"></i>
+                            <spring:message code="label.subscriber.add"/>
+                        </button>
+                    </a>
+                </td>
+            </table>
+            </br>
+            </br>
 
             <table id="table-subscriber" name="table-user" class="table table-striped table-bordered table-hover"
                    width="500px">

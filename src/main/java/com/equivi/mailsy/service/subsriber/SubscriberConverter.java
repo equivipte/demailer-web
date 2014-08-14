@@ -1,6 +1,6 @@
 package com.equivi.mailsy.service.subsriber;
 
-import com.equivi.mailsy.data.entity.SubscriberEntity;
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
@@ -13,7 +13,7 @@ import java.util.List;
 public class SubscriberConverter {
 
 
-    public SubscriberGroupDTO convertToSubscribeGroupDTO(SubscriberGroupEntity subscriberGroupEntity, List<SubscriberEntity> subscriberEntityList) {
+    public SubscriberGroupDTO convertToSubscribeGroupDTO(SubscriberGroupEntity subscriberGroupEntity, List<ContactEntity> subscriberEntityList) {
         SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
 
         subscriberGroupDTO.setSubscriberGroupName(subscriberGroupEntity.getGroupName());
@@ -23,10 +23,10 @@ public class SubscriberConverter {
         return subscriberGroupDTO;
     }
 
-    private List<SubscriberDTO> convertToSubscriberDTOList(List<SubscriberEntity> subscriberEntityList) {
+    private List<SubscriberDTO> convertToSubscriberDTOList(List<ContactEntity> contactEntityList) {
         List<SubscriberDTO> subscriberDTOList = new ArrayList<>();
-        if (subscriberEntityList != null && !subscriberEntityList.isEmpty()) {
-            for (SubscriberEntity subscriberEntity : subscriberEntityList) {
+        if (contactEntityList != null && !contactEntityList.isEmpty()) {
+            for (ContactEntity subscriberEntity : contactEntityList) {
                 SubscriberDTO subscriberDTO = new SubscriberDTO();
                 subscriberDTO.setEmailAddress(subscriberEntity.getEmailAddress());
                 subscriberDTO.setFirstName(subscriberEntity.getFirstName());

@@ -1,9 +1,10 @@
 package com.equivi.mailsy.service.subsriber;
 
-import com.equivi.mailsy.data.dao.SubscriberDao;
+import com.equivi.mailsy.data.dao.SubscriberContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
-import com.equivi.mailsy.data.entity.QSubscriberEntity;
-import com.equivi.mailsy.data.entity.SubscriberEntity;
+import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
+import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.google.common.collect.Lists;
 import com.mysema.query.types.Predicate;
@@ -14,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,34 +23,40 @@ import java.util.List;
 public class SubscriberServiceImpl implements SubscriberService {
 
     @Resource
-    private SubscriberDao subscriberDao;
+    private SubscriberContactDao subscriberContactDao;
 
     @Resource
     private SubscriberGroupDao subscriberGroupDao;
 
     @Override
-    public Page<SubscriberEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
+    public Page<ContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
         Pageable pageable = getPageable(pageNumber, maxRecords);
 
         Predicate subscribeGroupQueryPredicate = getSubscriberPredicate(subscriberGroupId);
 
-        Page requestedPage = subscriberDao.findAll(subscribeGroupQueryPredicate, pageable);
+        Page requestedPage = subscriberContactDao.findAll(subscribeGroupQueryPredicate, pageable);
         return requestedPage;
     }
 
     @Override
-    public List<SubscriberEntity> getSubscriberEntityListBySubscriberGroupId(Long subscriberGroupId) {
+    public List<ContactEntity> getSubscriberEntityListBySubscriberGroupId(Long subscriberGroupId) {
         Predicate subscribeGroupQueryPredicate = getSubscriberPredicate(subscriberGroupId);
 
-        return Lists.newArrayList(subscriberDao.findAll(subscribeGroupQueryPredicate));
+        List<SubscriberContactEntity> subscriberContactEntities = Lists.newArrayList(subscriberContactDao.findAll(subscribeGroupQueryPredicate));
+
+        List<ContactEntity> contactEntityList = new ArrayList<>();
+        for (SubscriberContactEntity subscriberContactEntity : subscriberContactEntities) {
+            contactEntityList.add(subscriberContactEntity.getContactEntity());
+        }
+        return contactEntityList;
     }
 
     private Predicate getSubscriberPredicate(Long subscriberGroupId) {
-        QSubscriberEntity qSubscriberEntity = QSubscriberEntity.subscriberEntity;
+        QSubscriberContactEntity qSubscriberContactEntity = QSubscriberContactEntity.subscriberContactEntity;
 
         SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
 
-        return qSubscriberEntity.subscriberGroupEntity.eq(subscriberGroupEntity);
+        return qSubscriberContactEntity.subscriberGroupEntity.eq(subscriberGroupEntity);
     }
 
     private Pageable getPageable(int page, int maxRecords) {
