@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Service(value = "bytePlantVerifierServiceImpl")
 public class BytePlantVerifierServiceImpl implements VerifierService {

@@ -2,13 +2,7 @@ package com.equivi.mailsy.service.subsriber;
 
 import com.equivi.mailsy.data.dao.ContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
-import com.equivi.mailsy.data.entity.ContactEntity;
-import com.equivi.mailsy.data.entity.GenericStatus;
-import com.equivi.mailsy.data.entity.QContactEntity;
-import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
-import com.equivi.mailsy.data.entity.QSubscriberGroupEntity;
-import com.equivi.mailsy.data.entity.SubscribeStatus;
-import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
+import com.equivi.mailsy.data.entity.*;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.mysema.query.BooleanBuilder;

@@ -1,17 +1,16 @@
 package com.equivi.mailsy.util;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
-
 import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
+
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class EmailCrawler extends WebCrawler {
 

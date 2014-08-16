@@ -1,21 +1,19 @@
 package com.equivi.mailsy.service.emailcollector;
 
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
-
-import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
+import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
+import com.equivi.mailsy.shutdown.Hook;
+import com.equivi.mailsy.shutdown.ShutdownService;
+import com.equivi.mailsy.util.EmailCrawler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
-import com.equivi.mailsy.shutdown.Hook;
-import com.equivi.mailsy.shutdown.ShutdownService;
-import com.equivi.mailsy.util.EmailCrawler;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
 public class EmailCollectorServiceImpl implements EmailCollectorService, Runnable {

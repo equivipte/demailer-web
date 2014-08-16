@@ -1,25 +1,17 @@
 package com.equivi.mailsy.service.emailcollector;
 
-import java.util.Properties;
-import java.util.Random;
-
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.util.WebConfigUtil;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.equivi.mailsy.util.EmailCrawler;
-
+import com.equivi.mailsy.util.WebConfigUtil;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import org.springframework.beans.BeansException;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.annotation.Resource;
+import java.util.Random;
 
 public class EmailCrawlerController implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(EmailCrawlerController.class);

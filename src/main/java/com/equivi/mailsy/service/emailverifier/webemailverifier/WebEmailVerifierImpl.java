@@ -1,8 +1,8 @@
 package com.equivi.mailsy.service.emailverifier.webemailverifier;
 
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
+import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.WebConfigUtil;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -17,7 +17,6 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 @Service("webEmailVerifierImpl")
 public class WebEmailVerifierImpl implements VerifierService {

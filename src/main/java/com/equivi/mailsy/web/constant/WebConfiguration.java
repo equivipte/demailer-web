@@ -7,9 +7,7 @@ import com.equivi.mailsy.web.exception.InvalidConfigException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
-import java.util.Properties;
 
 @Component
 public class WebConfiguration implements Serializable {

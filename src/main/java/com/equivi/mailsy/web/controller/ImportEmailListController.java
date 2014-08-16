@@ -1,9 +1,9 @@
 package com.equivi.mailsy.web.controller;
 
 
+import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
-import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.context.SessionUtil;
 import org.springframework.stereotype.Controller;
