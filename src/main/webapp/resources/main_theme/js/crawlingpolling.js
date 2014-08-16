@@ -11,11 +11,14 @@ function Poll() {
 
 	this.start = function start(start, poll, url, scanning, crawlingStatus) {
 		allow = true;
+		allowScanning = true;
 		startUrl = start;
 		pollUrl = poll;
 		scanningUrl = scanning;
 		siteUrl = url;
 		crawlingStatusUrl = crawlingStatus;
+
+		$('.scanning span').text('');
 		
 		$.ajax({
 			url : startUrl,
@@ -60,14 +63,21 @@ function Poll() {
         requestScanning.done(function(message) {
             console.log("Received a scanning url message");
 
-            $('.scanning span').text(message.url);
+            var scannedURL = message.url;
+
+            if(scannedURL != 'FINISH') {
+                $('.scanning span').text(scannedURL);
+
+                allowScanning = true;
+            } else {
+                allowScanning = false;
+            }
+
         });
 
         requestScanning.fail(function(jqXHR, textStatus, errorThrown) {
             console.log("Request scanning - the following error occured: " + textStatus, errorThrown);
-        });
 
-        requestScanning.always(function() {
             allowScanning = true;
         });
 	};

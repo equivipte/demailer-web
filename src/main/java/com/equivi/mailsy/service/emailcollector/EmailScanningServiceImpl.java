@@ -21,7 +21,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 public class EmailScanningServiceImpl implements EmailScanningService, Runnable {
     private static final Logger logger = LoggerFactory.getLogger(EmailScanningServiceImpl.class);
 
-    private final BlockingQueue<DeferredResult<EmailCollectorUrlMessage>> resultUrlQueue = new LinkedBlockingQueue<>();
+    public static final BlockingQueue<DeferredResult<EmailCollectorUrlMessage>> resultUrlQueue = new LinkedBlockingQueue<>();
 
     private Thread thread;
 
@@ -70,10 +70,5 @@ public class EmailScanningServiceImpl implements EmailScanningService, Runnable 
                 thread.start();
             }
         }
-    }
-
-    @Override
-    public BlockingQueue<DeferredResult<EmailCollectorUrlMessage>> getQueue() {
-        return resultUrlQueue;
     }
 }

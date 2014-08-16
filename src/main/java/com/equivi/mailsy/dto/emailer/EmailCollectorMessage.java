@@ -27,7 +27,7 @@ public class EmailCollectorMessage {
 		if(obj == null) return false;
 		if(getClass() != obj.getClass()) return false;
 		final EmailCollectorMessage other = (EmailCollectorMessage) obj;
-		return Objects.equals(this.email, other.email);
+		return Objects.equals(this.email.toLowerCase(), other.email.toLowerCase());
 	}
 
 }

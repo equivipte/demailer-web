@@ -12,6 +12,4 @@ public interface EmailScanningService {
     void getUrlScanningUpdate(DeferredResult<EmailCollectorUrlMessage> result);
 
     void subscribe() throws Exception;
-
-    BlockingQueue<DeferredResult<EmailCollectorUrlMessage>> getQueue();
 }
