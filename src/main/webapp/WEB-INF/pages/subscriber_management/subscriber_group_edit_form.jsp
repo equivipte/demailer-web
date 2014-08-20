@@ -27,10 +27,16 @@
     </div>
 
     <div class="form-group">
-        <label class="col-sm-3 control-label no-padding-right" for="form-subscribe-status">Active</label>
+        <label class="col-sm-3 control-label no-padding-right" for="form-subscribe-status"><spring:message code="ACTIVE"/></label>
 
         <div class="col-sm-9">
-            <input id=form-subscribe-status" checked="" type="checkbox" class="ace ace-switch ace-switch-5"/>
+            <c:if test="${subscriberGroupDTO.subscriberGroupStatus eq 'ACTIVE'}">
+                <input id=subscribe-status" name="subscribe-status" checked="checked" type="checkbox" class="ace ace-switch ace-switch-5"/>
+            </c:if>
+            <c:if test="${subscriberGroupDTO.subscriberGroupStatus eq 'INACTIVE'}">
+                <input id=subscribe-status" name="subscribe-status" type="checkbox" class="ace ace-switch ace-switch-5"/>
+            </c:if>
+
             <span class="lbl middle"></span>
         </div>
     </div>
@@ -51,4 +57,6 @@
             </button>
         </div>
     </div>
+
+    <form:input type="hidden" path="id" name="id" value="${subscriberGroupDTO.id}"/>
 </form:form>

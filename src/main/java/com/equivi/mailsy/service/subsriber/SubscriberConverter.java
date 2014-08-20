@@ -16,6 +16,7 @@ public class SubscriberConverter {
     public SubscriberGroupDTO convertToSubscribeGroupDTO(SubscriberGroupEntity subscriberGroupEntity, List<ContactEntity> subscriberEntityList) {
         SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
 
+        subscriberGroupDTO.setId(subscriberGroupEntity.getId());
         subscriberGroupDTO.setSubscriberGroupName(subscriberGroupEntity.getGroupName());
         subscriberGroupDTO.setSubscriberGroupStatus(subscriberGroupEntity.getStatus().getStatusDescription());
         subscriberGroupDTO.setSubscriberList(convertToSubscriberDTOList(subscriberEntityList));
