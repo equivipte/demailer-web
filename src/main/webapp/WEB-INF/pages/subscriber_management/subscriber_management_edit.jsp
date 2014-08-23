@@ -2,7 +2,6 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
-
 <jsp:include page="../general/error_message.jsp"/>
 
 <script type="text/css">
@@ -28,7 +27,7 @@
 
 <div class="page-header">
     <h1>
-        <spring:message code="label.subscriber.subscriber_group.edit"/>
+        <spring:message code="label.subscriber.subscriber_group.edit"/> : ${subscriberGroupDTO.subscriberGroupName}
     </h1>
 </div>
 
@@ -36,11 +35,12 @@
     <div class="tabbable">
         <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
             <li class="active">
-                <a data-toggle="tab" href="#subscriberGroup">Subscriber Group</a>
+                <a data-toggle="tab" href="#subscriberGroup"><spring:message
+                        code="label.subscriber.subscriber_group"/></a>
             </li>
 
             <li>
-                <a data-toggle="tab" href="#subscriberList">Subscriber List</a>
+                <a data-toggle="tab" href="#subscriberList"><spring:message code="label.subscriber.list"/></a>
             </li>
         </ul>
 

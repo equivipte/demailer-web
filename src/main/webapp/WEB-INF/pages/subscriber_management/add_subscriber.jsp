@@ -7,7 +7,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="blue bigger"><spring:message code="label.change.password"/></h4>
+                <h4 class="blue bigger"><spring:message code="label.subscriber.add"/></h4>
             </div>
             <div id="error-block" class="alert alert-danger" style="display: none">
                 <button type="button" class="close" data-dismiss="alert">
@@ -25,43 +25,7 @@
                 <div class="row">
                     <div class="col-xs-12 col-sm-7">
                         <div class="form-group">
-                            <label for="old-password"><spring:message code="label.old.password"/></label>
-
-                            <div>
-                                <input class="input-large" type="password"
-                                       name="old-password"
-                                       id="old-password"
-                                       maxlength="30"
-                                       placeholder="<spring:message code="label.old.password"/>"/>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-                        <div class="form-group">
-                            <label for="password"><spring:message code="label.password"/></label>
-
-                            <div>
-                                <input class="input-large"
-                                       type="password"
-                                       name="password"
-                                       id="password"
-                                       maxlength="30"
-                                       placeholder="<spring:message code="label.password"/>"/>
-                            </div>
-                        </div>
-                        <div class="space-4"></div>
-
-                        <div class="form-group">
-                            <label for="password-confirmation"><spring:message
-                                    code="label.password_confirmation"/></label>
-
-                            <div>
-                                <input class="input-large"
-                                       type="password"
-                                       name="password-confirmation"
-                                       id="password-confirmation"
-                                       maxlength="30"
-                                       placeholder="<spring:message code="label.password_confirmation"/>"/>
-                            </div>
+                            <input multiple="" type="file" id="id-input-file-3" />
                         </div>
                     </div>
                 </div>
@@ -86,35 +50,35 @@
 
     $(document).ready(function () {
         $("#success_message").css("display", "none");
-    });
-
-    function changePassword() {
-        $('#loading').html('<i class="icon-spinner icon-spin orange bigger-280"></i>');
-
-        // Capture the href from the selected link...
-        var oldPassword = $("#old-password").val();
-        var password = $("#password").val();
-        var password_confirmation = $("#password-confirmation").val();
-
-        $.ajax({
-            url: "${pageContext.request.contextPath}/main/changePassword?old-password=" + oldPassword + "&password=" + password + "&password-confirmation=" + password_confirmation,
-            type: "POST",
-            error: function (XMLHttpRequest, textStatus, errorThrown) {
-                alert("An error has occurred making the request: " + errorThrown);
-
-            },
-            success: function (data) {
-                if (data != 'SUCCESS') {
-                    $("#loading").html("");
-                    $("#error-block").css("display", "none");
-                    $("#error-block").css("display", "block");
-                    $("#error-message").text(data);
-                }
-                else {
-                    window.location.replace("${pageContext.request.contextPath}/login-page?originatedPage=changePasswordPage");
-                }
+        $('#id-input-file-3').ace_file_input({
+            style:'well',
+            btn_choose:'Drop files here or click to choose',
+            btn_change:null,
+            no_icon:'icon-cloud-upload',
+            droppable:true,
+            thumbnail:'small'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+						//Check an example below
+						//or examples/file-upload.html
+						return true;
+					}*/
+            /**,before_remove : function() {
+						return true;
+					}*/
+            ,
+            preview_error : function(filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
             }
-        });
 
-    }
+        }).on('change', function(){
+            //console.log($(this).data('ace_input_files'));
+            //console.log($(this).data('ace_input_method'));
+        });
+    });
 </script>

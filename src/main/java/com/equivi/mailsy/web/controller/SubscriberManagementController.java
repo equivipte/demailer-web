@@ -23,10 +23,14 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
-public class SubcriberManagementController extends AbstractController {
+public class SubscriberManagementController extends AbstractController {
 
     @Resource
     private WebConfiguration webConfiguration;
@@ -107,11 +111,11 @@ public class SubcriberManagementController extends AbstractController {
     @RequestMapping(value = "/main/subscriber_management/subscriber_list/{subscriberGroupId}/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView, @PathVariable Long subscriberGroupId, @PathVariable Integer pageNumber) {
 
-        SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId,pageNumber,webConfiguration.getMaxRecordsPerPage());
+        SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId, pageNumber, webConfiguration.getMaxRecordsPerPage());
         setPredefinedData(modelAndView, subscriberGroupDTO);
 
-        modelAndView.addObject("subscriberDTOList",subscriberGroupDTO.getSubscriberList());
-        modelAndView.addObject("subscriberGroupDTO",subscriberGroupDTO);
+        modelAndView.addObject("subscriberDTOList", subscriberGroupDTO.getSubscriberList());
+        modelAndView.addObject("subscriberGroupDTO", subscriberGroupDTO);
         modelAndView.setViewName("subscriberManagementEditPage");
         return modelAndView;
     }
@@ -138,6 +142,40 @@ public class SubcriberManagementController extends AbstractController {
             }
         } catch (InvalidDataException idex) {
             modelAndView = new ModelAndView("subscriberManagementAddPage");
+
+            modelAndView.addObject("errors", errorMessage.buildServiceValidationErrorMessages(idex, locale));
+        }
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/main/subscriber_management/saveUpdateSubscriberGroup", method = RequestMethod.POST)
+    public ModelAndView saveUpdateSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
+
+        ModelAndView modelAndView;
+        try {
+            if (result.hasErrors()) {
+                modelAndView = new ModelAndView("subscriberManagementEditPage");
+                modelAndView.addObject("errors", errorMessage.buildFormValidationErrorMessages(result, locale));
+            } else {
+
+                String active = httpServletRequest.getParameter("subscribe-status");
+
+                if ("on".equals(active)) {
+                    subscriberGroupDTO.setSubscriberGroupStatus(GenericStatus.ACTIVE.getStatusDescription());
+                } else {
+                    subscriberGroupDTO.setSubscriberGroupStatus(GenericStatus.INACTIVE.getStatusDescription());
+                }
+                SubscriberGroupEntity subscriberGroupEntity = subscriberService.saveSubscriberGroup(subscriberGroupDTO);
+
+                modelAndView = new ModelAndView();
+                String redirectData = "redirect:/main/subscriber_management/1";
+
+                modelAndView.setViewName(redirectData);
+                return modelAndView;
+            }
+        } catch (InvalidDataException idex) {
+            modelAndView = new ModelAndView("subscriberManagementEditPage");
 
             modelAndView.addObject("errors", errorMessage.buildServiceValidationErrorMessages(idex, locale));
         }

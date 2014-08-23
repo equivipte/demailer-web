@@ -66,3 +66,12 @@
     </c:forEach>
     </tbody>
 </table>
+
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button id="back_to_subscriber_list" class="btn" onclick="backToSubcriberList()" type="reset">
+            <i class="icon-undo bigger-110"></i>
+            <spring:message code="label.subscriber.subscriber_group.subscriber_group_list"/>
+        </button>
+    </div>
+</div>
