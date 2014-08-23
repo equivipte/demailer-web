@@ -10,4 +10,6 @@ public interface EmailCollectorService {
 
 	boolean getUpdateCrawlingStatus();
 
+    void cancel();
+
 }

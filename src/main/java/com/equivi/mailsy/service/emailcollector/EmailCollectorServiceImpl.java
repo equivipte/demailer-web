@@ -1,15 +1,23 @@
 package com.equivi.mailsy.service.emailcollector;
 
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.shutdown.Hook;
 import com.equivi.mailsy.shutdown.ShutdownService;
 import com.equivi.mailsy.util.EmailCrawler;
+import com.equivi.mailsy.util.WebConfigUtil;
+import edu.uci.ics.crawler4j.crawler.CrawlConfig;
+import edu.uci.ics.crawler4j.crawler.CrawlController;
+import edu.uci.ics.crawler4j.fetcher.PageFetcher;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
+import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
+import java.util.Random;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,6 +40,7 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	private Hook hook;
 	
 	private ExecutorService executor;
+    private CrawlController controller;
 	
 	@Override
 	public void run() {
@@ -58,8 +67,28 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	public void subscribe(String site) throws Exception { 
 		logger.info("Starting email crawler...");
 
+        String crawlStorageFolder = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_CRAWLING_STORAGE);
+
+        CrawlConfig config = new CrawlConfig();
+
+        Random rand = new Random();
+
+        config.setCrawlStorageFolder(crawlStorageFolder + "/crawler" + rand.nextInt(Integer.MAX_VALUE));
+        config.setPolitenessDelay(1000);
+        config.setMaxPagesToFetch(-1);
+        config.setMaxDepthOfCrawling(20);
+        config.setIncludeHttpsPages(true) ;
+
+        PageFetcher pageFetcher = new PageFetcher(config);
+
+        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
+        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+
+        controller = new CrawlController(config, pageFetcher, robotstxtServer);
+
 		EmailCrawlerController emailCrawlerController = new EmailCrawlerController();
-		emailCrawlerController.setSite(site); 
+		emailCrawlerController.setSite(site);
+        emailCrawlerController.setController(controller);
 		
 		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 		executor.execute(emailCrawlerController); 
@@ -89,13 +118,32 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
     @Override
 	public boolean getUpdateCrawlingStatus() {
 		boolean terminated = executor.isTerminated();
-		
+
 		if(terminated) {
-			resultQueue.clear();
-            EmailCrawler.queue.clear();
-            duplicateQueue.clear();
+            clearQueue();
 		}
-		
+
 		return terminated;
 	}
+
+    @Override
+    public void cancel() {
+        if(executor != null && !executor.isTerminated() && controller != null) {
+            controller.shutdown();
+            controller.waitUntilFinish();
+
+            executor.shutdown();
+
+            clearQueue();
+        }
+    }
+
+    private void clearQueue() {
+        EmailScanningServiceImpl.resultUrlQueue.clear();
+        resultQueue.clear();
+        duplicateQueue.clear();
+        EmailCrawler.queue.clear();
+        EmailCrawler.urlQueue.clear();
+    }
+
 }

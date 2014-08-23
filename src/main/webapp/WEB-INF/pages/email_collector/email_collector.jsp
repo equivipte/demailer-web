@@ -34,8 +34,8 @@
       <div class="rect5"></div>
     </div>
 
-    <span class="scanning">Scanning: <span></span></span>
-
+    <span id="scanning"><span></span></span>
+    <span id="terminating"><span></span></span>
 </div>
 
 <div class="widget-main no-padding">
@@ -108,14 +108,16 @@
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		
+
 		$("#crawling").click(function(){
 			$("#progress").removeClass("hide");
 			$("#progress").addClass("show");
 			$("#url").prop('disabled', true);
 			$("#crawlingsearch").toggleClass("hide");
 			$("#crawlingcancel").toggleClass("hide");
-			
+
+			$("#cancelcrawling").removeAttr('disabled');
+
 			$('.blink').blink();
 			
 			$("#emailTable").find("tr:gt(0)").remove();
@@ -128,6 +130,13 @@
 			var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
 			var poll = new Poll();
 			poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
-		}); 
+		});
+
+		$("#cancelcrawling").click(function() {
+            var poll = new Poll();
+
+            var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+            poll.cancelCrawling(cancelUrl);
+		});
 	});
 </script>

@@ -17,46 +17,28 @@ public class EmailCrawlerController implements Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(EmailCrawlerController.class);
 
 	private String site;
+    private CrawlController controller;
 
     @Override
 	public void run() {
-		String crawlStorageFolder = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_CRAWLING_STORAGE);
-		
-		CrawlConfig config = new CrawlConfig();
-        
-		Random rand = new Random();
-		
-        config.setCrawlStorageFolder(crawlStorageFolder + "/crawler" + rand.nextInt(Integer.MAX_VALUE));
-        config.setPolitenessDelay(1000);
-        config.setMaxPagesToFetch(-1);
-        config.setMaxDepthOfCrawling(20); 
-        config.setIncludeHttpsPages(true) ;
-        
-        PageFetcher pageFetcher = new PageFetcher(config);
-
-        RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-        RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-
-		try {
-			CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-			
-			String[] crawlerDomains = new String[] { site };
-
-	        controller.setCustomData(crawlerDomains);
-	        controller.addSeed(site);
-	        controller.startNonBlocking(EmailCrawler.class, 5);
-	        controller.waitUntilFinish();
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+        try {
+            String[] crawlerDomains = new String[] { site };
+            controller.setCustomData(crawlerDomains);
+            controller.addSeed(site);
+            controller.startNonBlocking(EmailCrawler.class, 5);
+            controller.waitUntilFinish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         logger.info("Finished crawling");
-        
 	}
 
 	public void setSite(String site) {
 		this.site = site;
 	}
-	
+
+    public void setController(CrawlController controller) {
+        this.controller = controller;
+    }
 }

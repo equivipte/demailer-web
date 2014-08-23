@@ -7,7 +7,7 @@ import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
-import com.google.common.collect.Lists;
+import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 
 @Controller
@@ -24,7 +23,8 @@ import java.util.List;
 public class EmailCollectorController {
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
     private static final String SESSION_CRAWLING = "sessionCrawling";
-    
+    private static final String SESSION_LIST_RESULT = "sessionListResult";
+
     @Autowired
     private EmailCollectorService emailCollectorService;
 
@@ -32,22 +32,12 @@ public class EmailCollectorController {
     private EmailScanningService emailScanningService;
     
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-    public String loadNewPage(Model model) {
+    public String loadNewPage(Model model, HttpServletRequest request) {
+        Boolean crawlingStatus = (Boolean) request.getSession().getAttribute(SESSION_CRAWLING);
+
 		model.addAttribute("collector", new EmailCollector());
-		
+
         return EMAIL_COLLECTOR_PAGE;
-    }
-    
-    @RequestMapping(value = "/collect", method = RequestMethod.POST)
-    public String collectEmails(@ModelAttribute("collector") EmailCollector collector, Model map) throws Exception {
-    	map.addAttribute("resultList", getEmailCollectorResults(collector));
-    	
-    	return EMAIL_COLLECTOR_PAGE;
-    }
-    
-    private List<EmailCollector> getEmailCollectorResults(EmailCollector collector) throws Exception {
-        List<EmailCollector> emailCollectorsList = Lists.newArrayList();
-        return emailCollectorsList;
     }
     
     @RequestMapping(value = "async/begin", method = RequestMethod.POST, headers = {"Content-type=application/json"})
@@ -94,5 +84,13 @@ public class EmailCollectorController {
         }
 
         return new EmailCollectorStatusMessage(crawlingStatus);
+    }
+
+    @RequestMapping(value = "cancelCrawling", method = RequestMethod.DELETE)
+    @ResponseStatus(HttpStatus.OK)
+    public void cancelCrawling(HttpServletRequest request) {
+        emailCollectorService.cancel();
+
+        request.getSession().setAttribute(SESSION_CRAWLING, Boolean.FALSE);
     }
 }

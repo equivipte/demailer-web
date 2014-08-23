@@ -6,8 +6,35 @@ var pollUrl;
 var siteUrl;
 var scanningUrl;
 var crawlingStatusUrl;
+var cancelUrl;
 
 function Poll() {
+
+    this.cancelCrawling = function cancelCrawling(cancel) {
+        cancelUrl = cancel;
+
+        $("#scanning").removeClass("show");
+        $("#scanning").addClass("hide");
+
+        $("#terminating").removeClass("hide");
+        $("#terminating").addClass("show");
+
+        $("#cancelcrawling").attr('disabled', 'disabled');
+
+        $('#terminating span').text('Terminating site crawlers...Please wait..');
+
+        $.ajax({
+            url : cancelUrl,
+            type : "DELETE",
+            success : function() {
+                console.log("Able to cancel");
+            },
+            error : function(jqXHR, textStatus, errorThrown) {
+                console.log("Unable to cancel crawling: " + textStatus, errorThrown);
+            }
+        });
+
+    };
 
 	this.start = function start(start, poll, url, scanning, crawlingStatus) {
 		allow = true;
@@ -18,7 +45,13 @@ function Poll() {
 		siteUrl = url;
 		crawlingStatusUrl = crawlingStatus;
 
-		$('.scanning span').text('');
+        $("#terminating").removeClass("show");
+        $("#terminating").addClass("hide");
+
+        $("#scanning").removeClass("hide");
+        $("#scanning").addClass("show");
+
+		$('#scanning span').text('');
 		
 		$.ajax({
 			url : startUrl,
@@ -66,7 +99,7 @@ function Poll() {
             var scannedURL = message.url;
 
             if(scannedURL != 'FINISH') {
-                $('.scanning span').text(scannedURL);
+                $('#scanning span').text('Scanning: ' + scannedURL);
 
                 allowScanning = true;
             } else {
