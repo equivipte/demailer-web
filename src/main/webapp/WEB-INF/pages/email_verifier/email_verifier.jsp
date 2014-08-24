@@ -4,7 +4,6 @@
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 
-
 <c:url var="url" value="/main/emailverifier/imports/upload"/>
 
 <div class="page-header">
@@ -33,7 +32,6 @@
 </div>
 
 <c:if test="${emailVerifierList.size() > 0 }">
-
     <div id="table_result" class="table-responsive">
         <table id="table-transaction" class="table table-striped table-bordered table-hover">
             <thead>
@@ -47,14 +45,8 @@
                 <tr>
                     <td>${email.address}</td>
                     <td>
-                        <c:if test="${email.status == 'Valid'}">
-                            <span class="label label-sm label-success">${email.statusCode}</span>
-                        </c:if>
-                        <c:if test="${email.status == 'Invalid'}">
-                            <span class="label label-sm label-danger">${email.statusCode}</span>
-                        </c:if>
-                        <c:if test="${email.status == 'Unknown'}">
-                            <span class="label label-sm label-grey">${email.statusCode}</span>
+                        <c:if test="${email.status == 'UNAVAILABLE'}">
+                            <span class="label label-sm label-inverse">${email.statusCode}</span>
                         </c:if>
                     </td>
                 </tr>
@@ -88,6 +80,8 @@
     }
 </style>
 
+<script type="text/javascript" src="<c:url value='/resources/js/jquery-blink.js' />"></script>
+
 <script type="text/javascript">
     jQuery(function ($) {
         $('#id-input-file-1 , #id-input-file-2').ace_file_input({
@@ -103,5 +97,49 @@
             //
         });
 
+    });
+
+    jQuery(window).load(function() {
+
+        var exist = $('#table_result').length > 0;
+
+        if(exist) {
+            var table = $("#table-transaction > tbody");
+
+            table.find('tr').each(function (i) {
+                var $tds = $(this).find('td'),email = $tds.eq(0).text();
+
+                $tds.eq(1).html('<span class="label label-sm label-arrowed">Verifying</span>');
+
+                $($tds.eq(1).find('span')).blink({delay: 500});
+
+                var url = "${context}/main/emailverifier";
+
+                $.ajax({
+                    url : url,
+                    type : "POST",
+                    data : "{\"Address\" : " + "\"" + email + "\"}",
+
+                    contentType: 'application/json',
+                    success: function(verifier) {
+                        var status = verifier.Status;
+                        var statusCode = verifier.StatusCode;
+
+                        if('Valid' === status) {
+                            $tds.eq(1).html('<span class="label label-sm label-success">' + statusCode + '</span>');
+                        } else if('Invalid' === status) {
+                            $tds.eq(1).html('<span class="label label-sm label-danger">' + statusCode + '</span>');
+                        } else if('Unknown' === status) {
+                            $tds.eq(1).html('<span class="label label-sm label-grey">' + statusCode + '</span>');
+                        }
+                    },
+                    error: function(jqXHR, textStatus, errorThrown) {
+                        console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
+
+                        $tds.eq(1).html('<span class="label label-sm label-inverse">Not Available</span>');
+                    }
+                });
+            });
+        }
     });
 </script>

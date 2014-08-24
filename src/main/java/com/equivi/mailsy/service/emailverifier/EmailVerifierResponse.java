@@ -14,6 +14,14 @@ public class EmailVerifierResponse {
     @JsonProperty("StatusCode")
     private String statusCode;
 
+    public EmailVerifierResponse() {}
+
+    public EmailVerifierResponse(String address, String status, String statusCode) {
+        this.address = address;
+        this.status = status;
+        this.statusCode = statusCode;
+    }
+
     public String getAddress() {
         return address;
     }

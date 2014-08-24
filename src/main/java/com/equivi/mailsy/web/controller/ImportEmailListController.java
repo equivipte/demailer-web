@@ -6,6 +6,7 @@ import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.context.SessionUtil;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -61,8 +62,11 @@ public class ImportEmailListController {
                 //Get Email address list from file
                 List<String> emailAddressList = excelEmailReader.getEmailAddressList(fileName);
 
-                List<EmailVerifierResponse> emailVerifierResponses = verifierService.filterValidEmail(emailAddressList);
+                List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
 
+                for (String emailAddress : emailAddressList) {
+                    emailVerifierResponses.add(new EmailVerifierResponse(emailAddress, "UNAVAILABLE", "Not Available"));
+                }
 
                 model.addAttribute("emailVerifierList", emailVerifierResponses);
 

@@ -101,8 +101,6 @@
     }
 </style>
 
-<script type="text/javascript" src="<c:url value='/resources/js/jquery-1.9.1.js' />"></script>
-<script type="text/javascript" src="<c:url value='/resources/js/jquery-blink.js' />"></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
@@ -118,8 +116,6 @@
 
 			$("#cancelcrawling").removeAttr('disabled');
 
-			$('.blink').blink();
-			
 			$("#emailTable").find("tr:gt(0)").remove();
 			
 			var url = $("#url").val();
