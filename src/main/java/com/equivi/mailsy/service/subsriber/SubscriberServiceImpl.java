@@ -6,6 +6,9 @@ import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
+import com.equivi.mailsy.dto.contact.ContactDTO;
+import com.equivi.mailsy.service.contact.ContactConverter;
+import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.google.common.collect.Lists;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.domain.Page;
@@ -28,13 +31,19 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Resource
     private SubscriberGroupDao subscriberGroupDao;
 
+    @Resource
+    private ContactManagementService contactManagementService;
+
+    @Resource
+    private ContactConverter contactConverter;
+
     @Override
-    public Page<ContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
-        Pageable pageable = getPageable(pageNumber, maxRecords);
+    public Page<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
+        Pageable pageable = getPageable(pageNumber - 1, maxRecords);
 
-        Predicate subscribeGroupQueryPredicate = getSubscriberPredicate(subscriberGroupId);
+        Predicate subscribeGroupQueryPredicate = getSubscriberContactPredicate(subscriberGroupId);
 
-        Page requestedPage = subscriberContactDao.findAll(subscribeGroupQueryPredicate, pageable);
+        Page<SubscriberContactEntity> requestedPage = subscriberContactDao.findAll(subscribeGroupQueryPredicate, pageable);
         return requestedPage;
     }
 
@@ -49,6 +58,47 @@ public class SubscriberServiceImpl implements SubscriberService {
             contactEntityList.add(subscriberContactEntity.getContactEntity());
         }
         return contactEntityList;
+    }
+
+    @Override
+    public void addSubscriberList(Long subscriberGroupId, List<ContactDTO> contactDTOList) {
+        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
+
+        //Delete all subscriber group entity under this group id
+        subscriberContactDao.delete(getSubscriberContactEntityList(subscriberGroupId));
+
+        if (contactDTOList != null && !contactDTOList.isEmpty()) {
+            for (ContactDTO contactDTO : contactDTOList) {
+                ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(contactDTO.getEmailAddress());
+                if (contactEntity == null) {
+                    contactEntity = contactManagementService.saveContactEntity(contactDTO);
+                }
+                SubscriberContactEntity subscriberContactEntity = new SubscriberContactEntity();
+                subscriberContactEntity.setContactEntity(contactEntity);
+                subscriberContactEntity.setSubscriberGroupEntity(subscriberGroupEntity);
+
+                subscriberContactDao.save(subscriberContactEntity);
+            }
+        }
+    }
+
+
+    private List<SubscriberContactEntity> getSubscriberContactEntityList(Long subscriberGroupId) {
+        Predicate getSubscribeGroupEntityPredicate = getSubscriberPredicate(subscriberGroupId);
+
+        List<SubscriberContactEntity> subscriberContactEntityList = Lists.newArrayList(subscriberContactDao.findAll(getSubscribeGroupEntityPredicate));
+
+
+        return subscriberContactEntityList;
+
+    }
+
+    private Predicate getSubscriberContactPredicate(Long subscriberGroupId) {
+        QSubscriberContactEntity qSubscriberContactEntity = QSubscriberContactEntity.subscriberContactEntity;
+
+        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
+
+        return qSubscriberContactEntity.subscriberGroupEntity.eq(subscriberGroupEntity);
     }
 
     private Predicate getSubscriberPredicate(Long subscriberGroupId) {

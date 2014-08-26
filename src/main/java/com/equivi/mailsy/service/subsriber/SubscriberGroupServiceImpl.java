@@ -59,7 +59,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     @Override
     public SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId, int pageNumber, int maxRecords) {
         SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
-        Page<ContactEntity> subscriberEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId, pageNumber, maxRecords);
+        Page<SubscriberContactEntity> subscriberEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId, pageNumber, maxRecords);
         return subscriberConverter.convertToSubscribeGroupDTO(subscriberGroupEntity, subscriberEntityList.getContent());
     }
 
@@ -126,7 +126,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
 
         List<ContactEntity> subscriberEntityList = getSubscriberList(subscriberGroupEntity, subscriberGroupDTO.getSubscriberList());
 
-        subscriberGroupEntity.setSubscribeEntityList(subscriberEntityList);
+        //subscriberGroupEntity.setSubscribeEntityList(subscriberEntityList);
 
         return subscriberGroupEntity;
     }

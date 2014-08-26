@@ -32,4 +32,12 @@ public class WebConfiguration implements Serializable {
         }
         return emailVerifierLocation;
     }
+
+    public String getSubscriberListLocation() {
+        String emailVerifierLocation = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_IMPORT_LOCATION);
+        if(StringUtils.isBlank(emailVerifierLocation)){
+            throw new InvalidConfigException("Unable to find import email verifier location");
+        }
+        return emailVerifierLocation;
+    }
 }

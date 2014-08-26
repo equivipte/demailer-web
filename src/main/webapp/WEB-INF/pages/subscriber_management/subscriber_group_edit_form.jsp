@@ -40,7 +40,6 @@
             <span class="lbl middle"></span>
         </div>
     </div>
-
     </br>
 
     <div class="clearfix form-actions">

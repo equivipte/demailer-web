@@ -1,0 +1,35 @@
+package com.equivi.mailsy.service.contact;
+
+
+import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.dto.contact.ContactDTO;
+import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
+import org.springframework.data.domain.Page;
+
+import java.util.Map;
+
+public interface ContactManagementService {
+
+    /**
+     * @param searchFilter
+     * @param pageNumber
+     * @param maxRecords
+     * @return Page<SubscriberGroupEntity>
+     */
+    Page<ContactEntity> listContactEntity(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords);
+
+    /**
+     * @param emailAddress
+     * @return
+     */
+    ContactEntity getContactEntityByEmailAddress(final String emailAddress);
+
+    /**
+     *
+     * @param contactDTO
+     * @return ContactEntity
+     */
+    ContactEntity saveContactEntity(final ContactDTO contactDTO);
+}
+
+

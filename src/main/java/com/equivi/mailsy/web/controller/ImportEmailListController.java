@@ -16,10 +16,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.util.List;
 
 
@@ -54,13 +50,11 @@ public class ImportEmailListController {
     private static final String ERROR_UPLOAD_MESSAGE_KEY = "error_upload";
 
     @RequestMapping(value = "/main/emailverifier/imports/upload", method = RequestMethod.POST)
-    public String handleFileUpload(@RequestParam("file") MultipartFile file, final HttpServletRequest servletRequest, Model model) {
+    public String handleFileUpload(final @RequestParam("file") MultipartFile file, final HttpServletRequest servletRequest, final Model model) {
         if (!file.isEmpty()) {
             try {
-                final String fileName = uploadFile(file, servletRequest);
-
                 //Get Email address list from file
-                List<String> emailAddressList = excelEmailReader.getEmailAddressList(fileName);
+                List<String> emailAddressList = excelEmailReader.getEmailAddressList(file);
 
                 List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
 
@@ -80,20 +74,6 @@ public class ImportEmailListController {
         return "emailVerifierPage";
     }
 
-    private String uploadFile(MultipartFile file, HttpServletRequest servletRequest) throws IOException {
-        byte[] bytes = file.getBytes();
-
-        final String fileName = file.getOriginalFilename();
-        final String targetUploadFileName = getTargetFileName(servletRequest, fileName);
-
-        BufferedOutputStream stream =
-                new BufferedOutputStream(new FileOutputStream(new File(targetUploadFileName)));
-        stream.write(bytes);
-        stream.close();
-        return targetUploadFileName;
-    }
-
-
     private final String getTargetFileName(final HttpServletRequest request, final String fileName) {
 
         StringBuilder sbTargetFileName = new StringBuilder();
@@ -105,4 +85,5 @@ public class ImportEmailListController {
         sbTargetFileName.append(fileName);
         return sbTargetFileName.toString();
     }
+
 }
