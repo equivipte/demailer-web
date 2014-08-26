@@ -42,7 +42,6 @@
     <tr>
         <th><spring:message code="label.subscriber.email_address"/></th>
         <th><spring:message code="label.subscriber.status"/></th>
-        <th><spring:message code="label.subscriber.subscriber_date"/></th>
         <th><spring:message code="label.action"/></th>
     </tr>
     </thead>
@@ -50,15 +49,15 @@
     <c:forEach items="${subscriberDTOList}" var="subscriber">
         <tr>
             <td>${subscriber.emailAddress}</td>
-            <c:if test="${subscriber.subscriberStatus == 'SUBSCRIBED'}">
-                <span class="label label-sm label-success">Subscribed</span>
-            </c:if>
-            <c:if test="${subscriber.subscriberStatus == 'UNSUBSCRIBED'}">
-                <span class="label label-sm label-grey">Unsubscribed</span>
-            </c:if>
             <td>
-                <button id="btnEdit" class="btn btn-xs btn-edit btnEdit" type="button"><i
-                        class="icon-edit bigger-120"></i></button>
+                <c:if test="${subscriber.subscribeStatus == 'SUBSCRIBED'}">
+                    <span class="label label-sm label-success">Subscribed</span>
+                </c:if>
+                <c:if test="${subscriber.subscribeStatus == 'UNSUBSCRIBED'}">
+                    <span class="label label-sm label-danger">Unsubscribed</span>
+                </c:if>
+            </td>
+            <td>
                 <button id="btnDeleteTrash" class="btn btn-xs btn-danger btnDelete" type="button"><i
                         class="icon-trash bigger-120"></i></button>
             </td>

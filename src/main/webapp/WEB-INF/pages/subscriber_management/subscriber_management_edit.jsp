@@ -34,24 +34,45 @@
 <div class="col-lg-12">
     <div class="tabbable">
         <ul class="nav nav-tabs padding-12 tab-color-blue background-blue" id="myTab4">
-            <li class="active">
-                <a data-toggle="tab" href="#subscriberGroup"><spring:message
-                        code="label.subscriber.subscriber_group"/></a>
-            </li>
+            <c:if test="${mainScreen eq 'SUBSCRIBER_GROUP'}">
+                <li class="active">
+                    <a data-toggle="tab" href="#subscriberGroup"><spring:message
+                            code="label.subscriber.subscriber_group"/></a>
+                </li>
 
-            <li>
-                <a data-toggle="tab" href="#subscriberList"><spring:message code="label.subscriber.list"/></a>
-            </li>
+                <li>
+                    <a data-toggle="tab" href="#subscriberList"><spring:message code="label.subscriber.list"/></a>
+                </li>
+            </c:if>
+            <c:if test="${mainScreen eq 'SUBSCRIBER_LIST'}">
+                <li>
+                    <a data-toggle="tab" href="#subscriberGroup"><spring:message
+                            code="label.subscriber.subscriber_group"/></a>
+                </li>
+
+                <li class="active">
+                    <a data-toggle="tab" href="#subscriberList"><spring:message code="label.subscriber.list"/></a>
+                </li>
+            </c:if>
         </ul>
 
         <div class="tab-content">
-            <div id="subscriberGroup" class="tab-pane in active">
-                <jsp:include page="subscriber_group_edit_form.jsp"/>
-            </div>
-
-            <div id="subscriberList" class="tab-pane">
-                <jsp:include page="subscriber_list.jsp"/>
-            </div>
+            <c:if test="${mainScreen eq 'SUBSCRIBER_GROUP'}">
+                <div id="subscriberGroup" class="tab-pane in active">
+                    <jsp:include page="subscriber_group_edit_form.jsp"/>
+                </div>
+                <div id="subscriberList" class="tab-pane">
+                    <jsp:include page="subscriber_list.jsp"/>
+                </div>
+            </c:if>
+            <c:if test="${mainScreen eq 'SUBSCRIBER_LIST'}">
+                <div id="subscriberGroup" class="tab-pane">
+                    <jsp:include page="subscriber_group_edit_form.jsp"/>
+                </div>
+                <div id="subscriberList" class="tab-pane  in active">
+                    <jsp:include page="subscriber_list.jsp"/>
+                </div>
+            </c:if>
         </div>
     </div>
 </div>

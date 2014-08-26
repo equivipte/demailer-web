@@ -1,18 +1,25 @@
 package com.equivi.mailsy.service.subsriber;
 
-import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import org.springframework.stereotype.Component;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
 @Component
 public class SubscriberConverter {
 
+    static SimpleDateFormat simpleDateFormat;
+
+    private static final String DATE_FORMAT = "dd/MM/yyyy hh:mm";
+
+    static {
+        simpleDateFormat = new SimpleDateFormat(DATE_FORMAT);
+    }
 
     public SubscriberGroupDTO convertToSubscribeGroupDTO(SubscriberGroupEntity subscriberGroupEntity, List<SubscriberContactEntity> subscriberEntityList) {
         SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
@@ -40,6 +47,7 @@ public class SubscriberConverter {
                 subscriberDTO.setPhone(subscriberContactEntity.getContactEntity().getPhone());
                 subscriberDTO.setZipCode(subscriberContactEntity.getContactEntity().getZipCode());
                 subscriberDTO.setSubscribeStatus(subscriberContactEntity.getContactEntity().getSubscribeStatus().getStatusDescription());
+                subscriberDTO.setSubscribeDate(simpleDateFormat.format(subscriberContactEntity.getCreatedDateTime()));
                 subscriberDTOList.add(subscriberDTO);
             }
         }

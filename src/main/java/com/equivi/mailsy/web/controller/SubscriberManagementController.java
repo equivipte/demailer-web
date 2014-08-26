@@ -7,6 +7,7 @@ import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
+import com.equivi.mailsy.web.constant.PageConstant;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -109,11 +110,15 @@ public class SubscriberManagementController extends AbstractController {
     }
 
     @RequestMapping(value = "/main/subscriber_management/subscriber_list/{subscriberGroupId}/{pageNumber}", method = RequestMethod.GET)
-    public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView, @PathVariable Long subscriberGroupId, @PathVariable Integer pageNumber) {
+    public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView, @PathVariable Long subscriberGroupId, @PathVariable Integer pageNumber, final HttpServletRequest httpServletRequest) {
+
+        String nextPage = httpServletRequest.getParameter(PageConstant.NEXT_PAGE.getPageName());
+
 
         SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId, pageNumber, webConfiguration.getMaxRecordsPerPage());
         setPredefinedData(modelAndView, subscriberGroupDTO);
 
+        modelAndView.addObject("mainScreen", nextPage);
         modelAndView.addObject("subscriberDTOList", subscriberGroupDTO.getSubscriberList());
         modelAndView.addObject("subscriberGroupDTO", subscriberGroupDTO);
         modelAndView.setViewName("subscriberManagementEditPage");
@@ -135,7 +140,7 @@ public class SubscriberManagementController extends AbstractController {
                 SubscriberGroupEntity subscriberGroupEntity = subscriberService.saveSubscriberGroup(subscriberGroupDTO);
 
                 modelAndView = new ModelAndView();
-                String redirectData = "redirect:subscriber_list/" + subscriberGroupEntity.getId().toString() + "/1";
+                String redirectData = "redirect:subscriber_list/" + subscriberGroupEntity.getId().toString() + "/1?nextPage=SUBSCRIBER_GROUP";
 
                 modelAndView.setViewName(redirectData);
                 return modelAndView;

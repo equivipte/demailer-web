@@ -52,7 +52,7 @@ public class ImportEmailSubscriberController {
                 subscriberService.addSubscriberList(Long.valueOf(subscriberGroupId), contactDTOList);
 
 
-                String redirectData = "redirect:/main/subscriber_management/subscriber_list/" + subscriberGroupId + "/1";
+                String redirectData = "redirect:/main/subscriber_management/subscriber_list/" + subscriberGroupId + "/1?nextPage=SUBSCRIBER_LIST";
 
                 modelAndView.setViewName(redirectData);
 

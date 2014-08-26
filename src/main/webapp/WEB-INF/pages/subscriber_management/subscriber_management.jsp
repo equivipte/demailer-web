@@ -152,7 +152,7 @@
     });
 
     function redirectToEdit(id) {
-        window.location.replace("${context}/main/subscriber_management/subscriber_list/"+id+"/1");
+        window.location.replace("${context}/main/subscriber_management/subscriber_list/"+id+"/1?nextPage=SUBSCRIBER_GROUP");
     }
 
     function deleteSubscriberGroup(id) {

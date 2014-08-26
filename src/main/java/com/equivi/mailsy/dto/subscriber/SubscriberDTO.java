@@ -26,6 +26,8 @@ public class SubscriberDTO implements Serializable {
 
     private String subscribeStatus;
 
+    private String subscribeDate;
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -104,5 +106,13 @@ public class SubscriberDTO implements Serializable {
 
     public void setSubscribeStatus(String subscribeStatus) {
         this.subscribeStatus = subscribeStatus;
+    }
+
+    public String getSubscribeDate() {
+        return subscribeDate;
+    }
+
+    public void setSubscribeDate(String subscribeDate) {
+        this.subscribeDate = subscribeDate;
     }
 }
