@@ -6,6 +6,8 @@ import java.io.Serializable;
 public class SubscriberDTO implements Serializable {
     private static final long serialVersionUID = 4800669550227187925L;
 
+    private String id;
+
     private String emailAddress;
 
     private String firstName;
@@ -27,6 +29,14 @@ public class SubscriberDTO implements Serializable {
     private String subscribeStatus;
 
     private String subscribeDate;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getEmailAddress() {
         return emailAddress;

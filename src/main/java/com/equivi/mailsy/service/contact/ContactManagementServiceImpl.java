@@ -60,6 +60,14 @@ public class ContactManagementServiceImpl implements ContactManagementService {
         return contactDao.save(contactEntity);
     }
 
+    @Override
+    public void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus) {
+        ContactEntity contactEntity = contactDao.findOne(contactId);
+        contactEntity.setSubscribeStatus(subscribeStatus);
+
+        contactDao.save(contactEntity);
+    }
+
 
     private Predicate getContactPredicateByEmailAddress(String emailAddress) {
         QContactEntity contactPredicate = QContactEntity.contactEntity;

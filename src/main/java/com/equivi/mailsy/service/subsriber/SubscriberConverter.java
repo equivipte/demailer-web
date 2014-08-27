@@ -37,6 +37,7 @@ public class SubscriberConverter {
         if (contactEntityList != null && !contactEntityList.isEmpty()) {
             for (SubscriberContactEntity subscriberContactEntity : contactEntityList) {
                 SubscriberDTO subscriberDTO = new SubscriberDTO();
+                subscriberDTO.setId(subscriberContactEntity.getContactEntity().getId().toString());
                 subscriberDTO.setEmailAddress(subscriberContactEntity.getContactEntity().getEmailAddress());
                 subscriberDTO.setFirstName(subscriberContactEntity.getContactEntity().getFirstName());
                 subscriberDTO.setLastName(subscriberContactEntity.getContactEntity().getLastName());

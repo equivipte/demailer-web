@@ -2,6 +2,7 @@ package com.equivi.mailsy.service.contact;
 
 
 import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import org.springframework.data.domain.Page;
@@ -25,11 +26,16 @@ public interface ContactManagementService {
     ContactEntity getContactEntityByEmailAddress(final String emailAddress);
 
     /**
-     *
      * @param contactDTO
      * @return ContactEntity
      */
     ContactEntity saveContactEntity(final ContactDTO contactDTO);
+
+
+    /**
+     * @param contactId
+     */
+    void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus);
 }
 
 

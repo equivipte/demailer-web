@@ -2,6 +2,10 @@
 <%@ taglib prefix="security" uri="http://www.springframework.org/security/tags" %>
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 
+<c:set var="context" value="${pageContext.request.contextPath}"/>
+<c:set var="subscriberGroupId" value="${subscriberGroupDTO.id}"/>
+<jsp:include page="../general/delete_confirmation.jsp"></jsp:include>
+
 </br>
 <table>
     <td>
@@ -58,8 +62,28 @@
                 </c:if>
             </td>
             <td>
-                <button id="btnDeleteTrash" class="btn btn-xs btn-danger btnDelete" type="button"><i
-                        class="icon-trash bigger-120"></i></button>
+                <div class="btn-group">
+                    <button data-toggle="dropdown" class="btn btn-xs btn-info dropdown-toggle">
+                        Action
+                        <span class="icon-caret-down icon-on-right"></span>
+                    </button>
+
+                    <ul class="dropdown-menu dropdown-default">
+                        <li>
+                            <c:if test="${subscriber.subscribeStatus == 'SUBSCRIBED'}">
+                                <a href="#" id="${subscriber.id}" class="unsubscribeContact">Unsubscribe</a>
+                            </c:if>
+                            <c:if test="${subscriber.subscribeStatus == 'UNSUBSCRIBED'}">
+                                <a href="#" id="${subscriber.id}" class="subscribeContact">Subscribe</a>
+                            </c:if>
+                        </li>
+
+                        <li>
+                            <a href="#" id="${subscriber.id}" class="deleteContact">Delete</a>
+                        </li>
+                    </ul>
+                </div>
+                <!-- /btn-group -->
             </td>
         </tr>
     </c:forEach>
@@ -74,3 +98,45 @@
         </button>
     </div>
 </div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".unsubscribeContact").click(function (event) {
+            var subscriberId = $(this).attr("id");
+            unsubscribeContact(subscriberId, "UNSUBSCRIBED")
+        });
+        $(".subscribeContact").click(function (event) {
+            var subscriberId = $(this).attr("id");
+            unsubscribeContact(subscriberId, "SUBSCRIBED")
+        });
+
+        $(".deleteUser").click(function (event) {
+            var userId = $(this).attr("id");
+            deleteUser(userId)
+        });
+
+    });
+
+    function unsubscribeContact(id, status) {
+        var href = "${context}/main/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
+        $.ajax({
+            url: "${context}/main/subscriber_management/change_subscribe_status/" + status + "/" + id + "/${subscriberGroupId}",
+            type: "PUT",
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("An error has occurred making the request: " + errorThrown);
+
+            },
+            success: function (data) {
+                if (data != 'SUCCESS') {
+                    alert("<spring:message code="general.exception.delete"/>");
+                }
+                else {
+                    //Do stuff here on success such as modal info
+                    window.location.replace(href);
+                }
+
+            }
+        });
+    }
+
+</script>

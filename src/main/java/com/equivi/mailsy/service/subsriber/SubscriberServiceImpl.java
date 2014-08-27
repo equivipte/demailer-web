@@ -34,8 +34,6 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Resource
     private ContactManagementService contactManagementService;
 
-    @Resource
-    private ContactConverter contactConverter;
 
     @Override
     public Page<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
@@ -81,7 +79,6 @@ public class SubscriberServiceImpl implements SubscriberService {
             }
         }
     }
-
 
     private List<SubscriberContactEntity> getSubscriberContactEntityList(Long subscriberGroupId) {
         Predicate getSubscribeGroupEntityPredicate = getSubscriberPredicate(subscriberGroupId);

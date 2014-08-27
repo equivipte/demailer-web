@@ -2,8 +2,10 @@ package com.equivi.mailsy.web.controller;
 
 
 import com.equivi.mailsy.data.entity.GenericStatus;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
+import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
@@ -18,6 +20,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -41,6 +44,9 @@ public class SubscriberManagementController extends AbstractController {
 
     @Resource
     private SubscriberGroupService subscriberService;
+
+    @Resource
+    private ContactManagementService contactManagementService;
 
     private static final String DATE_TIME_FORMAT = "dd/MM/YY HH:mm:ss";
 
@@ -125,6 +131,15 @@ public class SubscriberManagementController extends AbstractController {
         return modelAndView;
     }
 
+
+    @RequestMapping(value = "/main/subscriber_management/change_subscribe_status/{subscribeStatus}/{subscriberId}/{subscriberGroupId}", method = RequestMethod.PUT)
+    @ResponseBody
+    public String unsubscribeContact(@PathVariable String subscribeStatus, @PathVariable String subscriberId, @PathVariable String subscriberGroupId) {
+
+        contactManagementService.subscribeUnsubscribeContact(Long.valueOf(subscriberId), SubscribeStatus.getStatusByDescription(subscribeStatus));
+
+        return "SUCCESS";
+    }
 
     @RequestMapping(value = "/main/subscriber_management/saveAddSubscriberGroup", method = RequestMethod.POST)
     public ModelAndView saveAddSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
