@@ -1,9 +1,12 @@
 package com.equivi.mailsy.service.contact;
 
 import com.equivi.mailsy.data.dao.ContactDao;
+import com.equivi.mailsy.data.dao.SubscriberContactDao;
 import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.QContactEntity;
+import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
+import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.mysema.query.types.Predicate;
@@ -18,6 +21,9 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Resource
     private ContactDao contactDao;
+
+    @Resource
+    private SubscriberContactDao subscriberContactDao;
 
     @Override
     public Page<ContactEntity> listContactEntity(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
@@ -66,6 +72,24 @@ public class ContactManagementServiceImpl implements ContactManagementService {
         contactEntity.setSubscribeStatus(subscribeStatus);
 
         contactDao.save(contactEntity);
+    }
+
+    @Override
+    public void deleteContact(Long contactId) {
+        //Delete subscriber contact entity
+        Iterable<SubscriberContactEntity> subscriberContactEntities = subscriberContactDao.findAll(getSubscriberContactEntity(contactId));
+
+        if (subscriberContactEntities != null && subscriberContactEntities.iterator().hasNext()) {
+            subscriberContactDao.delete(subscriberContactEntities);
+        }
+        contactDao.delete(contactId);
+    }
+
+    private Predicate getSubscriberContactEntity(Long contactId) {
+        QSubscriberContactEntity subscriberContactPredicate = QSubscriberContactEntity.subscriberContactEntity;
+        ContactEntity contactEntity = contactDao.findOne(contactId);
+
+        return subscriberContactPredicate.contactEntity.eq(contactEntity);
     }
 
 

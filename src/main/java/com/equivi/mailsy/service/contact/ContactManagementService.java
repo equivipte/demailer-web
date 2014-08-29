@@ -36,6 +36,13 @@ public interface ContactManagementService {
      * @param contactId
      */
     void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus);
+
+
+    /**
+     *
+     * @param contactId
+     */
+    void deleteContact(final Long contactId);
 }
 
 

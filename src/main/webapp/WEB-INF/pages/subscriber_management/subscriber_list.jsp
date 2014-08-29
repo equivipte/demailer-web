@@ -110,9 +110,9 @@
             unsubscribeContact(subscriberId, "SUBSCRIBED")
         });
 
-        $(".deleteUser").click(function (event) {
-            var userId = $(this).attr("id");
-            deleteUser(userId)
+        $(".deleteContact").click(function (event) {
+            var contactId = $(this).attr("id");
+            deleteContact(contactId)
         });
 
     });
@@ -122,6 +122,28 @@
         $.ajax({
             url: "${context}/main/subscriber_management/change_subscribe_status/" + status + "/" + id + "/${subscriberGroupId}",
             type: "PUT",
+            error: function (XMLHttpRequest, textStatus, errorThrown) {
+                alert("An error has occurred making the request: " + errorThrown);
+
+            },
+            success: function (data) {
+                if (data != 'SUCCESS') {
+                    alert("<spring:message code="general.exception.delete"/>");
+                }
+                else {
+                    //Do stuff here on success such as modal info
+                    window.location.replace(href);
+                }
+
+            }
+        });
+    }
+
+    function deleteContact(id) {
+        var href = "${context}/main/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
+        $.ajax({
+            url: "${context}/main/subscriber_management/delete_subscriber/" + id + "",
+            type: "DELETE",
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("An error has occurred making the request: " + errorThrown);
 

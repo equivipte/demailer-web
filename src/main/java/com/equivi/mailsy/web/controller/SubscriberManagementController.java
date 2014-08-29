@@ -141,6 +141,15 @@ public class SubscriberManagementController extends AbstractController {
         return "SUCCESS";
     }
 
+    @RequestMapping(value = "/main/subscriber_management/delete_subscriber/{subscriberId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteContact(@PathVariable String subscriberId) {
+
+        contactManagementService.deleteContact(Long.valueOf(subscriberId));
+
+        return "SUCCESS";
+    }
+
     @RequestMapping(value = "/main/subscriber_management/saveAddSubscriberGroup", method = RequestMethod.POST)
     public ModelAndView saveAddSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
 

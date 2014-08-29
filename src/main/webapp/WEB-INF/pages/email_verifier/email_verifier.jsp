@@ -16,11 +16,7 @@
     <div class="col-xs-12">
         <form method="POST" enctype="multipart/form-data" action="${url}">
             <div class="form-group">
-                <div class="col-sm2">
-                    <label class="col-sm-2 padding-right"><spring:message
-                            code="label.import.email.file"></spring:message></label>
-                </div>
-                <div class="col-sm-3">
+                <div class="col-sm-5" align="right">
                     <input type="file" id="id-input-file-2" contenteditable="false" name="file" width="30px"/>
                     <button id="id-btn-upload" class="btn btn-xs btn-info no-padding-left" type="submit">
                         <spring:message code="label.import.upload"></spring:message>
@@ -30,7 +26,8 @@
         </form>
     </div>
 </div>
-
+</br>
+</br>
 <c:if test="${emailVerifierList.size() > 0 }">
     <div id="table_result" class="table-responsive">
         <table id="table-transaction" class="table table-striped table-bordered table-hover">
@@ -83,6 +80,39 @@
 <script type="text/javascript" src="<c:url value='/resources/js/jquery-blink.js' />"></script>
 
 <script type="text/javascript">
+    $(document).ready(function () {
+        $("#success_message").css("display", "none");
+        $('#id-input-file-2').ace_file_input({
+            style: 'well',
+            btn_choose: 'Drop your excel file here or click to choose',
+            btn_change: null,
+            no_icon: 'icon-cloud-upload',
+            droppable: true,
+            thumbnail: 'large'//large | fit
+            //,icon_remove:null//set null, to hide remove/reset button
+            /**,before_change:function(files, dropped) {
+						//Check an example below
+						//or examples/file-upload.html
+						return true;
+					}*/
+            /**,before_remove : function() {
+						return true;
+					}*/,
+            preview_error: function (filename, error_code) {
+                //name of the file that failed
+                //error_code values
+                //1 = 'FILE_LOAD_FAILED',
+                //2 = 'IMAGE_LOAD_FAILED',
+                //3 = 'THUMBNAIL_FAILED'
+                //alert(error_code);
+            }
+
+        }).on('change', function () {
+            //console.log($(this).data('ace_input_files'));
+            //console.log($(this).data('ace_input_method'));
+        });
+    });
+
     jQuery(function ($) {
         $('#id-input-file-1 , #id-input-file-2').ace_file_input({
             no_file: 'No File ...',

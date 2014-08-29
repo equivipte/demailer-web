@@ -60,11 +60,11 @@
         $("#success_message").css("display", "none");
         $('#id-input-file-2').ace_file_input({
             style: 'well',
-            btn_choose: 'Drop your excel files here or click to choose',
+            btn_choose: 'Drop your excel file here or click to choose',
             btn_change: null,
             no_icon: 'icon-cloud-upload',
             droppable: true,
-            thumbnail: 'small'//large | fit
+            thumbnail: 'large'//large | fit
             //,icon_remove:null//set null, to hide remove/reset button
             /**,before_change:function(files, dropped) {
 						//Check an example below
