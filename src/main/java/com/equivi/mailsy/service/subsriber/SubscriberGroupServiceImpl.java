@@ -2,7 +2,13 @@ package com.equivi.mailsy.service.subsriber;
 
 import com.equivi.mailsy.data.dao.ContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
-import com.equivi.mailsy.data.entity.*;
+import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.data.entity.GenericStatus;
+import com.equivi.mailsy.data.entity.QContactEntity;
+import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
+import com.equivi.mailsy.data.entity.SubscriberContactEntity;
+import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.mysema.query.BooleanBuilder;
@@ -86,26 +92,23 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
 
     private Predicate getSubscribeGroupQueryPredicate(Map<SubscriberGroupSearchFilter, String> filterMap) {
 
-        QSubscriberGroupEntity qSubscriberGroupEntity = QSubscriberGroupEntity.subscriberGroupEntity;
+        QSubscriberContactEntity qSubscriberContactEntity = QSubscriberContactEntity.subscriberContactEntity;
         BooleanBuilder booleanMerchantPredicateBuilder = new BooleanBuilder();
 
         if (filterMap.get(SubscriberGroupSearchFilter.SUBSCRIBER_GROUP_NAME) != null) {
-            booleanMerchantPredicateBuilder.or(qSubscriberGroupEntity.groupName.like("%" + filterMap.get(SubscriberGroupSearchFilter.SUBSCRIBER_GROUP_NAME) + "%"));
+            booleanMerchantPredicateBuilder.or(qSubscriberContactEntity.subscriberGroupEntity.groupName.like("%" + filterMap.get(SubscriberGroupSearchFilter.SUBSCRIBER_GROUP_NAME) + "%"));
 
         }
 
         if (filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) != null) {
-            QSubscriberContactEntity qSubscriberEntity = QSubscriberContactEntity.subscriberContactEntity;
-            Predicate emailPredicate = qSubscriberEntity.contactEntity.emailAddress.like("%" + filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) + "%");
+            Predicate emailPredicate = qSubscriberContactEntity.contactEntity.emailAddress.like("%" + filterMap.get(SubscriberGroupSearchFilter.EMAIL_ADDRESS) + "%");
 
             Iterable<ContactEntity> subscriberEntityList = subscriberDao.findAll(emailPredicate);
 
             if (subscriberEntityList.iterator().hasNext()) {
                 for (ContactEntity subscriberEntity : subscriberEntityList) {
-                    booleanMerchantPredicateBuilder.and(qSubscriberGroupEntity.subscribeEntityList.contains(subscriberEntity));
+                    booleanMerchantPredicateBuilder.and(qSubscriberContactEntity.contactEntity.eq(subscriberEntity));
                 }
-            } else {
-                booleanMerchantPredicateBuilder.and(qSubscriberGroupEntity.subscribeEntityList.isEmpty());
             }
 
         }
