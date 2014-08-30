@@ -55,7 +55,7 @@
            </div>
            <div id="crawlingcancel" class="hide">
            		<button id="cancelcrawling" class="btn btn-sm btn-info">
-           			<spring:message code="label.cancel"/>
+           			<spring:message code="label.stop"/>
            		</button>
            </div>
 	    </td>
@@ -86,7 +86,7 @@
     </a>
 
     <a href="#">
-        <button class="btn btn-info" id="print-receipt-btn">
+        <button class="btn btn-info" id="verify-emails-btn">
             <i class="icon-ok white bigger-120"></i>
             <spring:message code="label.common.verify_email_list"/>
         </button>
@@ -133,6 +133,34 @@
 
             var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
             poll.cancelCrawling(cancelUrl);
+		});
+
+		$("#verify-emails-btn").click(function() {
+		    var table = $("#emailTable > tbody");
+
+
+            var emails = [];
+
+            table.find('tr').each(function (i) {
+                var $tds = $(this).find('td'),email = $tds.eq(0).text();
+
+                emails.push(email);
+
+            });
+
+            $.ajax({
+                url : "${context}/main/emailcollector/verifyEmail",
+                type : "POST",
+                data : JSON.stringify(emails),
+                contentType: 'application/json',
+                success: function(verifier) {
+                    window.location.href = "${context}/main/emailverifier/verify";
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
+                }
+            });
+
 		});
 	});
 </script>

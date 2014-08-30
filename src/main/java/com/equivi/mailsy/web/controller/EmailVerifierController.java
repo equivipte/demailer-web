@@ -3,12 +3,15 @@ package com.equivi.mailsy.web.controller;
 import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
+import com.google.common.collect.Lists;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 
 @Controller
@@ -29,4 +32,19 @@ public class EmailVerifierController {
         return verifierService.getEmailAddressStatus(emailVerifierResponse.getAddress());
     }
 
+    @RequestMapping(value = "/main/emailverifier/verify", method = RequestMethod.GET)
+    public String verifyEmail(HttpServletRequest request, Model model) {
+        List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
+        List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
+
+        if(resultEmails != null && !resultEmails.isEmpty()) {
+            for (String email : resultEmails) {
+                emailVerifierResponses.add(new EmailVerifierResponse(email, "UNAVAILABLE", "Not Available"));
+            }
+
+            model.addAttribute("emailVerifierList", emailVerifierResponses);
+        }
+
+        return "emailVerifierPage";
+    }
 }

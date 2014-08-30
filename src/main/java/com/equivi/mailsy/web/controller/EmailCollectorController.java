@@ -7,6 +7,7 @@ import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
@@ -23,7 +26,8 @@ import javax.servlet.http.HttpServletRequest;
 public class EmailCollectorController {
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
     private static final String SESSION_CRAWLING = "sessionCrawling";
-    private static final String SESSION_LIST_RESULT = "sessionListResult";
+
+    public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
 
     @Autowired
     private EmailCollectorService emailCollectorService;
@@ -46,12 +50,15 @@ public class EmailCollectorController {
     	emailCollectorService.subscribe(emailCollector.getSite());
         emailScanningService.subscribe();
 
+        List<String> emailsResult = Lists.newArrayList();
+
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.TRUE);
+        request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
 
     }
     
     @RequestMapping(value = "async/update", method = RequestMethod.GET)
-    public @ResponseBody DeferredResult<EmailCollectorMessage> getUpdate() {
+    public @ResponseBody DeferredResult<EmailCollectorMessage> getUpdate(HttpServletRequest request) {
     	final DeferredResult<EmailCollectorMessage> result = new DeferredResult<>();
     	emailCollectorService.getUpdate(result);
         return result;
@@ -92,5 +99,11 @@ public class EmailCollectorController {
         emailCollectorService.cancel();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.FALSE);
+    }
+
+    @RequestMapping(value = "verifyEmail", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void verifyEmail(@RequestBody ArrayList<String> emails, HttpServletRequest request) {
+        request.getSession().setAttribute(SESSION_RESULT_EMAILS, emails);
     }
 }
