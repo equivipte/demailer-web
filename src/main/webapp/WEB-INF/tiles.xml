@@ -80,6 +80,22 @@
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management.jsp"/>
     </definition>
 
+    <definition name="campaignManagementAddPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management_add.jsp"/>
+    </definition>
+
+    <definition name="campaignManagementEditPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management_edit.jsp"/>
+    </definition>
+
     <!--Subcriber Management Page-->
     <definition name="subscriberManagementPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>

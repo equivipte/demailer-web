@@ -3,8 +3,6 @@ package com.equivi.mailsy.web.controller;
 import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.subsriber.SubscriberService;
-import com.equivi.mailsy.web.constant.WebConfiguration;
-import com.equivi.mailsy.web.context.SessionUtil;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,12 +17,6 @@ import java.util.List;
 
 @Controller
 public class ImportEmailSubscriberController {
-
-    @Resource
-    private SessionUtil sessionUtil;
-
-    @Resource
-    private WebConfiguration webConfiguration;
 
     @Resource
     private ExcelEmailReader excelEmailReader;

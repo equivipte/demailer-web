@@ -5,6 +5,7 @@ import com.equivi.mailsy.data.entity.GenericStatus;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
+import com.equivi.mailsy.service.constant.ConstantProperty;
 import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
@@ -48,12 +49,10 @@ public class SubscriberManagementController extends AbstractController {
     @Resource
     private ContactManagementService contactManagementService;
 
-    private static final String DATE_TIME_FORMAT = "dd/MM/YY HH:mm:ss";
-
     private static SimpleDateFormat sdf;
 
     static {
-        sdf = new SimpleDateFormat(DATE_TIME_FORMAT);
+        sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
     }
 
     @RequestMapping(value = "/main/subscriber_management", method = RequestMethod.GET)

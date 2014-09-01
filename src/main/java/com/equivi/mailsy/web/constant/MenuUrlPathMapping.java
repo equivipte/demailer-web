@@ -6,7 +6,7 @@ public enum MenuUrlPathMapping {
     MENU_EMAIL_COLLECTOR("/main/emailcollector", MenuConstant.EMAIL_COLLECTOR, MenuConstant.EMAIL_COLLECTOR),
     MENU_EMAIL_VERIFIER("/main/emailverifier", MenuConstant.EMAIL_VERIFIER, MenuConstant.EMAIL_VERIFIER),
     MENU_CONTACT_MANAGEMENT("/main/subscriber_management", MenuConstant.SUBSCRIBER_MANAGEMENT, MenuConstant.SUBSCRIBER_MANAGEMENT),
-    MENU_CAMPAIGN_MANAGEMENT("/main/campaignmanagement", MenuConstant.CAMPAIGN_MANAGEMENT, MenuConstant.CAMPAIGN_MANAGEMENT),
+    MENU_CAMPAIGN_MANAGEMENT("/main/campaign_management", MenuConstant.CAMPAIGN_MANAGEMENT, MenuConstant.CAMPAIGN_MANAGEMENT),
     MENU_REPORT("/main/report", MenuConstant.REPORT, MenuConstant.REPORT),
     MENU_USER_MANAGEMENT("/main/admin/users", MenuConstant.MENU_ADMINISTRATION, MenuConstant.SUB_MENU_USER_MANAGEMENT);
 

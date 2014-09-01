@@ -44,7 +44,7 @@
         <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
         <li id="campaign-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/campaignmanagement">
+            <a href="${pageContext.request.contextPath}/main/campaign_management/1">
                 <i class="icon-envelope"></i>
                 <spring:message code="label.menu.campaign"/>
             </a>
