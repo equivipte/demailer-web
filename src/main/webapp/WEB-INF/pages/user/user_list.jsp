@@ -75,13 +75,17 @@
                     </td>
                     <td>
                         <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                            <button class="btn btn-xs btn-info" onclick="redirectToEdit(${user.id})">
-                                <i class="icon-edit bigger-120"></i>
-                            </button>
-
-                            <button class="btn btn-xs btn-danger" onclick="deleteUser(${user.id})">
-                                <i class="icon-trash bigger-120"></i>
-                            </button>
+                            <a id="${user.id}" href="#" class="tooltip-success green editUser"
+                               data-rel="tooltip"
+                               title="<spring:message code="label.edit"/>">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            <a id="${user.id}" href="#" class="tooltip-error red deleteUser"
+                               data-rel="tooltip"
+                               class="deleteUser"
+                               title="<spring:message code="label.delete"/>">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
                         </div>
                         <div class="visible-xs visible-sm hidden-md hidden-lg">
                             <div class="inline position-relative">
@@ -178,6 +182,7 @@
 
 
     function redirectToEdit(id) {
+        alert()
         window.location.replace("${context}/main/admin/user/" + id);
     }
 

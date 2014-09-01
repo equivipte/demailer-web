@@ -84,6 +84,7 @@ public class CampaignManagementController extends AbstractController {
             for (CampaignEntity campaignEntity : content) {
                 CampaignDTO campaignDTO = new CampaignDTO();
                 campaignDTO.setEmaiSubject(campaignEntity.getEmaiSubject());
+                campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
                 campaignDTO.setLastUpdateDate(sdf.format(campaignEntity.getLastUpdatedDateTime()));
                 campaignDTOList.add(campaignDTO);
             }

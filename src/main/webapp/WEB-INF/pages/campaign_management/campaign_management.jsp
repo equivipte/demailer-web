@@ -24,6 +24,7 @@
 <thead>
 <tr>
     <th><spring:message code="label.campaign.subject"/></th>
+    <th><spring:message code="label.campaign.status"/></th>
     <th><spring:message code="label.last_updated"/></th>
     <th><spring:message code="label.action"/></th>
 </tr>
@@ -32,48 +33,91 @@
     <tbody>
     <c:forEach items="${campaignDTOList}" var="campaign">
         <tr>
-            <td>${campaign.subjectName}</td>
-            <td>${campaign.lastUpdatedDate}</td>
+            <td>${campaign.emaiSubject}</td>
             <td>
-                <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                    <button class="btn btn-xs btn-info" onclick="redirectToEdit(${campaignDTO.id})">
-                        <i class="icon-edit bigger-120"></i>
-                    </button>
-
-                    <button class="btn btn-xs btn-danger" onclick="deleteCampaign(${campaignDTO.id})">
-                        <i class="icon-trash bigger-120"></i>
-                    </button>
-                </div>
-                <div class="visible-xs visible-sm hidden-md hidden-lg">
-                    <div class="inline position-relative">
-                        <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown">
-                            <i class="icon-cog icon-only bigger-110"></i>
-                        </button>
-                        <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
-                            <li>
-                                <a id="${campaignDTO.id}" href="#" class="tooltip-success editCampaign"
-                                   data-rel="tooltip"
-                                   title="<spring:message code="label.edit"/>">
+                <c:if test="${campaign.campaignStatus == 'SEND'}">
+                    <span class="label label-sm label-success"><spring:message code="SEND"/></span>
+                </c:if>
+                <c:if test="${campaign.campaignStatus == 'DRAFT'}">
+                    <span class="label label-sm label-warning"><spring:message code="DRAFT"/></span>
+                </c:if>
+            </td>
+            <td>${campaign.lastUpdateDate}</td>
+            <c:if test="${campaign.campaignStatus == 'DRAFT'}">
+                <td>
+                    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                        <a id="${campaignDTO.id}" href="#" class="tooltip-success green editCampaign"
+                           data-rel="tooltip"
+                           title="<spring:message code="label.campaign.edit"/>">
+                            <i class="icon-pencil bigger-130"></i>
+                        </a>
+                        <a id="${campaignDTO.id}" href="#" class="tooltip-error red deleteCampaign"
+                           data-rel="tooltip"
+                           class="deleteCampaign"
+                           title="<spring:message code="label.campaign.delete"/>">
+                            <i class="icon-trash bigger-130"></i>
+                        </a>
+                    </div>
+                    <div class="visible-xs visible-sm hidden-md hidden-lg">
+                        <div class="inline position-relative">
+                            <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-cog icon-only bigger-110"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                <li>
+                                    <a id="${campaignDTO.id}" href="#" class="tooltip-success editCampaign"
+                                       data-rel="tooltip"
+                                       title="<spring:message code="label.campaign.edit"/>">
                                             <span class="green">
                                                 <i class="icon-edit bigger-120"></i>
                                             </span>
-                                </a>
-                            </li>
+                                    </a>
+                                </li>
 
-                            <li>
-                                <a id="${subscriber.id}" href="#" class="tooltip-error deleteCampaign"
-                                   data-rel="tooltip"
-                                   class="deleteCampaign"
-                                   title="<spring:message code="label.delete"/>">
+                                <li>
+                                    <a id="${subscriber.id}" href="#" class="tooltip-error deleteCampaign"
+                                       data-rel="tooltip"
+                                       class="deleteCampaign"
+                                       title="<spring:message code="label.campaign.delete"/>">
                                             <span class="red">
                                                 <i class="icon-trash bigger-120"></i>
                                             </span>
-                                </a>
-                            </li>
-                        </ul>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            </td>
+                </td>
+            </c:if>
+            <c:if test="${campaign.campaignStatus == 'SEND'}">
+                <td>
+                    <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
+                        <a id="${campaignDTO.id}" href="#" class="tooltip-success blue viewCampaign"
+                           data-rel="tooltip"
+                           title="<spring:message code="label.campaign.view"/>">
+                            <i class="icon-zoom-in bigger-130"></i>
+                        </a>
+                    </div>
+                    <div class="visible-xs visible-sm hidden-md hidden-lg">
+                        <div class="inline position-relative">
+                            <button class="btn btn-minier btn-primary dropdown-toggle" data-toggle="dropdown">
+                                <i class="icon-cog icon-only bigger-110"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
+                                <li>
+                                    <a id="${campaignDTO.id}" href="#" class="tooltip-success viewCampaign"
+                                       data-rel="tooltip"
+                                       title="<spring:message code="label.campaign.view"/>">
+                                            <span class="green">
+                                                <i class="icon-zoom-in bigger-120"></i>
+                                            </span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </td>
+            </c:if>
         </tr>
     </c:forEach>
     </tbody>

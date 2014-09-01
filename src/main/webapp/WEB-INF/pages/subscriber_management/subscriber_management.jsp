@@ -48,13 +48,17 @@
             <td>${subscriber.subscriberLastUpdateDate}</td>
             <td>
                 <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                    <button class="btn btn-xs btn-info" onclick="redirectToEdit(${subscriber.id})">
-                        <i class="icon-edit bigger-120"></i>
-                    </button>
-
-                    <button class="btn btn-xs btn-danger" onclick="deleteSubscriberGroup(${subscriber.id})">
-                        <i class="icon-trash bigger-120"></i>
-                    </button>
+                    <a id="${subscriber.id}" href="#" class="tooltip-success green editSubscriberGroup"
+                       data-rel="tooltip"
+                       title="<spring:message code="label.subscriber.subscriber_group.edit"/>">
+                        <i class="icon-pencil bigger-130"></i>
+                    </a>
+                    <a id="${subscriber.id}" href="#" class="tooltip-error red deleteSubscriberGroup"
+                       data-rel="tooltip"
+                       class="deleteSubscriberGroup"
+                       title="<spring:message code="label.subscriber.subscriber_group.delete"/>">
+                        <i class="icon-trash bigger-130"></i>
+                    </a>
                 </div>
                 <div class="visible-xs visible-sm hidden-md hidden-lg">
                     <div class="inline position-relative">
@@ -65,7 +69,7 @@
                             <li>
                                 <a id="${subscriber.id}" href="#" class="tooltip-success editSubscriberGroup"
                                    data-rel="tooltip"
-                                   title="<spring:message code="label.edit"/>">
+                                   title="<spring:message code="label.subscriber.subscriber_group.edit"/>">
                                             <span class="green">
                                                 <i class="icon-edit bigger-120"></i>
                                             </span>
@@ -139,7 +143,7 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".editSubscriber").click(function (event) {
+        $(".editSubscriberGroup").click(function (event) {
             var subscriberId = $(this).attr("id");
             redirectToEdit(subscriberId)
         });
