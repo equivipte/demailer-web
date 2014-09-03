@@ -8,7 +8,7 @@
 <form action="${context}/main/campaign_management/1">
     <table>
         <td>
-            <a href="#" class="add-campaign-button">
+            <a href="#" class="add-campaign-button" title="<spring:message code="label.create.campaign"/>">
                 <button class="btn btn-info" type="button">
                     <i class="icon-plus-sign white bigger-120"></i>
                     <spring:message code="label.create"/>

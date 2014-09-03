@@ -8,7 +8,9 @@ public class CampaignDTO implements Serializable {
 
     private Long id;
 
-    private String emaiSubject;
+    private String campaignName;
+
+    private String emailSubject;
 
     private String emailContent;
 
@@ -28,12 +30,12 @@ public class CampaignDTO implements Serializable {
         this.id = id;
     }
 
-    public String getEmaiSubject() {
-        return emaiSubject;
+    public String getEmailSubject() {
+        return emailSubject;
     }
 
-    public void setEmaiSubject(String emaiSubject) {
-        this.emaiSubject = emaiSubject;
+    public void setEmailSubject(String emailSubject) {
+        this.emailSubject = emailSubject;
     }
 
     public String getEmailContent() {
@@ -74,5 +76,13 @@ public class CampaignDTO implements Serializable {
 
     public void setCampaignStatus(String campaignStatus) {
         this.campaignStatus = campaignStatus;
+    }
+
+    public String getCampaignName() {
+        return campaignName;
+    }
+
+    public void setCampaignName(String campaignName) {
+        this.campaignName = campaignName;
     }
 }

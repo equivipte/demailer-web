@@ -3,6 +3,7 @@ package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
+import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
 import com.equivi.mailsy.service.constant.ConstantProperty;
@@ -15,6 +16,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +62,22 @@ public class CampaignManagementController extends AbstractController {
         return "campaignManagementPage";
     }
 
+    @RequestMapping(value = "/main/campaign_management/create", method = RequestMethod.GET)
+    public ModelAndView goToCreateSubscribeGroup(ModelAndView modelAndView) {
+
+        CampaignDTO campaignDTO = new CampaignDTO();
+
+        setPredefinedData(modelAndView, campaignDTO);
+
+        modelAndView.setViewName("campaignManagementAddPage");
+        return modelAndView;
+    }
+
+    private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
+        modelAndView.addObject("campaignDTO", campaignDTO);
+    }
+
+
     private Map<CampaignSearchFilter, String> buildMapFilter(HttpServletRequest request) {
 
         String campaignSubjectName = request.getParameter(CampaignSearchFilter.CAMPAIGN_SUBJECT.getFilterName());
@@ -83,7 +101,8 @@ public class CampaignManagementController extends AbstractController {
         if (content != null && !content.isEmpty()) {
             for (CampaignEntity campaignEntity : content) {
                 CampaignDTO campaignDTO = new CampaignDTO();
-                campaignDTO.setEmaiSubject(campaignEntity.getEmaiSubject());
+                campaignDTO.setCampaignName(campaignEntity.getCampaignName());
+                campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
                 campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
                 campaignDTO.setLastUpdateDate(sdf.format(campaignEntity.getLastUpdatedDateTime()));
                 campaignDTOList.add(campaignDTO);

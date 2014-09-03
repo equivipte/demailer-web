@@ -82,11 +82,21 @@
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.multi-select.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/additional-methods.min.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.maskedinput.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/typeahead-bs2.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.validate.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/additional-methods.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootbox.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/fuelux/fuelux.wizard.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/markdown/markdown.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/markdown/bootstrap-markdown.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.hotkeys.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap-wysiwyg.min.js"></script>
+
 <script src="${pageContext.request.contextPath}/resources/js/shadowbox.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery-ui-1.10.3.full.min.js"></script>
@@ -103,6 +113,8 @@
 <script src="${pageContext.request.contextPath}/resources/js/ace-elements.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/ace.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/ace-extra.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/select2.min.js"></script>
+
 
 <script src="${pageContext.request.contextPath}/resources/js/chosen.jquery.min.js"></script>
 

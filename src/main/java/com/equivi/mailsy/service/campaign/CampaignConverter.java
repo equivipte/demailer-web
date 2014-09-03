@@ -42,7 +42,7 @@ public class CampaignConverter {
         }
 
         campaignEntity.setEmailContent(campaignDTO.getEmailContent());
-        campaignEntity.setEmaiSubject(campaignDTO.getEmaiSubject());
+        campaignEntity.setEmaiSubject(campaignDTO.getEmailSubject());
 
         SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(campaignDTO.getSubscriberGroupId());
         campaignEntity.setSubscriberGroupEntity(subscriberGroupEntity);

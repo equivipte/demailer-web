@@ -23,6 +23,7 @@
 <table id="table-subscriber" class="table table-striped table-bordered table-hover">
 <thead>
 <tr>
+    <th><spring:message code="label.campaign.name"/></th>
     <th><spring:message code="label.campaign.subject"/></th>
     <th><spring:message code="label.campaign.status"/></th>
     <th><spring:message code="label.last_updated"/></th>
@@ -33,7 +34,8 @@
     <tbody>
     <c:forEach items="${campaignDTOList}" var="campaign">
         <tr>
-            <td>${campaign.emaiSubject}</td>
+            <td>${campaign.campaignName}</td>
+            <td>${campaign.emailSubject}</td>
             <td>
                 <c:if test="${campaign.campaignStatus == 'SEND'}">
                     <span class="label label-sm label-success"><spring:message code="SEND"/></span>

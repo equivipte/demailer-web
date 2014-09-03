@@ -168,7 +168,7 @@
             title_html: true,
             buttons: [
                 {
-                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.subscriber.subscriber_group.delete"/> ",
+                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.delete"/>",
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
