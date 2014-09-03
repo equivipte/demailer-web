@@ -34,6 +34,10 @@
     </h1>
 </div>
 
+<jsp:include page="campaign_wizard_header_step1.jsp"/>
+</br>
+</br>
+
 <!-- /.page-header -->
 <div class="row">
     <div class="col-xs-12">
@@ -48,7 +52,7 @@
                    method="POST" cssClass="form-horizontal">
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-campaign-name"><spring:message
-                        code="label.subscriber.subscriber_group"></spring:message></label>
+                        code="label.campaign.name"></spring:message></label>
 
                 <div class="col-sm-9">
                     <form:input
@@ -90,16 +94,17 @@
             </div>
             <div class="clearfix form-actions">
                 <div class="col-md-offset-3 col-md-9">
-                    <button id="id-btn-save" class="btn btn-info" type="submit">
-                        <i class="icon-ok bigger-110"></i>
-                        <spring:message code="label.save"/>
-                    </button>
-
-                    &nbsp; &nbsp; &nbsp;
                     <button id="back_to_user_id_list" class="btn" onclick="backToCampaignList()" type="reset">
                         <i class="icon-undo bigger-110"></i>
-                        <spring:message code="label.campaign.back_to_campaign_list"/>
+                        <spring:message code="label.cancel"/>
                     </button>
+                    &nbsp; &nbsp; &nbsp;
+
+                    <button class="btn btn-success btn-next" type="submit">
+                        <spring:message code="label.next"/>
+                        <i class="icon-arrow-right icon-on-right"></i>
+                    </button>
+
                 </div>
             </div>
         </form:form>
