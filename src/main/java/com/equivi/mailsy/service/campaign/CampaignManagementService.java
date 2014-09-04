@@ -21,8 +21,13 @@ public interface CampaignManagementService {
     /**
      * @param campaignDTO
      */
-    void saveCampaign(CampaignDTO campaignDTO);
+    CampaignDTO saveCampaign(CampaignDTO campaignDTO);
 
+    /**
+     * @param campaignId
+     * @return CampaignEntity
+     */
+    CampaignDTO getCampaign(Long campaignId);
 
     /**
      * @param campaignId

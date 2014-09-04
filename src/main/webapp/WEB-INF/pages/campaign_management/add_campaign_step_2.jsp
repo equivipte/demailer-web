@@ -10,6 +10,21 @@
 <div class="row-fluid">
     <div class="wysiwyg-editor" id="editor1"></div>
 </div>
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button id="back_to_user_id_list" class="btn" onclick="redirectToStep1" type="reset">
+            <i class="icon-undo bigger-110"></i>
+            <spring:message code="label.prev"/>
+        </button>
+        &nbsp; &nbsp; &nbsp;
+
+        <button class="btn btn-success btn-next" type="submit">
+            <spring:message code="label.next"/>
+            <i class="icon-arrow-right icon-on-right"></i>
+        </button>
+
+    </div>
+</div>
 
 <script type="text/javascript">
     jQuery(function($){

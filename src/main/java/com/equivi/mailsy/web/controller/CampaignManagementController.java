@@ -2,17 +2,19 @@ package com.equivi.mailsy.web.controller;
 
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
+import com.equivi.mailsy.data.entity.CampaignStatus;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
-import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
 import com.equivi.mailsy.service.constant.ConstantProperty;
+import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -20,10 +22,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 @Controller
@@ -37,6 +41,8 @@ public class CampaignManagementController extends AbstractController {
 
     @Resource
     private CampaignManagementService campaignManagementService;
+
+    private static final String EMAIL_CONTENT_PAGE = "campaignManagementEmailContentPage";
 
     private static SimpleDateFormat sdf;
 
@@ -73,6 +79,45 @@ public class CampaignManagementController extends AbstractController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/main/campaign_management/saveAddCampaign", method = RequestMethod.POST)
+    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
+
+        ModelAndView modelAndView;
+        try {
+            if (result.hasErrors()) {
+                modelAndView = new ModelAndView("campaignManagementAddPage");
+                modelAndView.addObject("errors", errorMessage.buildFormValidationErrorMessages(result, locale));
+            } else {
+
+                campaignDTO.setCampaignStatus(CampaignStatus.DRAFT.getCampaignStatusDescription());
+                campaignDTO = campaignManagementService.saveCampaign(campaignDTO);
+
+                modelAndView = new ModelAndView();
+                String redirectData = "redirect:" + campaignDTO.getId().toString() + "/" + EMAIL_CONTENT_PAGE;
+
+                modelAndView.setViewName(redirectData);
+                return modelAndView;
+            }
+        } catch (InvalidDataException idex) {
+            modelAndView = new ModelAndView("campaignManagementAddPage");
+
+            modelAndView.addObject("errors", errorMessage.buildServiceValidationErrorMessages(idex, locale));
+        }
+
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/main/campaign_management/{campaignId}/{pageName}", method = RequestMethod.GET)
+    public ModelAndView goToEditCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId, @PathVariable String pageName, final HttpServletRequest httpServletRequest) {
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
+
+        setPredefinedData(modelAndView, campaignDTO);
+
+        modelAndView.addObject("campaignDTO", campaignDTO);
+        modelAndView.setViewName(pageName);
+        return modelAndView;
+    }
+
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
         modelAndView.addObject("campaignDTO", campaignDTO);
     }
@@ -104,7 +149,9 @@ public class CampaignManagementController extends AbstractController {
                 campaignDTO.setCampaignName(campaignEntity.getCampaignName());
                 campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
                 campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
-                campaignDTO.setLastUpdateDate(sdf.format(campaignEntity.getLastUpdatedDateTime()));
+                if (campaignEntity.getLastUpdatedDateTime() != null) {
+                    campaignDTO.setLastUpdateDate(sdf.format(campaignEntity.getLastUpdatedDateTime()));
+                }
                 campaignDTOList.add(campaignDTO);
             }
         }

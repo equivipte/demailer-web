@@ -55,11 +55,16 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
-    public void saveCampaign(CampaignDTO campaignDTO) {
+    public CampaignDTO saveCampaign(CampaignDTO campaignDTO) {
 
         CampaignEntity campaignEntity = campaignConverter.convertToCampaignEntity(campaignDTO);
 
-        campaignDao.save(campaignEntity);
+        return campaignConverter.convertToCampaignDTO(campaignDao.save(campaignEntity));
+    }
+
+    @Override
+    public CampaignDTO getCampaign(Long campaignId) {
+        return campaignConverter.convertToCampaignDTO(campaignDao.findOne(campaignId));
     }
 
     @Override
