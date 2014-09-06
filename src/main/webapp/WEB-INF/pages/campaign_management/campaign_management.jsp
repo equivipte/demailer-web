@@ -129,10 +129,10 @@
     <c:set var="paginationParameter"
            value="campaignSubject=${param.subscriberGroupName}"/>
 
-    <c:url var="firstUrl" value="/main/campaign_management/1?${paginationParameter}"/>
-    <c:url var="lastUrl" value="/main/campaign_management/${deploymentLog.totalPages}?${paginationParameter}"/>
-    <c:url var="prevUrl" value="/main/campaign_management/${currentIndex - 1}?${paginationParameter}"/>
-    <c:url var="nextUrl" value="/main/campaign_management/${currentIndex + 1}?${paginationParameter}"/>
+    <c:url var="firstUrl" value="/main/merchant/campaign_management/1?${paginationParameter}"/>
+    <c:url var="lastUrl" value="/main/merchant/campaign_management/${deploymentLog.totalPages}?${paginationParameter}"/>
+    <c:url var="prevUrl" value="/main/merchant/campaign_management/${currentIndex - 1}?${paginationParameter}"/>
+    <c:url var="nextUrl" value="/main/merchant/campaign_management/${currentIndex + 1}?${paginationParameter}"/>
 
 
     <ul class="pagination pull-right no-margin">
@@ -147,7 +147,7 @@
             </c:otherwise>
         </c:choose>
         <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
-            <c:url var="pageUrl" value="/main/campaign_management/${i}?${paginationParameter}"/>
+            <c:url var="pageUrl" value="/main/merchant/campaign_management/${i}?${paginationParameter}"/>
             <c:choose>
                 <c:when test="${i == currentIndex}">
                     <li class="active"><a href="${pageUrl}"><c:out value="${i}"/></a></li>
@@ -186,11 +186,11 @@
     });
 
     function redirectToEdit(id) {
-        window.location.replace("${context}/main/campaign_management/campaign_list/" + id + "/1?nextPage=CAMPAIGN_GROUP");
+        window.location.replace("${context}/main/merchant/campaign_management/campaign_list/" + id + "/1?nextPage=CAMPAIGN_GROUP");
     }
 
     function deleteCampaign(id) {
-        var href = "${context}/main/campaign_management/1";
+        var href = "${context}/main/merchant/campaign_management/1";
         $("#dialog-confirm").removeClass('hide').dialog({
             resizable: false,
             modal: true,
@@ -202,7 +202,7 @@
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
-                            url: "${pageContext.request.contextPath}/main/campaign_management/" + id,
+                            url: "${pageContext.request.contextPath}/main/merchant/campaign_management/" + id,
                             type: "DELETE",
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                 alert("An error has occurred making the request: " + errorThrown);

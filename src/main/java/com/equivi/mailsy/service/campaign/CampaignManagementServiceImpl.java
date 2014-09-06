@@ -24,6 +24,8 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     @Resource
     private CampaignConverter campaignConverter;
 
+    @Resource
+    private CampaignValidator campaignValidator;
 
     @Override
     public Page<CampaignEntity> listCampaignEntity(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
@@ -56,6 +58,8 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
 
     @Override
     public CampaignDTO saveCampaign(CampaignDTO campaignDTO) {
+
+        campaignValidator.validate(campaignDTO);
 
         CampaignEntity campaignEntity = campaignConverter.convertToCampaignEntity(campaignDTO);
 

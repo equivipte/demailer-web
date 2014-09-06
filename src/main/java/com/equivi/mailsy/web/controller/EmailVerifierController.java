@@ -22,19 +22,19 @@ public class EmailVerifierController {
     @Resource(name = "webEmailVerifierImpl")
     private VerifierService verifierService;
 
-    @RequestMapping(value = "/main/emailverifier", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/emailverifier", method = RequestMethod.GET)
     public String getEmailVerifierPage(Model model) {
         return "emailVerifierPage";
     }
 
-    @RequestMapping(value = "/main/emailverifier", method = RequestMethod.POST,
+    @RequestMapping(value = "/main/merchant/emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody EmailVerifierResponse verifyEmail(@RequestBody EmailVerifierResponse emailVerifierResponse) {
         return verifierService.getEmailAddressStatus(emailVerifierResponse.getAddress());
     }
 
-    @RequestMapping(value = "/main/emailverifier/verify", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/emailverifier/verify", method = RequestMethod.GET)
     public String verifyEmail(HttpServletRequest request, Model model) {
         List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
         List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);

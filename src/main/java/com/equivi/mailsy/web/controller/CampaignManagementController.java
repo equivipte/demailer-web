@@ -16,8 +16,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
@@ -44,6 +46,8 @@ public class CampaignManagementController extends AbstractController {
 
     private static final String EMAIL_CONTENT_PAGE = "campaignManagementEmailContentPage";
 
+    private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
+
     private static SimpleDateFormat sdf;
 
     static {
@@ -51,12 +55,12 @@ public class CampaignManagementController extends AbstractController {
     }
 
 
-    @RequestMapping(value = "/main/campaignmanagement", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/campaignmanagement", method = RequestMethod.GET)
     public String getCampaignManagementPage() {
         return "campaignManagementPage";
     }
 
-    @RequestMapping(value = "/main/campaign_management/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/campaign_management/{pageNumber}", method = RequestMethod.GET)
     public String getCampaignManagementPage(@PathVariable Integer pageNumber, final HttpServletRequest request, Model model) {
 
         Page<CampaignEntity> campaignPage = campaignManagementService.listCampaignEntity(buildMapFilter(request), pageNumber, webConfiguration.getMaxRecordsPerPage());
@@ -68,8 +72,8 @@ public class CampaignManagementController extends AbstractController {
         return "campaignManagementPage";
     }
 
-    @RequestMapping(value = "/main/campaign_management/create", method = RequestMethod.GET)
-    public ModelAndView goToCreateSubscribeGroup(ModelAndView modelAndView) {
+    @RequestMapping(value = "/main/merchant/campaign_management/create", method = RequestMethod.GET)
+    public ModelAndView goToCreateCampaign(ModelAndView modelAndView) {
 
         CampaignDTO campaignDTO = new CampaignDTO();
 
@@ -79,8 +83,8 @@ public class CampaignManagementController extends AbstractController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/main/campaign_management/saveAddCampaign", method = RequestMethod.POST)
-    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
+    @RequestMapping(value = "/main/merchant/campaign_management/saveAddCampaign", method = RequestMethod.POST)
+    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale) {
 
         ModelAndView modelAndView;
         try {
@@ -107,15 +111,40 @@ public class CampaignManagementController extends AbstractController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/main/campaign_management/{campaignId}/{pageName}", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/saveCampaignEmailContent", method = RequestMethod.POST)
+    @ResponseBody
+    public String saveUpdateEmailContent(@RequestBody String emailContent, @PathVariable String campaignId) {
+
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(Long.valueOf(campaignId));
+        campaignDTO.setEmailContent(emailContent);
+
+        campaignManagementService.saveCampaign(campaignDTO);
+
+        return "SUCCESS";
+    }
+
+
+    @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/{pageName}", method = RequestMethod.GET)
     public ModelAndView goToEditCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId, @PathVariable String pageName, final HttpServletRequest httpServletRequest) {
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
 
         setPredefinedData(modelAndView, campaignDTO);
 
-        modelAndView.addObject("campaignDTO", campaignDTO);
         modelAndView.setViewName(pageName);
         return modelAndView;
+    }
+
+    @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}", method = RequestMethod.DELETE)
+    @ResponseBody
+    public String deleteCampaign(@PathVariable Long campaignId) {
+
+        try {
+            campaignManagementService.deleteCampaign(campaignId);
+        } catch (Exception ex) {
+            return "general.exception.delete";
+        }
+
+        return "SUCCESS";
     }
 
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {

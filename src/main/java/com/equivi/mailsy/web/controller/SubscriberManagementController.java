@@ -55,7 +55,7 @@ public class SubscriberManagementController extends AbstractController {
         sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
     }
 
-    @RequestMapping(value = "/main/subscriber_management", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/subscriber_management", method = RequestMethod.GET)
     public String getContactManagementPage(Model model) {
 
         List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
@@ -91,7 +91,7 @@ public class SubscriberManagementController extends AbstractController {
     }
 
 
-    @RequestMapping(value = "/main/subscriber_management/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/subscriber_management/{pageNumber}", method = RequestMethod.GET)
     public String getSubscriberManagementPage(@PathVariable Integer pageNumber, final HttpServletRequest request, Model model) {
 
         Page<SubscriberGroupEntity> subscriberGroupPage = subscriberService.listSubscriberGroup(buildMapFilter(request), pageNumber, webConfiguration.getMaxRecordsPerPage());
@@ -103,7 +103,7 @@ public class SubscriberManagementController extends AbstractController {
         return "subscriberManagementPage";
     }
 
-    @RequestMapping(value = "/main/subscriber_management/create", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/subscriber_management/create", method = RequestMethod.GET)
     public ModelAndView goToCreateSubscribeGroup(ModelAndView modelAndView) {
 
         SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
@@ -114,7 +114,7 @@ public class SubscriberManagementController extends AbstractController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/main/subscriber_management/subscriber_list/{subscriberGroupId}/{pageNumber}", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/subscriber_management/subscriber_list/{subscriberGroupId}/{pageNumber}", method = RequestMethod.GET)
     public ModelAndView goToEditSubscribeGroup(ModelAndView modelAndView, @PathVariable Long subscriberGroupId, @PathVariable Integer pageNumber, final HttpServletRequest httpServletRequest) {
 
         String nextPage = httpServletRequest.getParameter(PageConstant.NEXT_PAGE.getPageName());
@@ -131,7 +131,7 @@ public class SubscriberManagementController extends AbstractController {
     }
 
 
-    @RequestMapping(value = "/main/subscriber_management/change_subscribe_status/{subscribeStatus}/{subscriberId}/{subscriberGroupId}", method = RequestMethod.PUT)
+    @RequestMapping(value = "/main/merchant/subscriber_management/change_subscribe_status/{subscribeStatus}/{subscriberId}/{subscriberGroupId}", method = RequestMethod.PUT)
     @ResponseBody
     public String unsubscribeContact(@PathVariable String subscribeStatus, @PathVariable String subscriberId, @PathVariable String subscriberGroupId) {
 
@@ -140,7 +140,7 @@ public class SubscriberManagementController extends AbstractController {
         return "SUCCESS";
     }
 
-    @RequestMapping(value = "/main/subscriber_management/delete_subscriber/{subscriberId}", method = RequestMethod.DELETE)
+    @RequestMapping(value = "/main/merchant/subscriber_management/delete_subscriber/{subscriberId}", method = RequestMethod.DELETE)
     @ResponseBody
     public String deleteContact(@PathVariable String subscriberId) {
 
@@ -149,8 +149,8 @@ public class SubscriberManagementController extends AbstractController {
         return "SUCCESS";
     }
 
-    @RequestMapping(value = "/main/subscriber_management/saveAddSubscriberGroup", method = RequestMethod.POST)
-    public ModelAndView saveAddSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
+    @RequestMapping(value = "/main/merchant/subscriber_management/saveAddSubscriberGroup", method = RequestMethod.POST)
+    public ModelAndView saveAddSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, BindingResult result, Locale locale) {
 
         ModelAndView modelAndView;
         try {
@@ -177,7 +177,7 @@ public class SubscriberManagementController extends AbstractController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/main/subscriber_management/saveUpdateSubscriberGroup", method = RequestMethod.POST)
+    @RequestMapping(value = "/main/merchant/subscriber_management/saveUpdateSubscriberGroup", method = RequestMethod.POST)
     public ModelAndView saveUpdateSubscriberGroup(@Valid SubscriberGroupDTO subscriberGroupDTO, HttpServletRequest httpServletRequest, BindingResult result, Locale locale) {
 
         ModelAndView modelAndView;
@@ -197,7 +197,7 @@ public class SubscriberManagementController extends AbstractController {
                 SubscriberGroupEntity subscriberGroupEntity = subscriberService.saveSubscriberGroup(subscriberGroupDTO);
 
                 modelAndView = new ModelAndView();
-                String redirectData = "redirect:/main/subscriber_management/1";
+                String redirectData = "redirect:/main/merchant/subscriber_management/1";
 
                 modelAndView.setViewName(redirectData);
                 return modelAndView;

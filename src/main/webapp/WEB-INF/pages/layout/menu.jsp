@@ -31,7 +31,7 @@
             <c:if test="${currentPage.currentSubMenu != 'EMAIL_VERIFIER'}">
         <li id="email-verifier">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/emailverifier">
+            <a href="${pageContext.request.contextPath}/main/merchant/emailverifier">
                 <i class="icon-ok-sign"></i>
                 <spring:message code="label.menu.email.verifier"/>
             </a>
@@ -44,7 +44,7 @@
         <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
         <li id="campaign-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/campaign_management/1">
+            <a href="${pageContext.request.contextPath}/main/merchant/campaign_management/1">
                 <i class="icon-envelope"></i>
                 <spring:message code="label.menu.campaign"/>
             </a>
@@ -57,7 +57,7 @@
             <c:if test="${currentPage.currentSubMenu != 'SUBSCRIBER_MANAGEMENT'}">
         <li id="contact-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/subscriber_management/1">
+            <a href="${pageContext.request.contextPath}/main/merchant/subscriber_management/1">
                 <i class="icon-book"></i>
                 <spring:message code="label.menu.subscriber"/>
             </a>
@@ -70,7 +70,7 @@
             <c:if test="${currentPage.currentSubMenu != 'REPORT'}">
         <li id="report">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/report">
+            <a href="${pageContext.request.contextPath}/main/merchant/report">
                 <i class="icon-bar-chart"></i>
                 <spring:message code="label.menu.email.report"/>
             </a>

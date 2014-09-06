@@ -1,15 +1,20 @@
 package com.equivi.mailsy.dto.campaign;
 
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import java.io.Serializable;
+
 
 public class CampaignDTO implements Serializable {
     private static final long serialVersionUID = -1517953677545275306L;
 
     private Long id;
 
+    @NotEmpty(message = "campaign.name.empty")
     private String campaignName;
 
+    @NotEmpty(message = "campaign.emailsubject.empty")
     private String emailSubject;
 
     private String emailContent;

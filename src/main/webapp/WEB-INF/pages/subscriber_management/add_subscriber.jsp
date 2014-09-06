@@ -4,7 +4,7 @@
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 
-<c:url var="url" value="/main/subscriber/imports/upload"/>
+<c:url var="url" value="/main/merchant/subscriber/imports/upload"/>
 
 
 <div id="modal-form-subscriber" class="modal" tabindex="-1">

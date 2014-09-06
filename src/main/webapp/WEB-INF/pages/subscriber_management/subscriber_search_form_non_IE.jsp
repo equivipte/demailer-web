@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<form action="${context}/main/subscriber_management/1">
+<form action="${context}/main/merchant/subscriber_management/1">
     <table>
         <td>
             <a href="#" class="add-subscribe-button">
@@ -51,6 +51,6 @@
 </form>
 <script type="text/javascript">
     $(".add-subscribe-button").click(function (event) {
-        window.location.replace("${pageContext.request.contextPath}/main/subscriber_management/create");
+        window.location.replace("${pageContext.request.contextPath}/main/merchant/subscriber_management/create");
     });
 </script>

@@ -36,7 +36,7 @@
 <div class="row">
     <div class="col-xs-12">
 
-        <c:url var="url" value="/main/subscriber_management/saveAddSubscriberGroup"/>
+        <c:url var="url" value="/main/merchant/subscriber_management/saveAddSubscriberGroup"/>
 
         <!-- #dialog-confirm -->
         <form:form id="subscriberGroupAddForm"
@@ -81,7 +81,7 @@
 
     function backToSubcriberList() {
 
-        window.location.replace("${pageContext.request.contextPath}/main/subscriber_management/1");
+        window.location.replace("${pageContext.request.contextPath}/main/merchant/subscriber_management/1");
     }
 </script>
 

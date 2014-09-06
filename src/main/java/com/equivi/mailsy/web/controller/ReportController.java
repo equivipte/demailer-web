@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 @Controller
 public class ReportController {
 
-    @RequestMapping(value = "/main/report", method = RequestMethod.GET)
+    @RequestMapping(value = "/main/merchant/report", method = RequestMethod.GET)
     public String getReportPage() {
         return "reportPage";
     }

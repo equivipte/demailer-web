@@ -99,10 +99,10 @@
     <c:set var="paginationParameter"
            value="subscriberGroupName=${param.subscriberGroupName}&subscriberEmail=${param.emailAddress}"/>
 
-    <c:url var="firstUrl" value="/main/subscriber_management/1?${paginationParameter}"/>
-    <c:url var="lastUrl" value="/main/subscriber_management/${deploymentLog.totalPages}?${paginationParameter}"/>
-    <c:url var="prevUrl" value="/main/subscriber_management/${currentIndex - 1}?${paginationParameter}"/>
-    <c:url var="nextUrl" value="/main/subscriber_management/${currentIndex + 1}?${paginationParameter}"/>
+    <c:url var="firstUrl" value="/main/merchant/subscriber_management/1?${paginationParameter}"/>
+    <c:url var="lastUrl" value="/main/merchant/subscriber_management/${deploymentLog.totalPages}?${paginationParameter}"/>
+    <c:url var="prevUrl" value="/main/merchant/subscriber_management/${currentIndex - 1}?${paginationParameter}"/>
+    <c:url var="nextUrl" value="/main/mercahnt/subscriber_management/${currentIndex + 1}?${paginationParameter}"/>
 
 
     <ul class="pagination pull-right no-margin">
@@ -117,7 +117,7 @@
             </c:otherwise>
         </c:choose>
         <c:forEach var="i" begin="${beginIndex}" end="${endIndex}">
-            <c:url var="pageUrl" value="/main/subscriber_management/${i}?${paginationParameter}"/>
+            <c:url var="pageUrl" value="/main/merchant/subscriber_management/${i}?${paginationParameter}"/>
             <c:choose>
                 <c:when test="${i == currentIndex}">
                     <li class="active"><a href="${pageUrl}"><c:out value="${i}"/></a></li>
@@ -156,7 +156,7 @@
     });
 
     function redirectToEdit(id) {
-        window.location.replace("${context}/main/subscriber_management/subscriber_list/"+id+"/1?nextPage=SUBSCRIBER_GROUP");
+        window.location.replace("${context}/main/merchant/subscriber_management/subscriber_list/"+id+"/1?nextPage=SUBSCRIBER_GROUP");
     }
 
     function deleteSubscriberGroup(id) {
@@ -172,7 +172,7 @@
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
-                            url: "${pageContext.request.contextPath}/main/subscriber/delete/" + id,
+                            url: "${pageContext.request.contextPath}/main/merchant/subscriber/delete/" + id,
                             type: "DELETE",
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                 alert("An error has occurred making the request: " + errorThrown);

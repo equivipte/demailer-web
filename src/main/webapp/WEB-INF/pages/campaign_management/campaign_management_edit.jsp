@@ -3,7 +3,7 @@
 <%@ taglib uri='http://java.sun.com/jsp/jstl/core' prefix='c' %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 
-<c:url var="url" value="/main/subscriber_management/saveUpdateSubscriberGroup"/>
+<c:url var="url" value="/main/merchant/subscriber_management/saveUpdateSubscriberGroup"/>
 
 <!-- #dialog-confirm -->
 <form:form id="subscriberGroupUpdateForm"

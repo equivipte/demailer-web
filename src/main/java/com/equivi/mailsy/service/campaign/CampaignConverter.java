@@ -48,8 +48,10 @@ public class CampaignConverter {
         campaignEntity.setEmaiSubject(campaignDTO.getEmailSubject());
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
-        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(campaignDTO.getSubscriberGroupId());
-        campaignEntity.setSubscriberGroupEntity(subscriberGroupEntity);
+        if (campaignDTO.getSubscriberGroupId() != null) {
+            SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(campaignDTO.getSubscriberGroupId());
+            campaignEntity.setSubscriberGroupEntity(subscriberGroupEntity);
+        }
 
         if (!StringUtils.isEmpty(campaignDTO.getScheduledSendDate())) {
             try {
@@ -70,7 +72,10 @@ public class CampaignConverter {
         campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
         campaignDTO.setEmailContent(campaignEntity.getEmailContent());
         campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
-        campaignDTO.setSubscriberGroupId(campaignEntity.getSubscriberGroupEntity().getId());
+
+        if (campaignDTO.getSubscriberGroupId() != null) {
+            campaignDTO.setSubscriberGroupId(campaignEntity.getSubscriberGroupEntity().getId());
+        }
 
         if (campaignEntity.getScheduledSendDate() != null) {
             campaignDTO.setScheduledSendDate(sdf.format(campaignEntity.getScheduledSendDate()));

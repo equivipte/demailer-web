@@ -84,7 +84,7 @@
 
     function backToSubcriberList() {
 
-        window.location.replace("${pageContext.request.contextPath}/main/subscriber_management/1");
+        window.location.replace("${pageContext.request.contextPath}/main/merchant/subscriber_management/1");
     }
 </script>
 

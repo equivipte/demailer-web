@@ -49,7 +49,7 @@ public class ImportEmailListController {
 
     private static final String ERROR_UPLOAD_MESSAGE_KEY = "error_upload";
 
-    @RequestMapping(value = "/main/emailverifier/imports/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/main/merchant/emailverifier/imports/upload", method = RequestMethod.POST)
     public String handleFileUpload(final @RequestParam("file") MultipartFile file, final HttpServletRequest servletRequest, final Model model) {
         if (!file.isEmpty()) {
             try {

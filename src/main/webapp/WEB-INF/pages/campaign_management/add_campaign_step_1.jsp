@@ -26,7 +26,6 @@
 
 <c:set var="campaignName"><spring:message code="label.campaign.name"/></c:set>
 <c:set var="subject"><spring:message code="label.campaign.subject"/></c:set>
-<c:set var="subscriberGroup"><spring:message code="label.subscriber.subscriber_group"/></c:set>
 
 <div class="page-header">
     <h1>
@@ -42,7 +41,7 @@
 <div class="row">
     <div class="col-xs-12">
 
-        <c:url var="url" value="/main/campaign_management/saveAddCampaign"/>
+        <c:url var="url" value="/main/merchant/campaign_management/saveAddCampaign"/>
 
         <!-- #dialog-confirm -->
         <form:form id="campaignAddForm"
@@ -78,20 +77,7 @@
                             class="col-xs-10 col-sm-5"/>
                 </div>
             </div>
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-email-subject"><spring:message
-                        code="label.subscriber.subscriber_group"></spring:message></label>
 
-                <div class="col-sm-9">
-                    <form:input
-                            id="form-subscriberGroup"
-                            path="subscriberGroupId"
-                            value="${campaignDTO.subscriberGroupId}"
-                            placeholder="${subscriberGroup}"
-                            maxlength="50"
-                            class="col-xs-10 col-sm-5"/>
-                </div>
-            </div>
             <div class="clearfix form-actions">
                 <div class="col-md-offset-3 col-md-9">
                     <button id="back_to_user_id_list" class="btn" onclick="backToCampaignList()" type="reset">

@@ -5,7 +5,7 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <c:set var="campaignSubjectName"><spring:message code="label.campaign.subject"/></c:set>
 
-<form action="${context}/main/campaign_management/1">
+<form action="${context}/main/merchant/campaign_management/1">
     <table>
         <td>
             <a href="#" class="add-campaign-button" title="<spring:message code="label.create.campaign"/>">
@@ -40,6 +40,6 @@
 </form>
 <script type="text/javascript">
     $(".add-campaign-button").click(function (event) {
-        window.location.replace("${context}/main/campaign_management/create");
+        window.location.replace("${context}/main/merchant/campaign_management/create");
     });
 </script>

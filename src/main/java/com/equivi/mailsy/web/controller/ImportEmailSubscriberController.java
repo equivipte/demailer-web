@@ -31,7 +31,7 @@ public class ImportEmailSubscriberController {
     private static final String ERROR_UPLOAD_MESSAGE_KEY = "error_upload";
 
 
-    @RequestMapping(value = "/main/subscriber/imports/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/main/merchant/subscriber/imports/upload", method = RequestMethod.POST)
     public ModelAndView handleFileUpload(final @RequestParam("file") MultipartFile file, final HttpServletRequest servletRequest, final Model model) {
         ModelAndView modelAndView = new ModelAndView();
         if (!file.isEmpty()) {
@@ -44,7 +44,7 @@ public class ImportEmailSubscriberController {
                 subscriberService.addSubscriberList(Long.valueOf(subscriberGroupId), contactDTOList);
 
 
-                String redirectData = "redirect:/main/subscriber_management/subscriber_list/" + subscriberGroupId + "/1?nextPage=SUBSCRIBER_LIST";
+                String redirectData = "redirect:/main/merchant/subscriber_management/subscriber_list/" + subscriberGroupId + "/1?nextPage=SUBSCRIBER_LIST";
 
                 modelAndView.setViewName(redirectData);
 

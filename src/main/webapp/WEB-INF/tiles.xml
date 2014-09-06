@@ -98,6 +98,15 @@
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2.jsp"/>
     </definition>
 
+    <!--CAMPAIGN MANAGEMENT STEP 3-->
+    <definition name="campaignManagementEmailDeliveryPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_3.jsp"/>
+    </definition>
+
 
     <definition name="campaignManagementEditPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
