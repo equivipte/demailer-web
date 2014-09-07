@@ -93,6 +93,7 @@
 
                 </div>
             </div>
+            <form:input type="hidden" path="id" name="id" value="${campaignDTO.id}"/>
         </form:form>
     </div>
 </div>

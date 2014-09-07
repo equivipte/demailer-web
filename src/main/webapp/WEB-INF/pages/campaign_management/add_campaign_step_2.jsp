@@ -17,7 +17,7 @@
 </div>
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
-        <button id="back_to_user_id_list" class="btn">
+        <button id="back_to_user_id_list" class="btn" onclick="goToStep1(${campaignDTO.id})">
             <i class="icon-arrow-left icon-on-right"></i>
             <spring:message code="label.prev"/>
         </button>
@@ -31,9 +31,17 @@
     </div>
 </div>
 
+<input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
 <c:set var="context" value="${pageContext.request.contextPath}"/>
+
 <script type="text/javascript">
+
     jQuery(function ($) {
+
+        var content = $('input#email-content').val();
+        $( "div.wysiwyg-editor" )
+                .html(content);
+
 
         function showErrorAlert(reason, detail) {
             var msg = '';
@@ -200,6 +208,11 @@
                 console.log("Save email content - the following error occured: " + textStatus, errorThrown);
             }
         });
+    }
+
+
+    function goToStep1(campaignId) {
+        window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementAddPage");
     }
 
 

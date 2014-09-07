@@ -27,8 +27,10 @@ public class CampaignValidator {
                 throw new InvalidDataException(DUPLICATE_CAMPAIGN_NAME);
             }
         } else {
-            if (!campaignDTO.getId().equals(campaignEntity.getId())) {
-                throw new InvalidDataException(DUPLICATE_CAMPAIGN_NAME);
+            if(campaignEntity!=null){
+                if (!campaignDTO.getId().equals(campaignEntity.getId())) {
+                    throw new InvalidDataException(DUPLICATE_CAMPAIGN_NAME);
+                }
             }
         }
     }

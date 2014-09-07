@@ -147,6 +147,19 @@ public class CampaignManagementController extends AbstractController {
         return "SUCCESS";
     }
 
+
+    @RequestMapping(value = "/main/merchant/campaign_management/email_content/{campaignId}", method = RequestMethod.GET)
+    @ResponseBody
+    public String getEmailContent(@PathVariable Long campaignId) {
+
+        try {
+            CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
+            return campaignDTO.getEmailContent();
+        } catch (Exception ex) {
+            return "general.exception.delete";
+        }
+    }
+
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
         modelAndView.addObject("campaignDTO", campaignDTO);
     }
@@ -175,6 +188,7 @@ public class CampaignManagementController extends AbstractController {
         if (content != null && !content.isEmpty()) {
             for (CampaignEntity campaignEntity : content) {
                 CampaignDTO campaignDTO = new CampaignDTO();
+                campaignDTO.setId(campaignEntity.getId());
                 campaignDTO.setCampaignName(campaignEntity.getCampaignName());
                 campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
                 campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());

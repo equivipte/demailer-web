@@ -48,12 +48,12 @@
             <c:if test="${campaign.campaignStatus == 'DRAFT'}">
                 <td>
                     <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                        <a id="${campaignDTO.id}" href="#" class="tooltip-success green editCampaign"
+                        <a id="${campaign.id}" href="#" class="tooltip-success green editCampaign"
                            data-rel="tooltip"
                            title="<spring:message code="label.campaign.edit"/>">
                             <i class="icon-pencil bigger-130"></i>
                         </a>
-                        <a id="${campaignDTO.id}" href="#" class="tooltip-error red deleteCampaign"
+                        <a id="${campaign.id}" href="#" class="tooltip-error red deleteCampaign"
                            data-rel="tooltip"
                            class="deleteCampaign"
                            title="<spring:message code="label.campaign.delete"/>">
@@ -67,7 +67,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
                                 <li>
-                                    <a id="${campaignDTO.id}" href="#" class="tooltip-success editCampaign"
+                                    <a id="${campaign.id}" href="#" class="tooltip-success editCampaign"
                                        data-rel="tooltip"
                                        title="<spring:message code="label.campaign.edit"/>">
                                             <span class="green">
@@ -77,7 +77,7 @@
                                 </li>
 
                                 <li>
-                                    <a id="${subscriber.id}" href="#" class="tooltip-error deleteCampaign"
+                                    <a id="${campaign.id}" href="#" class="tooltip-error deleteCampaign"
                                        data-rel="tooltip"
                                        class="deleteCampaign"
                                        title="<spring:message code="label.campaign.delete"/>">
@@ -94,7 +94,7 @@
             <c:if test="${campaign.campaignStatus == 'SEND'}">
                 <td>
                     <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                        <a id="${campaignDTO.id}" href="#" class="tooltip-success blue viewCampaign"
+                        <a id="${campaign.id}" href="#" class="tooltip-success blue viewCampaign"
                            data-rel="tooltip"
                            title="<spring:message code="label.campaign.view"/>">
                             <i class="icon-zoom-in bigger-130"></i>
@@ -107,7 +107,7 @@
                             </button>
                             <ul class="dropdown-menu dropdown-only-icon dropdown-yellow pull-right dropdown-caret dropdown-close">
                                 <li>
-                                    <a id="${campaignDTO.id}" href="#" class="tooltip-success viewCampaign"
+                                    <a id="${campaign.id}" href="#" class="tooltip-success viewCampaign"
                                        data-rel="tooltip"
                                        title="<spring:message code="label.campaign.view"/>">
                                             <span class="green">
@@ -186,7 +186,7 @@
     });
 
     function redirectToEdit(id) {
-        window.location.replace("${context}/main/merchant/campaign_management/campaign_list/" + id + "/1?nextPage=CAMPAIGN_GROUP");
+        window.location.replace("${context}/main/merchant/campaign_management/"+id+"/campaignManagementAddPage");
     }
 
     function deleteCampaign(id) {
@@ -202,7 +202,7 @@
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
-                            url: "${pageContext.request.contextPath}/main/merchant/campaign_management/" + id,
+                            url: "${context}/main/merchant/campaign_management/" + id,
                             type: "DELETE",
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                 alert("An error has occurred making the request: " + errorThrown);

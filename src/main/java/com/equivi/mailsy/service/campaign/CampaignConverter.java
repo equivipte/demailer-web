@@ -8,6 +8,7 @@ import com.equivi.mailsy.data.entity.CampaignStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.service.constant.ConstantProperty;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,7 +45,9 @@ public class CampaignConverter {
         }
 
         campaignEntity.setCampaignName(campaignDTO.getCampaignName());
-        campaignEntity.setEmailContent(campaignDTO.getEmailContent());
+        if (StringUtils.isNotEmpty(campaignDTO.getEmailContent())) {
+            campaignEntity.setEmailContent(StringEscapeUtils.escapeHtml4(campaignDTO.getEmailContent()));
+        }
         campaignEntity.setEmaiSubject(campaignDTO.getEmailSubject());
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
@@ -70,7 +73,10 @@ public class CampaignConverter {
         campaignDTO.setId(campaignEntity.getId());
         campaignDTO.setCampaignName(campaignEntity.getCampaignName());
         campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
-        campaignDTO.setEmailContent(campaignEntity.getEmailContent());
+
+        if (StringUtils.isNotEmpty(campaignEntity.getEmailContent())) {
+            campaignDTO.setEmailContent(campaignEntity.getEmailContent());
+        }
         campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
 
         if (campaignDTO.getSubscriberGroupId() != null) {

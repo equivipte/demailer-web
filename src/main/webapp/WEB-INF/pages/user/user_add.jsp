@@ -165,7 +165,7 @@
 <script type="text/javascript">
 
     $(document).ready(function () {
-        $('#form-user-role').val(0);
+        )$('#form-user-role'.val(0);
     });
 
     function backToUserList() {

@@ -52,6 +52,7 @@
 
     <link href="${pageContext.request.contextPath}/resources/css/chosen.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/bootstrap-timepicker.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/datepicker.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/daterangepicker.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/colorpicker.css" rel="stylesheet"/>
 
@@ -122,6 +123,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-timepicker.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/date-time/daterangepicker.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-datetimepicker.min.js"></script>
 
 <!-- inline styles related to this page -->
 
