@@ -15,13 +15,18 @@
             <span class="title">Email Content</span>
         </li>
 
-        <li data-target="#step3" class="active">
+        <li data-target="#step3" class="complete">
             <span class="step">3</span>
-            <span class="title">Delivery</span>
+            <span class="title">Recipients</span>
         </li>
 
         <li data-target="#step4" class="active">
             <span class="step">4</span>
+            <span class="title">Delivery</span>
+        </li>
+
+        <li data-target="#step5">
+            <span class="step">5</span>
             <span class="title">Finish</span>
         </li>
     </ul>

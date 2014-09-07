@@ -15,59 +15,79 @@
 </br>
 </br>
 
-<!-- /.page-header -->
-<div class="row">
-    <div class="col-xs-12">
+<div class="table-responsive">
+<table id="table-subscriber" class="table table-striped table-bordered table-hover">
+<thead>
+<tr>
+    <th class="center">
+        <label class="pull-right">
+            <input id="checkedAll" type="checkbox" class="ace"/>
+            <span class="lbl"></span>
+        </label>
+    </th>
+    <th><spring:message code="label.subscriber.subscriber_group"/></th>
+    <th><spring:message code="label.subscriber.status"/></th>
+</tr>
+</thead>
+<c:if test="${subscriberGroupDTOList.size() > 0 }">
+    <tbody>
+    <c:forEach items="${subscriberGroupDTOList}" var="subscriber">
+        <tr>
+            <td class="center">
+                <label class="pull-right">
+                    <input type="checkbox" name="messageIds" value="${subscriber.id}" class="ace"/>
+                    <span class="lbl"></span>
+                </label>
+            </td>
+            <td>${subscriber.subscriberGroupName}</td>
+            <td>
+                <c:if test="${subscriber.subscriberGroupStatus == 'ACTIVE'}">
+                    <span class="label label-sm label-success">Active</span>
+                </c:if>
+                <c:if test="${subscriber.subscriberGroupStatus == 'INACTIVE'}">
+                    <span class="label label-sm label-grey">Inactive</span>
+                </c:if>
+                <c:if test="${subscriber.subscriberGroupStatus == 'DISABLED'}">
+                    <span class="label label-sm label-danger">Disabled</span>
+                </c:if>
+            </td>
+        </tr>
+    </c:forEach>
+    </tbody>
+    </table>
+    </div>
+</c:if>
 
-        <c:url var="url" value="/main/merchant/campaign_management/saveCampaignDelivery"/>
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button id="back_to_user_id_list" class="btn" onclick="goToStep1(${campaignDTO.id})">
+            <i class="icon-arrow-left icon-on-right"></i>
+            <spring:message code="label.prev"/>
+        </button>
+        &nbsp; &nbsp; &nbsp;
 
-        <!-- #dialog-confirm -->
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">
-                <spring:message code="label.campaign.scheduled_send_date"></spring:message></label>
+        <button class="btn btn-success btn-next" onclick="goToStep3(${campaignDTO.id})">
+            <spring:message code="label.next"/>
+            <i class="icon-arrow-right icon-on-right"></i>
+        </button>
 
-            <div class="input-group col-sm-3">
-                <div class="input-group">
-                    <input class="form-control date-picker" id="id-date-picker-1" type="text"
-                           data-date-format="dd-mm-yyyy"/>
-                    <span class="input-group-addon">
-                        <i class="icon-calendar bigger-110"></i>
-                    </span>
-                </div>
-            </div>
-        </div>
-
-        </br>
-        </br>
-        <div class="clearfix form-actions">
-            <div class="col-md-offset-3 col-md-9">
-                <button id="back_to_user_id_list" class="btn" onclick="backToEmailContent(${campaignDTO.id})">
-                    <i class="icon-arrow-left icon-on-right"></i>
-                    <spring:message code="label.prev"/>
-                </button>
-                &nbsp; &nbsp; &nbsp;
-
-                <button class="btn btn-success btn-next" type="submit">
-                    <spring:message code="label.next"/>
-                    <i class="icon-arrow-right icon-on-right"></i>
-                </button>
-
-            </div>
-        </div>
     </div>
 </div>
-
-<c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
 
-    jQuery(function ($) {
-        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
-            $(this).prev().focus();
+    function initCheckbox() {
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+                    .each(function () {
+                        this.checked = that.checked;
+                        $(this).closest('tr').toggleClass('selected');
+                    });
+
         });
-
-    });
-    function backToEmailContent(campaignId) {
-
-        window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementEmailContentPage");
     }
+    $(document).ready(function () {
+        initCheckbox();
+    });
+
 </script>

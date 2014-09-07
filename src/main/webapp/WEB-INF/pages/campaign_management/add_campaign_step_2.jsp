@@ -202,7 +202,7 @@
 
             contentType: 'application/json',
             success: function () {
-                window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementEmailDeliveryPage");
+                window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementRecipientsPage");
             },
             error: function (jqXHR, textStatus, errorThrown) {
                 console.log("Save email content - the following error occured: " + textStatus, errorThrown);

@@ -3,11 +3,16 @@ package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
+import com.equivi.mailsy.data.entity.SubscriberContactEntity;
+import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
+import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
 import com.equivi.mailsy.service.constant.ConstantProperty;
 import com.equivi.mailsy.service.exception.InvalidDataException;
+import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
+import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
 import org.apache.commons.lang3.StringUtils;
@@ -43,6 +48,9 @@ public class CampaignManagementController extends AbstractController {
 
     @Resource
     private CampaignManagementService campaignManagementService;
+
+    @Resource
+    private SubscriberGroupService subscriberGroupService;
 
     private static final String EMAIL_CONTENT_PAGE = "campaignManagementEmailContentPage";
 
@@ -162,6 +170,31 @@ public class CampaignManagementController extends AbstractController {
 
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
         modelAndView.addObject("campaignDTO", campaignDTO);
+        modelAndView.addObject("subscriberGroupDTOList", getSubscriberGroupDTOList());
+    }
+
+    private List<SubscriberGroupDTO> getSubscriberGroupDTOList() {
+        Page<SubscriberGroupEntity> subscriberContactEntities = subscriberGroupService.listSubscriberGroup(new HashMap<SubscriberGroupSearchFilter, String>(), 1, webConfiguration.getMaxRecordsPerPage());
+
+        return convertToSubscribeGroupDTOList(subscriberContactEntities.getContent());
+    }
+
+    //TODO: move duplicated code in SubscriberManagementController to converter
+    private List<SubscriberGroupDTO> convertToSubscribeGroupDTOList(List<SubscriberGroupEntity> subscriberGroupEntityList) {
+        List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
+
+        if (subscriberGroupEntityList != null && !subscriberGroupEntityList.isEmpty()) {
+            for (SubscriberGroupEntity subscriberGroupEntity : subscriberGroupEntityList) {
+                SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
+                subscriberGroupDTO.setId(subscriberGroupEntity.getId());
+                subscriberGroupDTO.setSubscriberGroupName(subscriberGroupEntity.getGroupName());
+                subscriberGroupDTO.setSubscriberGroupStatus(subscriberGroupEntity.getStatus().getStatusDescription());
+                subscriberGroupDTO.setSubscriberLastUpdateDate(sdf.format(subscriberGroupEntity.getLastUpdatedDateTime()));
+                subscriberGroupDTOList.add(subscriberGroupDTO);
+            }
+        }
+
+        return subscriberGroupDTOList;
     }
 
 
