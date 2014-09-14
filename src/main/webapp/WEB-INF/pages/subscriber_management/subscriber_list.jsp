@@ -118,9 +118,9 @@
     });
 
     function unsubscribeContact(id, status) {
-        var href = "${context}/main/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
+        var href = "${context}/main/merchant/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
         $.ajax({
-            url: "${context}/main/subscriber_management/change_subscribe_status/" + status + "/" + id + "/${subscriberGroupId}",
+            url: "${context}/main/merchant/subscriber_management/change_subscribe_status/" + status + "/" + id + "/${subscriberGroupId}",
             type: "PUT",
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("An error has occurred making the request: " + errorThrown);
@@ -140,9 +140,9 @@
     }
 
     function deleteContact(id) {
-        var href = "${context}/main/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
+        var href = "${context}/main/merchant/subscriber_management/subscriber_list/${subscriberGroupId}/1?nextPage=SUBSCRIBER_LIST";
         $.ajax({
-            url: "${context}/main/subscriber_management/delete_subscriber/" + id + "",
+            url: "${context}/main/merchant/subscriber_management/delete_subscriber/" + id + "",
             type: "DELETE",
             error: function (XMLHttpRequest, textStatus, errorThrown) {
                 alert("An error has occurred making the request: " + errorThrown);

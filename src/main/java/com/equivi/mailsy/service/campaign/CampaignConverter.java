@@ -2,10 +2,8 @@ package com.equivi.mailsy.service.campaign;
 
 
 import com.equivi.mailsy.data.dao.CampaignDao;
-import com.equivi.mailsy.data.dao.SubscriberGroupDao;
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
-import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.service.constant.ConstantProperty;
 import org.apache.commons.lang3.StringEscapeUtils;
@@ -17,6 +15,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class CampaignConverter {
@@ -24,8 +24,9 @@ public class CampaignConverter {
     @Resource
     private CampaignDao campaignDao;
 
-    @Resource
-    private SubscriberGroupDao subscriberGroupDao;
+    private static SimpleDateFormat dateFormat;
+
+    private static SimpleDateFormat timeFormat;
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignConverter.class);
 
@@ -33,6 +34,8 @@ public class CampaignConverter {
 
     static {
         sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
+        dateFormat = new SimpleDateFormat(ConstantProperty.DATE_FORMAT.getValue());
+        timeFormat = new SimpleDateFormat(ConstantProperty.TIME_FORMAT.getValue());
     }
 
     public CampaignEntity convertToCampaignEntity(CampaignDTO campaignDTO) {
@@ -42,19 +45,22 @@ public class CampaignConverter {
             campaignEntity = campaignDao.findOne(campaignDTO.getId());
         } else {
             campaignEntity = new CampaignEntity();
+            campaignEntity.setCampaignUUID(UUID.randomUUID().toString());
+        }
+
+        if (StringUtils.isNotEmpty(campaignDTO.getEmailContent())) {
+            String emailContent = StringEscapeUtils.unescapeHtml4(campaignDTO.getEmailContent());
+            campaignEntity.setEmailContent(StringEscapeUtils.escapeHtml4(emailContent));
         }
 
         campaignEntity.setCampaignName(campaignDTO.getCampaignName());
-        if (StringUtils.isNotEmpty(campaignDTO.getEmailContent())) {
-            campaignEntity.setEmailContent(StringEscapeUtils.escapeHtml4(campaignDTO.getEmailContent()));
-        }
         campaignEntity.setEmaiSubject(campaignDTO.getEmailSubject());
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
 
         if (!StringUtils.isEmpty(campaignDTO.getScheduledSendDate())) {
             try {
-                campaignEntity.setScheduledSendDate(sdf.parse(campaignDTO.getScheduledSendDate()));
+                campaignEntity.setScheduledSendDate(sdf.parse(campaignDTO.getScheduledSendDate() + " " + campaignDTO.getScheduledSendTime()));
             } catch (ParseException e) {
                 LOG.error(e.getMessage(), e);
             }
@@ -75,10 +81,14 @@ public class CampaignConverter {
         }
         campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
 
-
-        if (campaignEntity.getScheduledSendDate() != null) {
-            campaignDTO.setScheduledSendDate(sdf.format(campaignEntity.getScheduledSendDate()));
+        Date scheduledSendDate = campaignEntity.getScheduledSendDate();
+        if (scheduledSendDate == null) {
+            scheduledSendDate = new Date();
         }
+        campaignDTO.setScheduledSendTime(timeFormat.format(scheduledSendDate));
+        campaignDTO.setScheduledSendDateTime(sdf.format(scheduledSendDate));
+        campaignDTO.setScheduledSendDate(dateFormat.format(scheduledSendDate));
+
 
         return campaignDTO;
     }

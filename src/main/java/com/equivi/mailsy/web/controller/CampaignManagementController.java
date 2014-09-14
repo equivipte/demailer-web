@@ -3,7 +3,6 @@ package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
-import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
@@ -15,6 +14,7 @@ import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
+import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -32,10 +32,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 @Controller
 public class CampaignManagementController extends AbstractController {
@@ -56,10 +56,10 @@ public class CampaignManagementController extends AbstractController {
 
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
 
-    private static SimpleDateFormat sdf;
+    private static SimpleDateFormat dateTimeFormat;
 
     static {
-        sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
+        dateTimeFormat = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
     }
 
 
@@ -91,6 +91,12 @@ public class CampaignManagementController extends AbstractController {
         return modelAndView;
     }
 
+    @RequestMapping(value = "/main/merchant/campaign_management/goToFinishPage", method = RequestMethod.GET)
+    public String goToFinishPage(ModelAndView modelAndView) {
+
+        return "campaignManagementFinishPage";
+    }
+
     @RequestMapping(value = "/main/merchant/campaign_management/saveAddCampaign", method = RequestMethod.POST)
     public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale) {
 
@@ -102,7 +108,7 @@ public class CampaignManagementController extends AbstractController {
             } else {
 
                 campaignDTO.setCampaignStatus(CampaignStatus.DRAFT.getCampaignStatusDescription());
-                campaignDTO = campaignManagementService.saveCampaign(campaignDTO);
+                campaignDTO = campaignManagementService.saveCampaignDTO(campaignDTO);
 
                 modelAndView = new ModelAndView();
                 String redirectData = "redirect:" + campaignDTO.getId().toString() + "/" + EMAIL_CONTENT_PAGE;
@@ -125,6 +131,31 @@ public class CampaignManagementController extends AbstractController {
 
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(Long.valueOf(campaignId));
         campaignDTO.setEmailContent(emailContent);
+
+        campaignManagementService.saveCampaign(campaignDTO);
+
+        return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/saveCampaignDelivery", method = RequestMethod.POST)
+    @ResponseBody
+    public String saveCampaignDelivery(@RequestBody String scheduleDeliveryTime, @PathVariable String campaignId) {
+
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(Long.valueOf(campaignId));
+        campaignDTO.setScheduledSendDateTime(scheduleDeliveryTime);
+
+        campaignManagementService.saveCampaign(campaignDTO);
+        campaignManagementService.setCampaignReadyToSendStatus(Long.valueOf(campaignId));
+
+        return "SUCCESS";
+    }
+
+    @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/saveSubscriberGroup", method = RequestMethod.POST)
+    @ResponseBody
+    public String saveSubscriberGroup(@RequestBody String subscriberGroupId, @PathVariable String campaignId) {
+
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(Long.valueOf(campaignId));
+        campaignDTO.setSubscriberGroupIds(convertIdsToLongList(subscriberGroupId));
 
         campaignManagementService.saveCampaign(campaignDTO);
 
@@ -170,17 +201,17 @@ public class CampaignManagementController extends AbstractController {
 
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
         modelAndView.addObject("campaignDTO", campaignDTO);
-        modelAndView.addObject("subscriberGroupDTOList", getSubscriberGroupDTOList());
+        modelAndView.addObject("subscriberGroupDTOList", getSubscriberGroupDTOList(campaignDTO));
     }
 
-    private List<SubscriberGroupDTO> getSubscriberGroupDTOList() {
-        Page<SubscriberGroupEntity> subscriberContactEntities = subscriberGroupService.listSubscriberGroup(new HashMap<SubscriberGroupSearchFilter, String>(), 1, webConfiguration.getMaxRecordsPerPage());
+    private List<SubscriberGroupDTO> getSubscriberGroupDTOList(CampaignDTO campaignDTO) {
+        Page<SubscriberGroupEntity> subscriberContactEntities = subscriberGroupService.listSubscriberGroup(new THashMap<SubscriberGroupSearchFilter, String>(), 1, webConfiguration.getMaxRecordsPerPage());
 
-        return convertToSubscribeGroupDTOList(subscriberContactEntities.getContent());
+        return convertToSubscribeGroupDTOList(subscriberContactEntities.getContent(), campaignDTO.getSubscriberGroupIds());
     }
 
     //TODO: move duplicated code in SubscriberManagementController to converter
-    private List<SubscriberGroupDTO> convertToSubscribeGroupDTOList(List<SubscriberGroupEntity> subscriberGroupEntityList) {
+    private List<SubscriberGroupDTO> convertToSubscribeGroupDTOList(List<SubscriberGroupEntity> subscriberGroupEntityList, List<Long> subscriberGroupList) {
         List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
 
         if (subscriberGroupEntityList != null && !subscriberGroupEntityList.isEmpty()) {
@@ -189,7 +220,13 @@ public class CampaignManagementController extends AbstractController {
                 subscriberGroupDTO.setId(subscriberGroupEntity.getId());
                 subscriberGroupDTO.setSubscriberGroupName(subscriberGroupEntity.getGroupName());
                 subscriberGroupDTO.setSubscriberGroupStatus(subscriberGroupEntity.getStatus().getStatusDescription());
-                subscriberGroupDTO.setSubscriberLastUpdateDate(sdf.format(subscriberGroupEntity.getLastUpdatedDateTime()));
+                subscriberGroupDTO.setSubscriberLastUpdateDate(dateTimeFormat.format(subscriberGroupEntity.getLastUpdatedDateTime()));
+
+                if (subscriberGroupList != null && !subscriberGroupList.isEmpty()) {
+                    if (subscriberGroupList.contains(subscriberGroupDTO.getId())) {
+                        subscriberGroupDTO.setAddedToCampaign(true);
+                    }
+                }
                 subscriberGroupDTOList.add(subscriberGroupDTO);
             }
         }
@@ -203,7 +240,7 @@ public class CampaignManagementController extends AbstractController {
         String campaignSubjectName = request.getParameter(CampaignSearchFilter.CAMPAIGN_SUBJECT.getFilterName());
 
 
-        Map<CampaignSearchFilter, String> filterMap = new HashMap<>();
+        Map<CampaignSearchFilter, String> filterMap = new THashMap<>();
         if (!StringUtils.isBlank(campaignSubjectName)) {
             filterMap.put(CampaignSearchFilter.CAMPAIGN_SUBJECT, campaignSubjectName);
         }
@@ -226,12 +263,23 @@ public class CampaignManagementController extends AbstractController {
                 campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
                 campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
                 if (campaignEntity.getLastUpdatedDateTime() != null) {
-                    campaignDTO.setLastUpdateDate(sdf.format(campaignEntity.getLastUpdatedDateTime()));
+                    campaignDTO.setLastUpdateDate(dateTimeFormat.format(campaignEntity.getLastUpdatedDateTime()));
                 }
                 campaignDTOList.add(campaignDTO);
             }
         }
         return campaignDTOList;
+    }
+
+    private List<Long> convertIdsToLongList(String subscriberGroupIds) {
+        StringTokenizer tokenizer = new StringTokenizer(subscriberGroupIds, ",");
+
+        List<Long> subscriberGroupIdList = new ArrayList<>();
+        while (tokenizer.hasMoreElements()) {
+            subscriberGroupIdList.add(Long.valueOf((String) tokenizer.nextElement()));
+        }
+
+        return subscriberGroupIdList;
     }
 
 }

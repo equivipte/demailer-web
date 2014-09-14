@@ -4,7 +4,7 @@
 
 <div class="page-header">
     <h1>
-        <spring:message code="label.create.campaign"/>
+        <spring:message code="label.campaign.email.content"/>
     </h1>
 </div>
 

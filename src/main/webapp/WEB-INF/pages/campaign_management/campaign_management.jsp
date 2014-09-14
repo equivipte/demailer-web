@@ -23,6 +23,7 @@
 <table id="table-subscriber" class="table table-striped table-bordered table-hover">
 <thead>
 <tr>
+    <th><spring:message code="label.campaign.id"/></th>
     <th><spring:message code="label.campaign.name"/></th>
     <th><spring:message code="label.campaign.subject"/></th>
     <th><spring:message code="label.campaign.status"/></th>
@@ -34,6 +35,7 @@
     <tbody>
     <c:forEach items="${campaignDTOList}" var="campaign">
         <tr>
+            <td>${campaign.id}</td>
             <td>${campaign.campaignName}</td>
             <td>${campaign.emailSubject}</td>
             <td>
@@ -42,6 +44,9 @@
                 </c:if>
                 <c:if test="${campaign.campaignStatus == 'DRAFT'}">
                     <span class="label label-sm label-warning"><spring:message code="DRAFT"/></span>
+                </c:if>
+                <c:if test="${campaign.campaignStatus == 'OUTBOX'}">
+                    <span class="label label-sm label-warning"><spring:message code="OUTBOX"/></span>
                 </c:if>
             </td>
             <td>${campaign.lastUpdateDate}</td>
@@ -91,7 +96,7 @@
                     </div>
                 </td>
             </c:if>
-            <c:if test="${campaign.campaignStatus == 'SEND'}">
+            <c:if test="${campaign.campaignStatus == 'SEND' or campaign.campaignStatus == 'OUTBOX' }">
                 <td>
                     <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
                         <a id="${campaign.id}" href="#" class="tooltip-success blue viewCampaign"

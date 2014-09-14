@@ -17,6 +17,8 @@ public class SubscriberGroupDTO implements Serializable {
 
     private String subscriberLastUpdateDate;
 
+    private boolean addedToCampaign;
+
     private List<SubscriberDTO> subscriberList;
 
     public Long getId() {
@@ -57,5 +59,13 @@ public class SubscriberGroupDTO implements Serializable {
 
     public void setSubscriberList(List<SubscriberDTO> subscriberList) {
         this.subscriberList = subscriberList;
+    }
+
+    public boolean isAddedToCampaign() {
+        return addedToCampaign;
+    }
+
+    public void setAddedToCampaign(boolean addedToCampaign) {
+        this.addedToCampaign = addedToCampaign;
     }
 }

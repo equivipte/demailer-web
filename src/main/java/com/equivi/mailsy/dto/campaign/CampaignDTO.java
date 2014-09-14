@@ -4,6 +4,7 @@ package com.equivi.mailsy.dto.campaign;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import java.io.Serializable;
+import java.util.List;
 
 
 public class CampaignDTO implements Serializable {
@@ -21,11 +22,16 @@ public class CampaignDTO implements Serializable {
 
     private String campaignStatus;
 
+    private String scheduledSendDateTime;
+
     private String scheduledSendDate;
+
+    private String scheduledSendTime;
+
 
     private String lastUpdateDate;
 
-    private Long subscriberGroupId;
+    private List<Long> subscriberGroupId;
 
     public Long getId() {
         return id;
@@ -67,12 +73,12 @@ public class CampaignDTO implements Serializable {
         this.lastUpdateDate = lastUpdateDate;
     }
 
-    public Long getSubscriberGroupId() {
+    public List<Long> getSubscriberGroupIds() {
         return subscriberGroupId;
     }
 
-    public void setSubscriberGroupId(Long subscriberGroupId) {
-        this.subscriberGroupId = subscriberGroupId;
+    public void setSubscriberGroupIds(List<Long> subscriberGroupIds) {
+        this.subscriberGroupId = subscriberGroupIds;
     }
 
     public String getCampaignStatus() {
@@ -89,5 +95,30 @@ public class CampaignDTO implements Serializable {
 
     public void setCampaignName(String campaignName) {
         this.campaignName = campaignName;
+    }
+
+
+    public String getScheduledSendDateTime() {
+        return scheduledSendDateTime;
+    }
+
+    public void setScheduledSendDateTime(String scheduledSendDateTime) {
+        this.scheduledSendDateTime = scheduledSendDateTime;
+    }
+
+    public String getScheduledSendTime() {
+        return scheduledSendTime;
+    }
+
+    public void setScheduledSendTime(String scheduledSendTime) {
+        this.scheduledSendTime = scheduledSendTime;
+    }
+
+    public List<Long> getSubscriberGroupId() {
+        return subscriberGroupId;
+    }
+
+    public void setSubscriberGroupId(List<Long> subscriberGroupId) {
+        this.subscriberGroupId = subscriberGroupId;
     }
 }

@@ -4,6 +4,7 @@ package com.equivi.mailsy.service.emailverifier;
 import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.constant.HeaderImportSubscribe;
 import com.equivi.mailsy.service.excel.ExcelToDTOConverter;
+import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -20,7 +21,6 @@ import javax.annotation.Resource;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -95,7 +95,7 @@ public class ExcelEmailReader {
 
                 Iterator<Row> rowIterator = sheet.iterator();
 
-                mapColumnIndex = new HashMap<>();
+                mapColumnIndex = new THashMap<>();
 
                 while (rowIterator.hasNext()) {
                     Row row = rowIterator.next();

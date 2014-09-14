@@ -29,7 +29,7 @@
 
 <div class="page-header">
     <h1>
-        <spring:message code="label.create.campaign"/>
+        <spring:message code="label.campaign.info"/>
     </h1>
 </div>
 
@@ -103,7 +103,7 @@
 
     function backToCampaignList() {
 
-        window.location.replace("${pageContext.request.contextPath}/main/campaign_management/1");
+        window.location.replace("${pageContext.request.contextPath}/main/merchant/campaign_management/1");
     }
 </script>
 

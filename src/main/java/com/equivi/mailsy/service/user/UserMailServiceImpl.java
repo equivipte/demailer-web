@@ -4,13 +4,13 @@ import com.equivi.mailsy.dto.user.UserRequestDTO;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.mail.MailService;
 import com.equivi.mailsy.util.WebConfigUtil;
+import gnu.trove.map.hash.THashMap;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import javax.annotation.Resource;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -37,7 +37,7 @@ public class UserMailServiceImpl implements UserMailService {
 
     @Override
     public void sendEmailForUserCreation(UserRequestDTO userRequestDTO) {
-        Map model = new HashMap();
+        Map model = new THashMap();
         model.put("userRequestDTO", userRequestDTO);
 
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(
@@ -51,7 +51,7 @@ public class UserMailServiceImpl implements UserMailService {
 
     @Override
     public void sendEmailForPasswordUpdate(UserRequestDTO userRequestDTO) {
-        Map model = new HashMap();
+        Map model = new THashMap();
         model.put("userRequestDTO", userRequestDTO);
 
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(
@@ -64,7 +64,7 @@ public class UserMailServiceImpl implements UserMailService {
 
     @Override
     public void sendEmailForForgetPassword(UserRequestDTO userRequestDTO) {
-        Map model = new HashMap();
+        Map model = new THashMap();
         model.put("userRequestDTO", userRequestDTO);
 
         String messageContent = VelocityEngineUtils.mergeTemplateIntoString(

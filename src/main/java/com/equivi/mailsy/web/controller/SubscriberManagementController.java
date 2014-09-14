@@ -13,6 +13,7 @@ import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.web.constant.PageConstant;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
+import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -248,7 +249,7 @@ public class SubscriberManagementController extends AbstractController {
         String emailAddress = request.getParameter(SubscriberGroupSearchFilter.EMAIL_ADDRESS.getFilterName());
 
 
-        Map<SubscriberGroupSearchFilter, String> filterMap = new HashMap<>();
+        Map<SubscriberGroupSearchFilter, String> filterMap = new THashMap<>();
         if (!StringUtils.isBlank(groupName)) {
             filterMap.put(SubscriberGroupSearchFilter.SUBSCRIBER_GROUP_NAME, groupName);
         }

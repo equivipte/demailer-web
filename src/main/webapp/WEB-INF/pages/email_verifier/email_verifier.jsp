@@ -4,7 +4,7 @@
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 
-<c:url var="url" value="/main/emailverifier/imports/upload"/>
+<c:url var="url" value="/main/merchant/emailverifier/imports/upload"/>
 
 <div class="page-header">
     <h1>
@@ -143,7 +143,7 @@
 
                 $($tds.eq(1).find('span')).blink({delay: 500});
 
-                var url = "${context}/main/emailverifier";
+                var url = "${context}/main/merchant/emailverifier";
 
                 $.ajax({
                     url : url,

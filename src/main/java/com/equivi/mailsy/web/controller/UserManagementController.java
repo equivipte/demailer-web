@@ -15,6 +15,7 @@ import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.constant.WebRequestConstant;
 import com.equivi.mailsy.web.context.SessionUtil;
 import com.equivi.mailsy.web.message.ErrorMessage;
+import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -29,7 +30,11 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Controller
 public class UserManagementController {
@@ -73,7 +78,7 @@ public class UserManagementController {
         String emailAddress = request.getParameter(UserSearchFilter.EMAIL_ADDRESS.getFilterName());
 
 
-        Map<UserSearchFilter, String> filterMap = new HashMap<>();
+        Map<UserSearchFilter, String> filterMap = new THashMap<>();
         if (!StringUtils.isBlank(userName)) {
             filterMap.put(UserSearchFilter.USERNAME, userName);
         }

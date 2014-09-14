@@ -25,7 +25,7 @@
             <span class="title">Delivery</span>
         </li>
 
-        <li data-target="#step5">
+        <li data-target="#step5" class="complete">
             <span class="step">5</span>
             <span class="title">Finish</span>
         </li>
