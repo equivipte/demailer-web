@@ -40,6 +40,7 @@
         <common.validator.version>1.4.0</common.validator.version>
         <poi.version>3.10-FINAL</poi.version>
         <trove.version>3.0.3</trove.version>
+        <httpclient.version>4.3.5</httpclient.version>
     </properties>
 
 
@@ -275,6 +276,20 @@
             <artifactId>commons-fileupload</artifactId>
             <version>${common.fileupload.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>${httpclient.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.ning</groupId>
+            <artifactId>async-http-client</artifactId>
+            <version>1.7.20</version>
+        </dependency>
+
+
 
         <!--Exporter -->
 

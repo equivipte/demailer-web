@@ -170,23 +170,21 @@
     $(document).ready(function () {
         $(".editUser").click(function (event) {
             var userId = $(this).attr("id");
-            redirectToEdit(userId)
+            redirectToEdit(userId);
         });
-
         $(".deleteUser").click(function (event) {
             var userId = $(this).attr("id");
-            deleteUser(userId)
+            deleteUser(userId);
         });
 
     });
 
 
     function redirectToEdit(id) {
-        alert()
         window.location.replace("${context}/main/admin/user/" + id);
     }
 
-    function deleteUser(id) {
+    function deleteUser(id){
         var href = "${context}/main/admin/users/1";
         $("#dialog-confirm").removeClass('hide').dialog({
             resizable: false,
@@ -195,7 +193,7 @@
             title_html: true,
             buttons: [
                 {
-                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.user.delete"/> ",
+                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.delete"/>",
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
@@ -207,12 +205,7 @@
                             },
                             success: function (data) {
                                 if (data != 'SUCCESS') {
-                                    if (data == 'import.process_running.warning.message') {
-                                        alert("<spring:message code="import.process_running.warning.message"/>");
-                                    }
-                                    else {
-                                        alert("<spring:message code="general.exception.delete"/>");
-                                    }
+                                    alert("<spring:message code="general.exception.delete"/>");
                                 }
                                 else {
                                     //Do stuff here on success such as modal info
@@ -236,4 +229,4 @@
         });
     }
 
-</script>
+S</script>

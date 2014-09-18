@@ -154,7 +154,7 @@
                 data : JSON.stringify(emails),
                 contentType: 'application/json',
                 success: function(verifier) {
-                    window.location.href = "${context}/main/emailverifier/verify";
+                    window.location.href = "${context}/main/merchant/emailverifier/verify";
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
