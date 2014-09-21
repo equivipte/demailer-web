@@ -15,7 +15,7 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.util.ByteArrayDataSource;
 import java.util.List;
 
-@Service
+@Service("smtpMailServiceImpl")
 public class MailServiceImpl implements MailService {
 
     @Autowired

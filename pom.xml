@@ -41,6 +41,7 @@
         <poi.version>3.10-FINAL</poi.version>
         <trove.version>3.0.3</trove.version>
         <httpclient.version>4.3.5</httpclient.version>
+        <httpasyncclient.version>4.0.2</httpasyncclient.version>
     </properties>
 
 
@@ -230,6 +231,12 @@
             <version>${mockito.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-test</artifactId>
+            <version>${spring.version}</version>
+        </dependency>
+
         <!--Logger -->
         <dependency>
             <groupId>org.slf4j</groupId>
@@ -284,9 +291,9 @@
         </dependency>
 
         <dependency>
-            <groupId>com.ning</groupId>
-            <artifactId>async-http-client</artifactId>
-            <version>1.7.20</version>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpasyncclient</artifactId>
+            <version>${httpasyncclient.version}</version>
         </dependency>
 
 

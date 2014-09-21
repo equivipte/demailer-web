@@ -1,6 +1,7 @@
 package com.equivi.mailsy.web.controller;
 
 
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
@@ -77,7 +78,7 @@ public class ImportEmailListController {
     private final String getTargetFileName(final HttpServletRequest request, final String fileName) {
 
         StringBuilder sbTargetFileName = new StringBuilder();
-        sbTargetFileName.append(webConfiguration.getEmailVerifierLocation());
+        sbTargetFileName.append(webConfiguration.getWebConfig(dEmailerWebPropertyKey.EMAIL_VERIFIER_IMPORT_LOCATION));
         sbTargetFileName.append("/");
         sbTargetFileName.append(sessionUtil.getCurrentUser(request).getUserId());
         sbTargetFileName.append("-");

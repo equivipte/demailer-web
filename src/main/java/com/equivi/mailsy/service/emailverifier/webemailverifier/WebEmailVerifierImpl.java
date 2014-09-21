@@ -17,6 +17,8 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 
 @Service("webEmailVerifierImpl")
 public class WebEmailVerifierImpl implements VerifierService {
@@ -48,15 +50,18 @@ public class WebEmailVerifierImpl implements VerifierService {
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         LOG.info("Send to Email Verifier API");
-        ResponseEntity<String> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
-        LOG.info("Result:" + emailVerifierResponse);
+        Future<ResponseEntity<String>> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
 
         try {
             ObjectMapper objectMapper = new ObjectMapper();
-            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), EmailVerifierResponse.class);
+            LOG.info("Result:" + emailVerifierResponse.get().getBody());
+
+            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.get().getBody(), EmailVerifierResponse.class);
             return emailVerifierResponseEntity;
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
+        } catch (InterruptedException | ExecutionException exx) {
+            LOG.error(exx.getMessage(), exx);
         }
         return null;
     }

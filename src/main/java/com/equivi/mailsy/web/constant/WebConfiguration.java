@@ -25,19 +25,13 @@ public class WebConfiguration implements Serializable {
         return Integer.parseInt(pageRecords);
     }
 
-    public String getEmailVerifierLocation() {
-        String emailVerifierLocation = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_IMPORT_LOCATION);
-        if(StringUtils.isBlank(emailVerifierLocation)){
-           throw new InvalidConfigException("Unable to find import email verifier location");
+    public String getWebConfig(dEmailerWebPropertyKey dEmailerWebPropertyKey) {
+        String webConfig = WebConfigUtil.getValue(dEmailerWebPropertyKey);
+        if (StringUtils.isBlank(webConfig)) {
+            throw new InvalidConfigException("Unable to find Web Property Key:" + dEmailerWebPropertyKey.getKeyName());
         }
-        return emailVerifierLocation;
+        return webConfig;
     }
 
-    public String getSubscriberListLocation() {
-        String emailVerifierLocation = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_IMPORT_LOCATION);
-        if(StringUtils.isBlank(emailVerifierLocation)){
-            throw new InvalidConfigException("Unable to find import email verifier location");
-        }
-        return emailVerifierLocation;
-    }
+
 }

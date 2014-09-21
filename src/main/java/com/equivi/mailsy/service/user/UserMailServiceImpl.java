@@ -29,7 +29,7 @@ public class UserMailServiceImpl implements UserMailService {
 
     private static final String FORGOT_PASSWORD_EMAIL_TEMPLATE = "forgot_password_email_content.vm";
 
-    @Resource
+    @Resource(name = "smtpMailServiceImpl")
     private MailService mailService;
 
     @Resource

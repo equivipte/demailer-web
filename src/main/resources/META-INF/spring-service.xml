@@ -51,7 +51,7 @@
                 <prop key="file.resource.loader.class">
                     org.apache.velocity.runtime.resource.loader.FileResourceLoader
                 </prop>
-                <prop key="file.resource.loader.path">file:/opt/demailer/conf/template</prop>
+                <prop key="file.resource.loader.path">file:/opt/demailer/conf/demailer/template</prop>
                 <prop key="file.resource.loader.cache">false</prop>
             </props>
         </property>
