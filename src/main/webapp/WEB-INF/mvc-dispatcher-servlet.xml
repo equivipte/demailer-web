@@ -52,6 +52,13 @@
             </value>
         </property>
     </bean>
+
+    <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location">
+            <value>/WEB-INF/views.xml</value>
+        </property>
+    </bean>
+
     <bean id="tilesConfigurer"
           class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
@@ -60,7 +67,6 @@
             </list>
         </property>
     </bean>
-
 
     <!--i18n-->
     <bean id="localeResolver"

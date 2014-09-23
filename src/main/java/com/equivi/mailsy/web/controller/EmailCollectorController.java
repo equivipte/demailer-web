@@ -7,18 +7,29 @@ import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
+import com.equivi.mailsy.web.views.CollectorResultExcelView;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 @Controller
@@ -28,6 +39,7 @@ public class EmailCollectorController {
     private static final String SESSION_CRAWLING = "sessionCrawling";
 
     public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
+    public static final String KEY_RESULT_EMAILS = "resultEmails";
 
     @Autowired
     private EmailCollectorService emailCollectorService;
@@ -49,8 +61,6 @@ public class EmailCollectorController {
     public void start(@RequestBody EmailCollector emailCollector, HttpServletRequest request) throws Exception {
     	emailCollectorService.subscribe(emailCollector.getSite());
         emailScanningService.subscribe();
-
-        List<String> emailsResult = Lists.newArrayList();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.TRUE);
         request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
@@ -101,9 +111,22 @@ public class EmailCollectorController {
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.FALSE);
     }
 
-    @RequestMapping(value = "verifyEmail", method = RequestMethod.POST)
+    @RequestMapping(value = "putResultToSession", method = RequestMethod.POST)
     @ResponseStatus(HttpStatus.OK)
-    public void verifyEmail(@RequestBody ArrayList<String> emails, HttpServletRequest request) {
+    public void putResultToSession(@RequestBody ArrayList<String> emails, HttpServletRequest request) {
         request.getSession().setAttribute(SESSION_RESULT_EMAILS, emails);
+    }
+
+    @RequestMapping(value = "exportToExcel", method = RequestMethod.GET)
+    public ModelAndView exportToExcel(Map<String, Object> model, HttpServletRequest request) throws IOException {
+        List<String> resultEmails = (List<String>) request.getSession().getAttribute(SESSION_RESULT_EMAILS);
+
+
+        model.put(KEY_RESULT_EMAILS, resultEmails);
+
+        ModelAndView mav = new ModelAndView("collectorResultExcelView");
+        request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
+
+        return mav;
     }
 }

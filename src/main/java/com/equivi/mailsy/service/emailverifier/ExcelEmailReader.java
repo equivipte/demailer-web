@@ -42,7 +42,7 @@ public class ExcelEmailReader {
             Workbook workbook = null;
             if (multipartFile.getOriginalFilename().toLowerCase().endsWith(".xlsx")) {
                 workbook = new XSSFWorkbook(multipartFile.getInputStream());
-            } else if (multipartFile.getOriginalFilename().toLowerCase().equals(".xls")) {
+            } else if (multipartFile.getOriginalFilename().toLowerCase().endsWith(".xls")) {
                 workbook = new HSSFWorkbook(multipartFile.getInputStream());
             }
 

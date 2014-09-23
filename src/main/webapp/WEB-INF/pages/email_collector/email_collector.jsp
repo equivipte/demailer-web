@@ -136,24 +136,14 @@
 		});
 
 		$("#verify-emails-btn").click(function() {
-		    var table = $("#emailTable > tbody");
-
-
-            var emails = [];
-
-            table.find('tr').each(function (i) {
-                var $tds = $(this).find('td'),email = $tds.eq(0).text();
-
-                emails.push(email);
-
-            });
+            var emails = getEmailsInTable();
 
             $.ajax({
-                url : "${context}/main/emailcollector/verifyEmail",
+                url : "${context}/main/emailcollector/putResultToSession",
                 type : "POST",
                 data : JSON.stringify(emails),
                 contentType: 'application/json',
-                success: function(verifier) {
+                success: function() {
                     window.location.href = "${context}/main/merchant/emailverifier/verify";
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
@@ -162,5 +152,37 @@
             });
 
 		});
+
+		$("#export-btn").click(function() {
+            var emails = getEmailsInTable();
+
+            $.ajax({
+                url : "${context}/main/emailcollector/putResultToSession",
+                type : "POST",
+                data : JSON.stringify(emails),
+                contentType: 'application/json',
+                success: function() {
+                    window.location.href = "${context}/main/emailcollector/exportToExcel";
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Export to excel - the following error occured: " + textStatus, errorThrown);
+                }
+            });
+		});
 	});
+
+	function getEmailsInTable() {
+        var table = $("#emailTable > tbody");
+
+        var emails = [];
+
+        table.find('tr').each(function (i) {
+            var $tds = $(this).find('td'),email = $tds.eq(0).text();
+
+            emails.push(email);
+
+        });
+
+        return emails;
+	}
 </script>

@@ -47,6 +47,8 @@ public class EmailVerifierController {
             model.addAttribute("emailVerifierList", emailVerifierResponses);
         }
 
+        request.getSession().removeAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
+
         return "emailVerifierPage";
     }
 }
