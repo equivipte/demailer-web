@@ -10,6 +10,8 @@ import com.equivi.mailsy.data.entity.QCampaignEntity;
 import com.equivi.mailsy.data.entity.QCampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
+import com.equivi.mailsy.service.campaign.queue.QueueCampaignService;
+import com.google.common.collect.Lists;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.domain.Page;
@@ -33,6 +35,9 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     private CampaignSubscriberGroupDao campaignSubscriberGroupDao;
 
     @Resource
+    private QueueCampaignService queueCampaignService;
+
+    @Resource
     private SubscriberGroupDao subscriberGroupDao;
 
     @Resource
@@ -42,7 +47,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     private CampaignValidator campaignValidator;
 
     @Override
-    public Page<CampaignEntity> listCampaignEntity(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
+    public Page<CampaignEntity> getCampaignEntityPage(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
 
         Pageable pageable = getPageable(pageNumber - 1, maxRecords);
         Predicate campaignQueryPredicate = getCampaignPredicate(searchFilter);
@@ -52,10 +57,25 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
         return requestedPage;
     }
 
+    @Override
+    public List<CampaignSubscriberGroupEntity> getEmailListToSend() {
+
+        List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntities = null;
+
+        Iterable<CampaignEntity> campaignsWithOutboxStatus = campaignDao.findAll(getCampaignToSendPredicate());
+
+        if (campaignsWithOutboxStatus.iterator().hasNext()) {
+            campaignSubscriberGroupEntities = Lists.newArrayList(campaignSubscriberGroupDao.findAll(getCampaignSubscriberGroupPredicate(campaignsWithOutboxStatus)));
+        }
+        return campaignSubscriberGroupEntities;
+    }
+
+
     private Pageable getPageable(int page, int maxRecords) {
         Sort sort = new Sort(Sort.Direction.DESC, "id");
         return new PageRequest(page, maxRecords, sort);
     }
+
 
     private Predicate getCampaignPredicate(Map<CampaignSearchFilter, String> filterMap) {
 
@@ -64,11 +84,48 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
 
         if (filterMap.get(CampaignSearchFilter.CAMPAIGN_SUBJECT) != null) {
             booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignEntity.emaiSubject.like("%" + filterMap.get(CampaignSearchFilter.CAMPAIGN_SUBJECT) + "%"));
+        }
 
+        if (filterMap.get(CampaignSearchFilter.CAMPAIGN_STATUS) != null) {
+            booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignStatus.eq(CampaignStatus.getStatusByDescription(filterMap.get(CampaignSearchFilter.CAMPAIGN_STATUS))));
         }
 
         return booleanMerchantPredicateBuilder;
     }
+
+    private Predicate getCampaignToSendPredicate() {
+
+        QCampaignEntity qCampaignEntity = QCampaignEntity.campaignEntity;
+        BooleanBuilder booleanMerchantPredicateBuilder = new BooleanBuilder();
+
+        booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignStatus.eq(CampaignStatus.OUTBOX));
+
+        return booleanMerchantPredicateBuilder;
+    }
+
+    private Predicate getCampaignSubscriberGroupPredicate(CampaignEntity campaignEntity) {
+
+        QCampaignSubscriberGroupEntity qCampaignSubscriberGroupEntity = QCampaignSubscriberGroupEntity.campaignSubscriberGroupEntity;
+        BooleanBuilder booleanMerchantPredicateBuilder = new BooleanBuilder();
+
+        booleanMerchantPredicateBuilder.or(qCampaignSubscriberGroupEntity.campaignEntity.eq(campaignEntity));
+
+        return booleanMerchantPredicateBuilder;
+    }
+
+    private Predicate getCampaignSubscriberGroupPredicate(Iterable<CampaignEntity> campaignEntityListWithOutboxStatus) {
+
+        QCampaignSubscriberGroupEntity qCampaignSubscriberGroupEntity = QCampaignSubscriberGroupEntity.campaignSubscriberGroupEntity;
+
+        BooleanBuilder booleanCampaignSubscriberGroupBuilder = new BooleanBuilder();
+
+        for (CampaignEntity campaignEntity : campaignEntityListWithOutboxStatus) {
+            booleanCampaignSubscriberGroupBuilder.or(qCampaignSubscriberGroupEntity.campaignEntity.eq(campaignEntity));
+        }
+
+        return booleanCampaignSubscriberGroupBuilder;
+    }
+
 
     @Override
     public CampaignDTO saveCampaignDTO(CampaignDTO campaignDTO) {
@@ -80,7 +137,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
         if (campaignEntity.getId() != null) {
             updateCampaignSubscriberGroup(campaignDTO, campaignEntity);
 
-            updatedCampaignDTO = assignSubscriberGroupIdToDTO(updatedCampaignDTO,campaignDTO);
+            updatedCampaignDTO = assignSubscriberGroupIdToDTO(updatedCampaignDTO, campaignDTO);
         }
 
 
@@ -88,10 +145,15 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
-    public void setCampaignReadyToSendStatus(Long campaignId) {
+    public void sendCampaignToQueueMailer(Long campaignId) {
         CampaignEntity campaignEntity = campaignDao.findOne(campaignId);
-        campaignEntity.setCampaignStatus(CampaignStatus.OUTBOX);
+        campaignEntity.setCampaignStatus(CampaignStatus.SEND);
         campaignDao.save(campaignEntity);
+
+        //Send to queue mailer
+        List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntityList = Lists.newArrayList(campaignSubscriberGroupDao.findAll(getCampaignSubscriberGroupPredicate(campaignEntity)));
+
+        queueCampaignService.sendCampaignToQueueMailer(campaignSubscriberGroupEntityList);
     }
 
     private CampaignEntity saveCampaignEntity(CampaignDTO campaignDTO) {
@@ -110,7 +172,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
         saveCampaignEntity(campaignDTO);
     }
 
-    private CampaignDTO assignSubscriberGroupIdToDTO(CampaignDTO updatedCampaignDTO,CampaignDTO campaignDTO) {
+    private CampaignDTO assignSubscriberGroupIdToDTO(CampaignDTO updatedCampaignDTO, CampaignDTO campaignDTO) {
         if (campaignDTO.getId() != null) {
             Iterable<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntities = campaignSubscriberGroupDao.findAll(buildCampaignSubscriberGroupPredicate(campaignDTO.getId()));
             List<Long> subscriberGroupIds = new ArrayList<>();
@@ -169,7 +231,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
 
         CampaignDTO campaignDTO = campaignConverter.convertToCampaignDTO(campaignDao.findOne(campaignId));
 
-        assignSubscriberGroupIdToDTO(campaignDTO,campaignDTO);
+        assignSubscriberGroupIdToDTO(campaignDTO, campaignDTO);
 
         return campaignDTO;
     }

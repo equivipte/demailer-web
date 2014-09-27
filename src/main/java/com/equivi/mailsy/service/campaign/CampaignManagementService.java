@@ -2,9 +2,11 @@ package com.equivi.mailsy.service.campaign;
 
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
+import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 public interface CampaignManagementService {
@@ -16,7 +18,13 @@ public interface CampaignManagementService {
      * @param maxRecords
      * @return Page<CampaignEntity>
      */
-    Page<CampaignEntity> listCampaignEntity(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords);
+    Page<CampaignEntity> getCampaignEntityPage(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords);
+
+    /**
+     *
+     * @return
+     */
+    List<CampaignSubscriberGroupEntity> getEmailListToSend();
 
     /**
      * @param campaignDTO
@@ -27,7 +35,7 @@ public interface CampaignManagementService {
      *
      * @param campaignId
      */
-    void setCampaignReadyToSendStatus(Long campaignId);
+    void sendCampaignToQueueMailer(Long campaignId);
 
     /**
      *

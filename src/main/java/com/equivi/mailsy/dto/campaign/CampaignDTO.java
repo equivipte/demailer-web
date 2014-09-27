@@ -18,6 +18,9 @@ public class CampaignDTO implements Serializable {
     @NotEmpty(message = "campaign.emailsubject.empty")
     private String emailSubject;
 
+    @NotEmpty(message = "campaign.emailfrom.empty")
+    private String emailFrom;
+
     private String emailContent;
 
     private String campaignStatus;
@@ -97,6 +100,13 @@ public class CampaignDTO implements Serializable {
         this.campaignName = campaignName;
     }
 
+    public String getEmailFrom() {
+        return emailFrom;
+    }
+
+    public void setEmailFrom(String emailFrom) {
+        this.emailFrom = emailFrom;
+    }
 
     public String getScheduledSendDateTime() {
         return scheduledSendDateTime;

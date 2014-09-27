@@ -1,12 +1,16 @@
 package com.equivi.mailsy.service.mailgun;
 
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
+import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.mail.Attachment;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.StringUtil;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
@@ -17,13 +21,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
 
 
-@Service(value = "mailgunEmailService")
+@Service
 public class MailgunEmailServiceImpl implements MailgunService {
 
     @Resource
@@ -37,7 +42,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
     private static final String API_USERNAME = "api";
 
     @Override
-    public void sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
+    public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
 
         String mailgunWebURLApi = buildSendMessageURL(campaignId, domain, from, recipientList, ccList, bccList, subject, message);
 
@@ -47,21 +52,36 @@ public class MailgunEmailServiceImpl implements MailgunService {
                 .setHostName(mailgunWebURLApi);
         demailerRestTemplate.setHttpAsyncClientFactory();
 
-        demailerRestTemplate.postForEntity(mailgunWebURLApi, buildHttpEntity(), String.class);
         ListenableFuture<ResponseEntity<String>> response = demailerRestTemplate.postForEntity(mailgunWebURLApi, buildHttpEntity(), String.class);
 
         if (response != null) {
             try {
                 LOG.info("HTTP Status code :" + response.get().getStatusCode());
-                LOG.info("Response From mailgun:" + response.get().getBody());
+
+                ObjectMapper objectMapper = new ObjectMapper();
+                String responseBody = response.get().getBody();
+
+                LOG.info("Response From mailgun:" + responseBody);
+
+                MailgunResponseMessage mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
+
+                return mailgunResponseMessage.getId();
             } catch (InterruptedException e) {
                 LOG.error(e.getMessage(), e);
             } catch (ExecutionException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (JsonMappingException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (JsonParseException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (IOException e) {
                 LOG.error(e.getMessage(), e);
             }
         } else {
             LOG.error("Unable to get Response during send message");
         }
+
+        return null;
     }
 
     private String buildSendMessageURL(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
@@ -98,7 +118,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
     Map<String, String> buildSendParameters(String campaignId, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         Map<String, String> mailParameter = new HashMap<>();
-        mailParameter.put(MailgunParameters.CAMPAIGN_ID.getValue(), campaignId);
+        //mailParameter.put(MailgunParameters.CAMPAIGN_ID.getValue(), campaignId);
         mailParameter.put(MailgunParameters.FROM.getValue(), from);
         mailParameter.put(MailgunParameters.TO.getValue(), StringUtil.buildStringWithSeparator(recipientList, ','));
         mailParameter.put(MailgunParameters.CC.getValue(), StringUtil.buildStringWithSeparator(ccList, ','));

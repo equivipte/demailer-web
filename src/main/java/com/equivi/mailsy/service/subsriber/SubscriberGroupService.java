@@ -1,10 +1,12 @@
 package com.equivi.mailsy.service.subsriber;
 
 
+import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 public interface SubscriberGroupService {
@@ -16,6 +18,14 @@ public interface SubscriberGroupService {
      * @return Page<SubscriberGroupEntity>
      */
     Page<SubscriberGroupEntity> listSubscriberGroup(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords);
+
+
+    /**
+     *
+     * @param subscriberGroupEntity
+     * @return subscriber contact entity list
+     */
+    List<SubscriberContactEntity> getSubscriberContactList(SubscriberGroupEntity subscriberGroupEntity);
 
     /**
      * @param subscriberGroupId

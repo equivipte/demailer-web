@@ -54,7 +54,8 @@ public class CampaignConverter {
         }
 
         campaignEntity.setCampaignName(campaignDTO.getCampaignName());
-        campaignEntity.setEmaiSubject(campaignDTO.getEmailSubject());
+        campaignEntity.setEmailFrom(campaignDTO.getEmailFrom());
+        campaignEntity.setEmailSubject(campaignDTO.getEmailSubject());
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
 
@@ -74,12 +75,13 @@ public class CampaignConverter {
 
         campaignDTO.setId(campaignEntity.getId());
         campaignDTO.setCampaignName(campaignEntity.getCampaignName());
+        campaignDTO.setEmailFrom(campaignEntity.getEmailFrom());
         campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
 
         if (StringUtils.isNotEmpty(campaignEntity.getEmailContent())) {
             campaignDTO.setEmailContent(campaignEntity.getEmailContent());
         }
-        campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
+        campaignDTO.setEmailSubject(campaignEntity.getEmailSubject());
 
         Date scheduledSendDate = campaignEntity.getScheduledSendDate();
         if (scheduledSendDate == null) {

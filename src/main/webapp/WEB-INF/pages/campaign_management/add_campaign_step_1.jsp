@@ -26,6 +26,8 @@
 
 <c:set var="campaignName"><spring:message code="label.campaign.name"/></c:set>
 <c:set var="subject"><spring:message code="label.campaign.subject"/></c:set>
+<c:set var="emailFrom"><spring:message code="label.campaign.email.from"/></c:set>
+
 
 <div class="page-header">
     <h1>
@@ -59,6 +61,20 @@
                             path="campaignName"
                             value="${campaignDTO.campaignName}"
                             placeholder="${campaignName}"
+                            maxlength="50"
+                            class="col-xs-10 col-sm-5"/>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-3 control-label no-padding-right" for="form-campaign-name"><spring:message
+                        code="label.campaign.email.from"></spring:message></label>
+
+                <div class="col-sm-9">
+                    <form:input
+                            id="form-email-from"
+                            path="emailFrom"
+                            value="${campaignDTO.emailFrom}"
+                            placeholder="${emailFrom}"
                             maxlength="50"
                             class="col-xs-10 col-sm-5"/>
                 </div>

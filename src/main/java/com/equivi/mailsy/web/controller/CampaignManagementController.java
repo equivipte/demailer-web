@@ -71,7 +71,7 @@ public class CampaignManagementController extends AbstractController {
     @RequestMapping(value = "/main/merchant/campaign_management/{pageNumber}", method = RequestMethod.GET)
     public String getCampaignManagementPage(@PathVariable Integer pageNumber, final HttpServletRequest request, Model model) {
 
-        Page<CampaignEntity> campaignPage = campaignManagementService.listCampaignEntity(buildMapFilter(request), pageNumber, webConfiguration.getMaxRecordsPerPage());
+        Page<CampaignEntity> campaignPage = campaignManagementService.getCampaignEntityPage(buildMapFilter(request), pageNumber, webConfiguration.getMaxRecordsPerPage());
 
         setCampaignList(model, campaignPage);
 
@@ -145,7 +145,7 @@ public class CampaignManagementController extends AbstractController {
         campaignDTO.setScheduledSendDateTime(scheduleDeliveryTime);
 
         campaignManagementService.saveCampaign(campaignDTO);
-        campaignManagementService.setCampaignReadyToSendStatus(Long.valueOf(campaignId));
+        campaignManagementService.sendCampaignToQueueMailer(Long.valueOf(campaignId));
 
         return "SUCCESS";
     }
@@ -260,7 +260,7 @@ public class CampaignManagementController extends AbstractController {
                 CampaignDTO campaignDTO = new CampaignDTO();
                 campaignDTO.setId(campaignEntity.getId());
                 campaignDTO.setCampaignName(campaignEntity.getCampaignName());
-                campaignDTO.setEmailSubject(campaignEntity.getEmaiSubject());
+                campaignDTO.setEmailSubject(campaignEntity.getEmailSubject());
                 campaignDTO.setCampaignStatus(campaignEntity.getCampaignStatus().getCampaignStatusDescription());
                 if (campaignEntity.getLastUpdatedDateTime() != null) {
                     campaignDTO.setLastUpdateDate(dateTimeFormat.format(campaignEntity.getLastUpdatedDateTime()));

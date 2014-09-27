@@ -1,6 +1,7 @@
 package com.equivi.mailsy.service.subsriber;
 
 import com.equivi.mailsy.data.dao.ContactDao;
+import com.equivi.mailsy.data.dao.SubscriberContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
 import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.GenericStatus;
@@ -11,6 +12,7 @@ import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
+import com.google.common.collect.Lists;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.domain.Page;
@@ -32,6 +34,9 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
 
     @Resource
     private SubscriberGroupDao subscriberGroupDao;
+
+    @Resource
+    private SubscriberContactDao subscriberContactDao;
 
     @Resource
     private ContactDao subscriberDao;
@@ -58,6 +63,17 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     }
 
     @Override
+    public List<SubscriberContactEntity> getSubscriberContactList(SubscriberGroupEntity subscriberGroupEntity) {
+
+        Iterable<SubscriberContactEntity> subscriberContactEntityList = subscriberContactDao.findAll(getSubscriberContactEntityListPredicate(subscriberGroupEntity));
+
+        if(subscriberContactEntityList.iterator().hasNext()){
+            return Lists.newArrayList(subscriberContactEntityList);
+        }
+        return null;
+    }
+
+    @Override
     public SubscriberGroupEntity getSubscriberGroup(Long subscriberGroupId) {
         return subscriberGroupDao.findOne(subscriberGroupId);
     }
@@ -70,11 +86,13 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteSubscriberGroup(Long subscriberGroupId) {
         subscriberGroupDao.delete(subscriberGroupId);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public SubscriberGroupEntity saveSubscriberGroup(SubscriberGroupDTO subscriberGroupDTO) {
         SubscriberGroupEntity subscriberGroupEntity = convertToEntity(subscriberGroupDTO);
 
@@ -114,6 +132,12 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         }
 
         return booleanMerchantPredicateBuilder;
+    }
+
+    private Predicate getSubscriberContactEntityListPredicate(SubscriberGroupEntity subscriberGroupEntity){
+        QSubscriberContactEntity qSubscriberContactEntity = QSubscriberContactEntity.subscriberContactEntity;
+
+        return qSubscriberContactEntity.subscriberGroupEntity.eq(subscriberGroupEntity);
     }
 
     private SubscriberGroupEntity convertToEntity(SubscriberGroupDTO subscriberGroupDTO) {
