@@ -83,7 +83,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
         BooleanBuilder booleanMerchantPredicateBuilder = new BooleanBuilder();
 
         if (filterMap.get(CampaignSearchFilter.CAMPAIGN_SUBJECT) != null) {
-            booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignEntity.emaiSubject.like("%" + filterMap.get(CampaignSearchFilter.CAMPAIGN_SUBJECT) + "%"));
+            booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignEntity.emailSubject.like("%" + filterMap.get(CampaignSearchFilter.CAMPAIGN_SUBJECT) + "%"));
         }
 
         if (filterMap.get(CampaignSearchFilter.CAMPAIGN_STATUS) != null) {
