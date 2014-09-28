@@ -5,8 +5,10 @@ import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 
 import java.util.List;
 
-public interface CampaignMailSender {
+public interface CampaignActivityService {
 
 
     void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList);
+
+    void updateTracker();
 }

@@ -1,14 +1,16 @@
 package com.equivi.mailsy.service.mailgun;
 
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.mail.Attachment;
+import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
+import com.equivi.mailsy.service.mailgun.response.MailgunResponseMessage;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.StringUtil;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
@@ -41,16 +43,23 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
     private static final String API_USERNAME = "api";
 
+    private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
+
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    static {
+        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+    }
+
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
 
+        if (domain == null) {
+            domain = DOMAIN_SANDBOX;
+        }
         String mailgunWebURLApi = buildSendMessageURL(campaignId, domain, from, recipientList, ccList, bccList, subject, message);
 
-        String mailgunAPIKey = webConfiguration.getWebConfig(dEmailerWebPropertyKey.MAILGUN_API_KEY);
-
-        demailerRestTemplate.setCredentials(API_USERNAME, mailgunAPIKey)
-                .setHostName(mailgunWebURLApi);
-        demailerRestTemplate.setHttpAsyncClientFactory();
+        setupHttpClientCredentials(mailgunWebURLApi);
 
         ListenableFuture<ResponseEntity<String>> response = demailerRestTemplate.postForEntity(mailgunWebURLApi, buildHttpEntity(), String.class);
 
@@ -58,10 +67,9 @@ public class MailgunEmailServiceImpl implements MailgunService {
             try {
                 LOG.info("HTTP Status code :" + response.get().getStatusCode());
 
-                ObjectMapper objectMapper = new ObjectMapper();
                 String responseBody = response.get().getBody();
 
-                LOG.info("Response From mailgun:" + responseBody);
+                LOG.debug("Response From mailgun:" + responseBody);
 
                 MailgunResponseMessage mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
 
@@ -84,11 +92,55 @@ public class MailgunEmailServiceImpl implements MailgunService {
         return null;
     }
 
+    private void setupHttpClientCredentials(String mailgunWebURLApi) {
+        String mailgunAPIKey = webConfiguration.getWebConfig(dEmailerWebPropertyKey.MAILGUN_API_KEY);
+
+        demailerRestTemplate.setCredentials(API_USERNAME, mailgunAPIKey)
+                .setHostName(mailgunWebURLApi);
+        demailerRestTemplate.setHttpAsyncClientFactory();
+    }
+
+    @Override
+    public MailgunResponseEventMessage getEventForMessageId(String messageId) {
+        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), DOMAIN_SANDBOX, StringUtil.buildQueryParameters(buildEventParameter(messageId)), MailgunAPIType.EVENTS.getValue());
+
+        setupHttpClientCredentials(mailgunEventAPIURL);
+
+        ListenableFuture<ResponseEntity<String>> response = demailerRestTemplate.getForEntity(mailgunEventAPIURL, String.class);
+
+        if (response != null) {
+            try {
+                LOG.info("HTTP Status code :" + response.get().getStatusCode());
+
+                String responseBody = response.get().getBody();
+
+                LOG.debug("Response From mailgun:" + responseBody);
+
+                MailgunResponseEventMessage mailgunResponseEventMessage = objectMapper.readValue(responseBody, MailgunResponseEventMessage.class);
+
+                return mailgunResponseEventMessage;
+            } catch (InterruptedException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (ExecutionException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (JsonMappingException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (JsonParseException e) {
+                LOG.error(e.getMessage(), e);
+            } catch (IOException e) {
+                LOG.error(e.getMessage(), e);
+            }
+        } else {
+            LOG.error("Unable to get Response during send message");
+        }
+
+        return null;
+    }
+
     private String buildSendMessageURL(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
-        String mailgunWebUrl = webConfiguration.getWebConfig(dEmailerWebPropertyKey.MAILGUN_WEB_URL);
         Map<String, String> mailParameter = buildSendParameters(campaignId, from, recipientList, ccList, bccList, subject, message);
 
-        return formatMailgunHostUrl(mailgunWebUrl, domain, StringUtil.buildQueryParameters(mailParameter), MailgunAPIType.MESSAGES.getValue());
+        return formatMailgunHostUrl(getMailgunBaseAPIURL(), domain, StringUtil.buildQueryParameters(mailParameter), MailgunAPIType.MESSAGES.getValue());
     }
 
     String formatMailgunHostUrl(String mailgunBaseURL, String domain, String queryParameters, String resource) {
@@ -132,9 +184,20 @@ public class MailgunEmailServiceImpl implements MailgunService {
         return mailParameter;
     }
 
+    Map<String, String> buildEventParameter(String messageId) {
+        Map<String, String> mailParameter = new HashMap<>();
+        mailParameter.put(MailgunParameters.MESSAGE_ID.getValue(), messageId);
+        return mailParameter;
+    }
+
 
     @Override
     public void sendMailWithAttachment(List<String> recipientList, List<Attachment> attachmentList, List<String> ccList, List<String> bccList, String subject, String message) {
 
+    }
+
+
+    String getMailgunBaseAPIURL() {
+        return webConfiguration.getWebConfig(dEmailerWebPropertyKey.MAILGUN_WEB_URL);
     }
 }

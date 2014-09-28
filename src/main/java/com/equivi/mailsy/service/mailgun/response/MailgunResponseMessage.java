@@ -1,7 +1,11 @@
-package com.equivi.mailsy.service.mailgun;
+package com.equivi.mailsy.service.mailgun.response;
 
 
-public class MailgunResponseMessage {
+import java.io.Serializable;
+
+public class MailgunResponseMessage implements Serializable {
+
+    private static final long serialVersionUID = -3395281815812131195L;
 
     private String id;
 

@@ -15,7 +15,9 @@ public enum MailgunParameters {
     DELIVERY_TIME("o:deliverytime"),
     TRACKING("o:tracking"),
     TRACKING_CLICKS("o:tracking-clicks"),
-    TRACKING_OPEN("o:tracking-opens");
+    TRACKING_OPEN("o:tracking-opens"),
+    MESSAGE_ID("message-id"),
+    EVENT("event");
 
     private String value;
 

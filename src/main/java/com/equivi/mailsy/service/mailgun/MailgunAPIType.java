@@ -7,7 +7,7 @@ public enum MailgunAPIType {
     UNSUBSCRIBES("unsubscribes"),
     CAMPAIGNS("campaigns"),
     BOUNCES("bounces"),
-    EVENT("event"),
+    EVENTS("events"),
     COMPLAINTS("complaints");
 
     private String value;

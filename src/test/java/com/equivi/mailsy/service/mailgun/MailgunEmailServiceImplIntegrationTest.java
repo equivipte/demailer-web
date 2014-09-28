@@ -1,5 +1,7 @@
 package com.equivi.mailsy.service.mailgun;
 
+import com.equivi.mailsy.service.mailgun.response.MailgunResponseItem;
+import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -35,5 +37,15 @@ public class MailgunEmailServiceImplIntegrationTest {
         mailgunEmailService.sendMessage(campaignId,domain, from, recipientList, null, null, subject, emailContent);
 
 
+    }
+
+    @Test
+    public void testGetEventForSpecificMessageId(){
+       MailgunResponseEventMessage mailgunResponseEventMessage = mailgunEmailService.getEventForMessageId("20140928073546.51495.82642@sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org");
+
+       for(MailgunResponseItem mailgunItems : mailgunResponseEventMessage.getItems()){
+
+           System.out.println(mailgunItems.getEvent());
+       }
     }
 }

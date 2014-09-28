@@ -24,13 +24,13 @@ public class CampaignConverter {
     @Resource
     private CampaignDao campaignDao;
 
-    private static SimpleDateFormat dateFormat;
+    static SimpleDateFormat dateFormat;
 
-    private static SimpleDateFormat timeFormat;
+    static SimpleDateFormat timeFormat;
 
-    private static final Logger LOG = LoggerFactory.getLogger(CampaignConverter.class);
+    static final Logger LOG = LoggerFactory.getLogger(CampaignConverter.class);
 
-    private static SimpleDateFormat sdf = null;
+    static SimpleDateFormat sdf = null;
 
     static {
         sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
@@ -59,9 +59,9 @@ public class CampaignConverter {
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
 
-        if (!StringUtils.isEmpty(campaignDTO.getScheduledSendDate())) {
+        if (!StringUtils.isEmpty(campaignDTO.getScheduledSendDateTime())) {
             try {
-                campaignEntity.setScheduledSendDate(sdf.parse(campaignDTO.getScheduledSendDate() + " " + campaignDTO.getScheduledSendTime()));
+                campaignEntity.setScheduledSendDate(sdf.parse(campaignDTO.getScheduledSendDateTime()));
             } catch (ParseException e) {
                 LOG.error(e.getMessage(), e);
             }

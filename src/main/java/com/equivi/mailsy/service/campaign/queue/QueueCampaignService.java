@@ -19,7 +19,7 @@ public interface QueueCampaignService {
 
     /**
      *
-     * @return
+     * @return QueueCampaignMailerEntity where MailDeliveryStatus != SUCCESS and scheduled date before or equals NOW()
      */
     List<QueueCampaignMailerEntity> getEmailQueueToSend();
 }
