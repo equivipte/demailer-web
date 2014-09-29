@@ -12,13 +12,18 @@ import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseItem;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
 @Service
+@Transactional
 public class CampaignActivityServiceImpl implements CampaignActivityService {
 
     @Resource
@@ -30,9 +35,12 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
 
+    private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
+
     @Override
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {
 
+        LOG.error("SIZE:" + queueCampaignMailerEntityList.size());
         for (QueueCampaignMailerEntity queueCampaignMailerEntity : queueCampaignMailerEntityList) {
             String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
 
@@ -49,17 +57,23 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Override
     public void updateTracker() {
 
+        LOG.info("Campaign Update Tracker");
         List<CampaignTrackerEntity> campaignTrackerEntityList = campaignTrackerService.getCampaignTrackerEntityList(null);
 
         if (campaignTrackerEntityList != null && !campaignTrackerEntityList.isEmpty()) {
             for (CampaignTrackerEntity campaignTrackerEntity : campaignTrackerEntityList) {
 
                 //Refresh object from DB
-                CampaignTrackerEntity campaignTrackerEntityFromDB = campaignTrackerService.getCampaignTrackerEntity(campaignTrackerEntity.getId());
+                try {
+                    CampaignTrackerEntity campaignTrackerEntityFromDB = campaignTrackerService.getCampaignTrackerEntity(campaignTrackerEntity.getId());
 
-                campaignTrackerEntityFromDB = updateCampaignTrackerEntityPerEvent(campaignTrackerEntityFromDB);
+                    campaignTrackerEntityFromDB = updateCampaignTrackerEntityPerEvent(campaignTrackerEntityFromDB);
 
-                campaignTrackerService.saveCampaignTrackerEntity(campaignTrackerEntityFromDB);
+                    campaignTrackerService.saveCampaignTrackerEntity(campaignTrackerEntityFromDB);
+
+                } catch (HibernateOptimisticLockingFailureException hex) {
+                    LOG.error("Stale object exception");
+                }
             }
         }
 
@@ -69,42 +83,47 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
         MailgunResponseEventMessage mailgunResponseEventMessage = mailgunService.getEventForMessageId(campaignTrackerEntity.getCampaignMailerMessageId());
 
         //Update event for delivered
-        MailgunResponseItem mailgunResponseDeliverItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.DELIVERED);
-        if (mailgunResponseDeliverItem != null) {
-            campaignTrackerEntity.setDelivered(true);
+        if (mailgunResponseEventMessage != null) {
+            MailgunResponseItem mailgunResponseDeliverItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.DELIVERED);
+            if (mailgunResponseDeliverItem != null) {
+                campaignTrackerEntity.setDelivered(true);
 
-            campaignTrackerEntity.setDeliverDate(new Date(formatTimestamp(mailgunResponseDeliverItem.getTimestamp())));
-        }
+                campaignTrackerEntity.setDeliverDate(new Date(formatTimestamp(mailgunResponseDeliverItem.getTimestamp())));
+            }
 
 
-        //Update event for opened
-        MailgunResponseItem mailgunResponseOpenItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.OPENED);
-        if (mailgunResponseOpenItem != null) {
+            //Update event for opened
+            MailgunResponseItem mailgunResponseOpenItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.OPENED);
+            if (mailgunResponseOpenItem != null) {
 
-            campaignTrackerEntity.setOpened(true);
-            campaignTrackerEntity.setClientUserAgent(mailgunResponseOpenItem.getClientInfo().getUserAgent());
-            campaignTrackerEntity.setClientType(mailgunResponseOpenItem.getClientInfo().getClientType());
-            campaignTrackerEntity.setClientDeviceName(mailgunResponseOpenItem.getClientInfo().getClientName());
-            campaignTrackerEntity.setClientOs(mailgunResponseOpenItem.getClientInfo().getClientOs());
-            campaignTrackerEntity.setClientDeviceType(mailgunResponseOpenItem.getClientInfo().getDeviceType());
+                campaignTrackerEntity.setOpened(true);
+                campaignTrackerEntity.setClientUserAgent(mailgunResponseOpenItem.getClientInfo().getUserAgent());
+                campaignTrackerEntity.setClientType(mailgunResponseOpenItem.getClientInfo().getClientType());
+                campaignTrackerEntity.setClientDeviceName(mailgunResponseOpenItem.getClientInfo().getClientName());
+                campaignTrackerEntity.setClientOs(mailgunResponseOpenItem.getClientInfo().getClientOs());
+                campaignTrackerEntity.setClientDeviceType(mailgunResponseOpenItem.getClientInfo().getDeviceType());
+                campaignTrackerEntity.setGeoLocationCity(mailgunResponseOpenItem.getGeoLocation().getCity());
+                campaignTrackerEntity.setGeoLocationCountry(mailgunResponseOpenItem.getGeoLocation().getCountry());
+                campaignTrackerEntity.setGeoLocationRegion(mailgunResponseOpenItem.getGeoLocation().getRegion());
 
-            campaignTrackerEntity.setOpenDate(new Date(formatTimestamp(mailgunResponseOpenItem.getTimestamp())));
-        }
+                campaignTrackerEntity.setOpenDate(new Date(formatTimestamp(mailgunResponseOpenItem.getTimestamp())));
+            }
 
-        //Update event for failed
-        MailgunResponseItem mailgunResponseFailedItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.FAILED);
+            //Update event for failed
+            MailgunResponseItem mailgunResponseFailedItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.FAILED);
 
-        if (mailgunResponseFailedItem != null) {
-            campaignTrackerEntity.setBounced(true);
+            if (mailgunResponseFailedItem != null) {
+                campaignTrackerEntity.setBounced(true);
 
-            campaignTrackerEntity.setBouncedDate(new Date(formatTimestamp(mailgunResponseFailedItem.getTimestamp())));
-        }
+                campaignTrackerEntity.setBouncedDate(new Date(formatTimestamp(mailgunResponseFailedItem.getTimestamp())));
+            }
 
-        //Update event for clicked
-        MailgunResponseItem mailgunResponseClickedItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.CLICKED);
-        if (mailgunResponseClickedItem != null) {
-            campaignTrackerEntity.setClicked(true);
-            campaignTrackerEntity.setClickedDate(new Date(formatTimestamp(mailgunResponseClickedItem.getTimestamp())));
+            //Update event for clicked
+            MailgunResponseItem mailgunResponseClickedItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.CLICKED);
+            if (mailgunResponseClickedItem != null) {
+                campaignTrackerEntity.setClicked(true);
+                campaignTrackerEntity.setClickedDate(new Date(formatTimestamp(mailgunResponseClickedItem.getTimestamp())));
+            }
         }
 
         return campaignTrackerEntity;
@@ -127,8 +146,13 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     }
 
     private void updateQueueCampaignStatus(QueueCampaignMailerEntity queueCampaignMailerEntity) {
-        QueueCampaignMailerEntity queueCampaignMailUpdated = queueCampaignMailerDao.findOne(queueCampaignMailerEntity.getId());
-        queueCampaignMailUpdated.setMailDeliveryStatus(MailDeliveryStatus.SUCCESS);
-        queueCampaignMailerDao.save(queueCampaignMailUpdated);
+        try {
+            QueueCampaignMailerEntity queueCampaignMailUpdated = queueCampaignMailerDao.findOne(queueCampaignMailerEntity.getId());
+            queueCampaignMailUpdated.setMailDeliveryStatus(MailDeliveryStatus.SUCCESS);
+            queueCampaignMailerDao.save(queueCampaignMailUpdated);
+        } catch (HibernateOptimisticLockingFailureException hibernateOptimisticLockExc) {
+            LOG.error("Stale object exception going it's fine");
+
+        }
     }
 }

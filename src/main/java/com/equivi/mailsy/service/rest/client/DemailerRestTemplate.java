@@ -1,6 +1,5 @@
 package com.equivi.mailsy.service.rest.client;
 
-import org.springframework.context.annotation.Scope;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -14,7 +13,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-@Scope(value = "prototype")
 public class DemailerRestTemplate extends AsyncRestTemplate {
 
     private int DEFAULT_TIMEOUT = 30000;
@@ -51,7 +49,6 @@ public class DemailerRestTemplate extends AsyncRestTemplate {
 
     public AsyncRestTemplate setHttpAsyncClientFactory() {
         this.setAsyncRequestFactory(httpAsyncClientFactory.getHttpComponentAsyncFactory(this.userName, this.password));
-
         return this;
     }
 

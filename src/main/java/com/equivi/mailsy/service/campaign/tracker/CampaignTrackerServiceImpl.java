@@ -8,7 +8,10 @@ import com.google.common.collect.Lists;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,9 +23,13 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
     @Resource
     private CampaignTrackerDao campaignTrackerDao;
 
+    private Logger LOG = LoggerFactory.getLogger(CampaignTrackerServiceImpl.class);
+
     @Override
+    @Transactional(readOnly = false)
     public void createCampaignTracker(String externalMessageId, Long campaignId, String recipient) {
 
+        LOG.error("Creating campaign tracker:"+externalMessageId+" "+campaignId);
         CampaignTrackerEntity campaignTrackerEntity = new CampaignTrackerEntity();
         campaignTrackerEntity.setCampaignId(campaignId);
 
@@ -36,16 +43,19 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CampaignTrackerEntity getCampaignTrackerEntity(Long campaignTrackerId) {
         return campaignTrackerDao.findOne(campaignTrackerId);
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void saveCampaignTrackerEntity(CampaignTrackerEntity campaignTrackerEntity) {
         campaignTrackerDao.save(campaignTrackerEntity);
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CampaignTrackerEntity> getCampaignTrackerEntityList(Map<CampaignTrackerSearchFilter, String> campaignTrackerSearchFilterStringMap) {
 
         Predicate campaignTrackerPredicate = getCampaignTrackerPredicate(campaignTrackerSearchFilterStringMap);

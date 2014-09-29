@@ -50,6 +50,7 @@ public class WebEmailVerifierImpl implements VerifierService {
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         LOG.info("Send to Email Verifier API");
+        restTemplate.setHostName(getVerifierApiUrl()).setUserName("").setPassword("");
         Future<ResponseEntity<String>> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
 
         try {

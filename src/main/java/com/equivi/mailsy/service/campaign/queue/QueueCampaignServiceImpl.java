@@ -11,6 +11,7 @@ import com.mysema.query.types.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Date;
@@ -28,6 +29,7 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
     private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignServiceImpl.class);
 
     @Override
+    @Transactional(readOnly = false)
     public void sendCampaignToQueueMailer(List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntityList) {
 
         if (campaignSubscriberGroupEntityList != null && !campaignSubscriberGroupEntityList.isEmpty()) {
@@ -44,6 +46,7 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<QueueCampaignMailerEntity> getEmailQueueToSend() {
 
         Iterable<QueueCampaignMailerEntity> queueCampaignMailerEntityIterable = queueCampaignMailerDao.findAll(getEmailQueueToSendPredicate());

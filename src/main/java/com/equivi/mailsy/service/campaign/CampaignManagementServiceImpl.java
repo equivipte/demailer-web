@@ -19,6 +19,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     private CampaignValidator campaignValidator;
 
     @Override
+    @Transactional(readOnly = true)
     public Page<CampaignEntity> getCampaignEntityPage(Map<CampaignSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
 
         Pageable pageable = getPageable(pageNumber - 1, maxRecords);
@@ -58,6 +60,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<CampaignSubscriberGroupEntity> getEmailListToSend() {
 
         List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntities = null;
@@ -128,6 +131,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
 
 
     @Override
+    @Transactional(readOnly = false)
     public CampaignDTO saveCampaignDTO(CampaignDTO campaignDTO) {
 
         CampaignEntity campaignEntity = saveCampaignEntity(campaignDTO);
@@ -145,6 +149,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void sendCampaignToQueueMailer(Long campaignId) {
         CampaignEntity campaignEntity = campaignDao.findOne(campaignId);
         campaignEntity.setCampaignStatus(CampaignStatus.SEND);
@@ -168,6 +173,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void saveCampaign(CampaignDTO campaignDTO) {
         saveCampaignEntity(campaignDTO);
     }
@@ -227,6 +233,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
+    @Transactional(readOnly = true)
     public CampaignDTO getCampaign(Long campaignId) {
 
         CampaignDTO campaignDTO = campaignConverter.convertToCampaignDTO(campaignDao.findOne(campaignId));
@@ -237,6 +244,7 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
     }
 
     @Override
+    @Transactional(readOnly = false)
     public void deleteCampaign(Long campaignId) {
 
         campaignDao.delete(campaignId);
