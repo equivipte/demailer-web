@@ -171,5 +171,38 @@
                 });
             });
         }
+
+        $("#export-btn").click(function() {
+            var exist = $('#table_result').length > 0;
+
+            if(exist) {
+                var emails = [];
+
+                var table = $("#table-transaction > tbody");
+
+                table.find('tr').each(function (i) {
+                    var $tds = $(this).find('td'),email = $tds.eq(0).text(), status = $tds.eq(1).text();
+
+                    if('Success' === status) {
+                        emails.push(email);
+                    }
+                });
+
+                if(emails.length != 0) {
+                    $.ajax({
+                        url : "${context}/main/emailcollector/putResultToSession",
+                        type : "POST",
+                        data : JSON.stringify(emails),
+                        contentType: 'application/json',
+                        success: function() {
+                            window.location.href = "${context}/main/merchant/emailverifier/exportToExcel";
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) {
+                            console.log("Export to excel - the following error occured: " + textStatus, errorThrown);
+                        }
+                    });
+                }
+            }
+        });
     });
 </script>

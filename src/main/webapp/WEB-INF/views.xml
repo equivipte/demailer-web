@@ -4,5 +4,6 @@
 	http://www.springframework.org/schema/beans/spring-beans.xsd">
 
     <bean id="collectorResultExcelView" class="com.equivi.mailsy.web.views.CollectorResultExcelView"/>
+    <bean id="verifierResultExcelView" class="com.equivi.mailsy.web.views.VerifierResultExcelView"/>
 
 </beans>
