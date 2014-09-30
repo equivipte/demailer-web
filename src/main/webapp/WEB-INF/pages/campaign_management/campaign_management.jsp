@@ -178,20 +178,28 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
     $(document).ready(function () {
-        $(".editCampaign").click(function (event) {
+        $(".editCampaign").click(function () {
             var campaignId = $(this).attr("id");
             redirectToEdit(campaignId)
         });
 
-        $(".deleteCampaign").click(function (event) {
+        $(".deleteCampaign").click(function () {
             var campaignId = $(this).attr("id");
             deleteCampaign(campaignId)
         });
 
+        $(".viewCampaign").click(function(){
+            var campaignId = $(this).attr("id");
+            viewCampaign(campaignId)
+        });
     });
 
     function redirectToEdit(id) {
         window.location.replace("${context}/main/merchant/campaign_management/"+id+"/campaignManagementAddPage");
+    }
+
+    function viewCampaign(id) {
+        window.location.replace("${context}/main/merchant/campaign_management/"+id+"/campaignManagementViewPage");
     }
 
     function deleteCampaign(id) {

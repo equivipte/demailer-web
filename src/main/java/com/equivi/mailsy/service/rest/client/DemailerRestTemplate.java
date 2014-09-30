@@ -5,7 +5,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.AsyncRestTemplate;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -13,12 +13,12 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class DemailerRestTemplate extends AsyncRestTemplate {
+public class DemailerRestTemplate extends RestTemplate {
 
     private int DEFAULT_TIMEOUT = 30000;
 
     @Resource
-    private HttpAsyncClientFactory httpAsyncClientFactory;
+    private HttpClientFactory httpClientFactory;
 
     private String hostName;
 
@@ -47,8 +47,8 @@ public class DemailerRestTemplate extends AsyncRestTemplate {
         this.getMessageConverters().add(mappingJacksonHttpConverter);
     }
 
-    public AsyncRestTemplate setHttpAsyncClientFactory() {
-        this.setAsyncRequestFactory(httpAsyncClientFactory.getHttpComponentAsyncFactory(this.userName, this.password));
+    public RestTemplate setHttpAsyncClientFactory() {
+        this.setRequestFactory(httpClientFactory.getHttpComponentFactory(this.userName, this.password));
         return this;
     }
 

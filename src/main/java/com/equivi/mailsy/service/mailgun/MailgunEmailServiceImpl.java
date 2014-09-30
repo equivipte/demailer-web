@@ -20,14 +20,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.util.concurrent.ListenableFuture;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 
 
 @Service
@@ -61,23 +59,19 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
         setupHttpClientCredentials(mailgunWebURLApi);
 
-        ListenableFuture<ResponseEntity<String>> response = demailerRestTemplate.postForEntity(mailgunWebURLApi, buildHttpEntity(), String.class);
+        ResponseEntity<String> response = demailerRestTemplate.postForEntity(mailgunWebURLApi, buildHttpEntity(), String.class);
 
         if (response != null) {
             try {
-                LOG.info("HTTP Status code :" + response.get().getStatusCode());
+                LOG.info("HTTP Status code :" + response.getStatusCode());
 
-                String responseBody = response.get().getBody();
+                String responseBody = response.getBody();
 
                 LOG.debug("Response From mailgun:" + responseBody);
 
                 MailgunResponseMessage mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
 
                 return mailgunResponseMessage.getId();
-            } catch (InterruptedException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (ExecutionException e) {
-                LOG.error(e.getMessage(), e);
             } catch (JsonMappingException e) {
                 LOG.error(e.getMessage(), e);
             } catch (JsonParseException e) {
@@ -106,23 +100,19 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
         setupHttpClientCredentials(mailgunEventAPIURL);
 
-        ListenableFuture<ResponseEntity<String>> response = demailerRestTemplate.getForEntity(mailgunEventAPIURL, String.class);
+        ResponseEntity<String> response = demailerRestTemplate.getForEntity(mailgunEventAPIURL, String.class);
 
         if (response != null) {
             try {
-                LOG.info("HTTP Status code :" + response.get().getStatusCode());
+                LOG.info("HTTP Status code :" + response.getStatusCode());
 
-                String responseBody = response.get().getBody();
+                String responseBody = response.getBody();
 
                 LOG.debug("Response From mailgun:" + responseBody);
 
                 MailgunResponseEventMessage mailgunResponseEventMessage = objectMapper.readValue(responseBody, MailgunResponseEventMessage.class);
 
                 return mailgunResponseEventMessage;
-            } catch (InterruptedException e) {
-                LOG.error(e.getMessage(), e);
-            } catch (ExecutionException e) {
-                LOG.error(e.getMessage(), e);
             } catch (JsonMappingException e) {
                 LOG.error(e.getMessage(), e);
             } catch (JsonParseException e) {

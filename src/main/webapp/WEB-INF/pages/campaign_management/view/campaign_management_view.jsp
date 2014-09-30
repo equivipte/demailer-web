@@ -2,7 +2,7 @@
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
 
-<jsp:include page="../general/error_message.jsp"/>
+<jsp:include page="../../general/error_message.jsp"/>
 
 <script type="text/css">
     table {
