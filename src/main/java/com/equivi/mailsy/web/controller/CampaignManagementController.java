@@ -5,9 +5,11 @@ import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
+import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
+import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
 import com.equivi.mailsy.service.constant.ConstantProperty;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
@@ -48,6 +50,9 @@ public class CampaignManagementController extends AbstractController {
 
     @Resource
     private CampaignManagementService campaignManagementService;
+
+    @Resource
+    private CampaignTrackerService campaignTrackerService;
 
     @Resource
     private SubscriberGroupService subscriberGroupService;
@@ -170,6 +175,19 @@ public class CampaignManagementController extends AbstractController {
         setPredefinedData(modelAndView, campaignDTO);
 
         modelAndView.setViewName(pageName);
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/main/merchant/campaign_management/view_campaign/{campaignId}", method = RequestMethod.GET)
+    public ModelAndView goToViewCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId) {
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
+
+        CampaignStatisticDTO campaignStatisticDTO = campaignTrackerService.getCampaignStatistic(campaignId);
+
+        setPredefinedData(modelAndView, campaignDTO);
+
+        modelAndView.addObject("campaignStatisticDTO", campaignStatisticDTO);
+        modelAndView.setViewName("campaignManagementViewPage");
         return modelAndView;
     }
 

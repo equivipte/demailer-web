@@ -67,6 +67,11 @@ public class ContactManagementServiceImpl implements ContactManagementService {
     }
 
     @Override
+    public ContactEntity saveContactEntity(ContactEntity contactEntity) {
+        return contactDao.save(contactEntity);
+    }
+
+    @Override
     public void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus) {
         ContactEntity contactEntity = contactDao.findOne(contactId);
         contactEntity.setSubscribeStatus(subscribeStatus);

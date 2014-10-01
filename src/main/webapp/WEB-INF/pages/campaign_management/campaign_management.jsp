@@ -199,7 +199,7 @@
     }
 
     function viewCampaign(id) {
-        window.location.replace("${context}/main/merchant/campaign_management/"+id+"/campaignManagementViewPage");
+        window.location.replace("${context}/main/merchant/campaign_management/view_campaign/"+id);
     }
 
     function deleteCampaign(id) {

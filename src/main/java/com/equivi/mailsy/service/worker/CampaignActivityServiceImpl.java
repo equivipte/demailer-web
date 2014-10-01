@@ -3,9 +3,12 @@ package com.equivi.mailsy.service.worker;
 
 import com.equivi.mailsy.data.dao.QueueCampaignMailerDao;
 import com.equivi.mailsy.data.entity.CampaignTrackerEntity;
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.MailDeliveryStatus;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
+import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.mailgun.response.EventAPIType;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
@@ -32,6 +35,9 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
 
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
+
+    @Resource
+    private ContactManagementService contactManagementService;
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
 
@@ -121,6 +127,20 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
             if (mailgunResponseClickedItem != null) {
                 campaignTrackerEntity.setClicked(true);
                 campaignTrackerEntity.setClickedDate(new Date(formatTimestamp(mailgunResponseClickedItem.getTimestamp())));
+            }
+
+            //Update event for unsubscribed
+            MailgunResponseItem mailgunResponseUnsubscribedItem = mailgunResponseEventMessage.getResponseItem(EventAPIType.UNSUBSCRIBED);
+            if (mailgunResponseUnsubscribedItem != null) {
+                campaignTrackerEntity.setUnsubscribed(true);
+                campaignTrackerEntity.setUnsubscribedDate(new Date(formatTimestamp(mailgunResponseUnsubscribedItem.getTimestamp())));
+
+                //Update unsubscribed in contact
+
+                ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(campaignTrackerEntity.getRecipient());
+                contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
+
+                contactManagementService.saveContactEntity(contactEntity);
             }
         }
 

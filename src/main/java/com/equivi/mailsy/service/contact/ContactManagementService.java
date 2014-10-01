@@ -33,6 +33,13 @@ public interface ContactManagementService {
 
 
     /**
+     *
+     * @param contactEntity
+     * @return
+     */
+    ContactEntity saveContactEntity(final ContactEntity contactEntity);
+
+    /**
      * @param contactId
      */
     void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus);

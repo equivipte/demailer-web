@@ -31,7 +31,6 @@ public class CampaignDTO implements Serializable {
 
     private String scheduledSendTime;
 
-
     private String lastUpdateDate;
 
     private List<Long> subscriberGroupId;
@@ -131,4 +130,5 @@ public class CampaignDTO implements Serializable {
     public void setSubscriberGroupId(List<Long> subscriberGroupId) {
         this.subscriberGroupId = subscriberGroupId;
     }
+
 }
