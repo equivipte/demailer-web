@@ -1,3 +1,24 @@
-<h3>
-    Email
-</h3>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+
+
+
+<div class="widget-header widget-header-flat widget-header-small">
+    <h5>
+        <spring:message code="label.campaign.email.content"/>
+    </h5>
+</div>
+<div class="widget-body">
+    <div class="widget-main-email-content">
+
+    </div>
+</div>
+
+<c:set var="content" value="${campaignDTO.emailContent}"/>
+
+<script type="text/javascript">
+    alert(${content});
+    $( "div.widget-main-email-content" )
+            .html(${content});
+</script>

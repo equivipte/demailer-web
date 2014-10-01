@@ -12,7 +12,6 @@
 <c:set var="sendDate"><spring:message code="label.campaign.scheduled_send_date"/></c:set>
 
 </br>
-</br>
 
 <div class="table-responsive">
 <table id="table-subscriber" class="table table-striped table-bordered table-hover">

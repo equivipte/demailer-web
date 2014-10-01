@@ -36,7 +36,7 @@ public class CampaignUpdateWorker {
     }
 
     //Run every 2 minute
-    @Scheduled(fixedDelay = 120000)
+    @Scheduled(fixedDelay = 45000)
     public void updateTracker(){
         LOG.info("Campaign Update tracker");
         try{
