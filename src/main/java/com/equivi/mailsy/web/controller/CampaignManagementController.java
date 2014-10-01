@@ -3,6 +3,7 @@ package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
@@ -187,6 +188,7 @@ public class CampaignManagementController extends AbstractController {
         setPredefinedData(modelAndView, campaignDTO);
 
         modelAndView.addObject("campaignStatisticDTO", campaignStatisticDTO);
+        modelAndView.addObject("recipientList", getContactDTOList(campaignDTO));
         modelAndView.setViewName("campaignManagementViewPage");
         return modelAndView;
     }
@@ -226,6 +228,19 @@ public class CampaignManagementController extends AbstractController {
         Page<SubscriberGroupEntity> subscriberContactEntities = subscriberGroupService.listSubscriberGroup(new THashMap<SubscriberGroupSearchFilter, String>(), 1, webConfiguration.getMaxRecordsPerPage());
 
         return convertToSubscribeGroupDTOList(subscriberContactEntities.getContent(), campaignDTO.getSubscriberGroupIds());
+    }
+
+    private List<String> getContactDTOList(CampaignDTO campaignDTO) {
+        List<ContactEntity> contactEntityList = subscriberGroupService.getContactListBySubscriberGroupIdList(campaignDTO.getSubscriberGroupIds());
+        List<String> recipientList = new ArrayList<>();
+
+        if (contactEntityList != null && !contactEntityList.isEmpty()) {
+            for (ContactEntity contactEntity : contactEntityList) {
+                recipientList.add(contactEntity.getEmailAddress());
+            }
+        }
+
+        return recipientList;
     }
 
     //TODO: move duplicated code in SubscriberManagementController to converter

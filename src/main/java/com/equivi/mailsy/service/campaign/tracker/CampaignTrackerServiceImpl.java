@@ -130,7 +130,10 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         campaignStatisticDTO.setTotalSent(totalSent);
 
         //Set Percentage
-        Double openPercentage = Double.valueOf(totalOpen * 100 / totalDelivered);
+        Double openPercentage = 0D;
+        if(totalDelivered > 0){
+            openPercentage = Double.valueOf(totalOpen * 100 / totalDelivered);
+        }
         Double failurePercentage = Double.valueOf(totalBounced * 100 / totalSent);
         Double deliverPercentage = Double.valueOf(totalDelivered * 100 / totalSent);
 

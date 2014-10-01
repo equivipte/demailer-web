@@ -57,7 +57,7 @@
                 <jsp:include page="email_content.jsp"/>
             </div>
             <div id="subscriberGroupList" class="tab-pane">
-                <jsp:include page="subscriber_group_list.jsp"/>
+                <jsp:include page="recipient_list.jsp"/>
             </div>
         </div>
     </div>

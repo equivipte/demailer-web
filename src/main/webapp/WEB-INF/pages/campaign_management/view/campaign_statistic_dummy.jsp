@@ -17,18 +17,13 @@
             </div>
 
             <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalOpened}/${campaignStatisticDTO.totalSent}</span>
+                <span class="infobox-data-number">8/50</span>
 
                 <div class="infobox-content"><spring:message code="label.campaign.opened"/></div>
             </div>
             <div class="badge badge-success">
-                <c:if test="${campaignStatisticDTO.openMailPercentage gt 0}">
-                    +${campaignStatisticDTO.openMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.openMailPercentage eq 0}">
-                    0%
-                </c:if>
+                +32%
+                <i class="icon-arrow-up"></i>
             </div>
         </div>
 
@@ -38,19 +33,14 @@
             </div>
 
             <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalDelivered}/${campaignStatisticDTO.totalSent}</span>
+                <span class="infobox-data-number">50/50</span>
 
                 <div class="infobox-content"><spring:message code="label.campaign.delivered"/></div>
             </div>
 
             <div class="badge badge-info">
-                <c:if test="${campaignStatisticDTO.deliverMailPercentage gt 0}">
-                    +${campaignStatisticDTO.deliverMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.deliverMailPercentage eq 0}">
-                     0%
-                </c:if>
+                +32%
+                <i class="icon-arrow-up"></i>
             </div>
         </div>
 
@@ -60,18 +50,9 @@
             </div>
 
             <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalFailed}/${campaignStatisticDTO.totalSent}</span>
+                <span class="infobox-data-number">7</span>
 
                 <div class="infobox-content"><spring:message code="label.campaign.failed"/></div>
-            </div>
-            <div class="badge badge-danger">
-                <c:if test="${campaignStatisticDTO.failedMailPercentage gt 0}">
-                    +${campaignStatisticDTO.failedMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.failedMailPercentage eq 0}">
-                    0%
-                </c:if>
             </div>
         </div>
         <div class="infobox infobox-red">
@@ -80,7 +61,7 @@
             </div>
 
             <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalUnsubscribed}</span>
+                <span class="infobox-data-number">7</span>
 
                 <div class="infobox-content"><spring:message code="label.campaign.unsubscribed"/></div>
             </div>
@@ -108,21 +89,21 @@
                 <span class="grey">
                     <i class="icon-mobile-phone icon-2x blue"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingMobile}</h4>
+                <h4 class="bigger pull-right">1,255</h4>
             </div>
 
             <div class="grid3">
                 <span class="grey">
                     <i class="icon-desktop icon-2x green"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingDesktop}</h4>
+                <h4 class="bigger pull-right">941</h4>
             </div>
 
             <div class="grid3">
                 <span class="grey">
                     <i class="icon-question-sign icon-2x red"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingOthers}</h4>
+                <h4 class="bigger pull-right">1,050</h4>
             </div>
         </div>
     </div>
@@ -136,11 +117,6 @@
         </button>
     </div>
 </div>
-
-<c:set var="mobilePercentage" value="${campaignStatisticDTO.openUsingMobilePercentage}"/>
-<c:set var="desktopPercentage" value="${campaignStatisticDTO.openUsingDesktopPercentage}"/>
-<c:set var="otherPercentage" value="${campaignStatisticDTO.openUsingOtherPercentage}"/>
-
 <!-- /widget-body -->
 <script type="text/javascript">
     jQuery(function ($) {
@@ -169,9 +145,9 @@
 
         var placeholder = $('#piechart-placeholder').css({'width': '90%', 'min-height': '150px'});
         var data = [
-            { label: "Mobile", data: ${mobilePercentage}, color: "#2091CF"},
-            { label: "Desktop", data: ${desktopPercentage}, color: "#68BC31"},
-            { label: "Other", data: ${otherPercentage}, color: "#DA5430"}
+            { label: "Mobile", data: 40, color: "#2091CF"},
+            { label: "Desktop", data: 45, color: "#68BC31"},
+            { label: "Other", data: 5, color: "#DA5430"}
         ]
 
         function drawPieChart(placeholder, data, position) {

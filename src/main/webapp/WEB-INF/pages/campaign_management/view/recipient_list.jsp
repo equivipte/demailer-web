@@ -17,14 +17,14 @@
 <table id="table-subscriber" class="table table-striped table-bordered table-hover">
 <thead>
 <tr>
-    <th><spring:message code="label.subscriber.subscriber_group"/></th>
+    <th><spring:message code="label.campaign.email.recipients"/></th>
 </tr>
 </thead>
-<c:if test="${subscriberGroupDTOList.size() > 0 }">
+<c:if test="${recipientList.size() > 0 }">
     <tbody>
-    <c:forEach items="${subscriberGroupDTOList}" var="subscriber">
-        <tr id="${subscriber.id}">
-            <td>${subscriber.subscriberGroupName}</td>
+    <c:forEach items="${recipientList}" var="recipient">
+        <tr id="${recipient}">
+            <td>${recipient}</td>
         </tr>
     </c:forEach>
     </tbody>

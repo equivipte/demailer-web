@@ -10,15 +10,15 @@
     </h5>
 </div>
 <div class="widget-body">
-    <div class="widget-main-email-content">
-
+    </br>
+    <div id ="email-content-div" class="widget-main-email-content">
+        <c:out value="${campaignDTO.emailContent}" />
     </div>
 </div>
 
-<c:set var="content" value="${campaignDTO.emailContent}"/>
+<input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
 
 <script type="text/javascript">
-    alert(${content});
-    $( "div.widget-main-email-content" )
-            .html(${content});
+    var content = $('input#email-content').val();
+    $( "#email-content-div" ).html(content);
 </script>

@@ -1,6 +1,7 @@
 package com.equivi.mailsy.service.subsriber;
 
 
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
@@ -52,4 +53,12 @@ public interface SubscriberGroupService {
      * @return SubscriberGroupEntity
      */
     SubscriberGroupEntity saveSubscriberGroup(SubscriberGroupDTO subscriberGroupDTO);
+
+
+    /**
+     *
+     * @param subscriberGroupIdList
+     * @return all contact list based on subscriber group id list
+     */
+    List<ContactEntity> getContactListBySubscriberGroupIdList(List<Long> subscriberGroupIdList);
 }

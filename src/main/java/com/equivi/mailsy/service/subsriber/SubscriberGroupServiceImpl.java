@@ -67,7 +67,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
 
         Iterable<SubscriberContactEntity> subscriberContactEntityList = subscriberContactDao.findAll(getSubscriberContactEntityListPredicate(subscriberGroupEntity));
 
-        if(subscriberContactEntityList.iterator().hasNext()){
+        if (subscriberContactEntityList.iterator().hasNext()) {
             return Lists.newArrayList(subscriberContactEntityList);
         }
         return null;
@@ -102,6 +102,23 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         return subscriberGroupDao.save(subscriberGroupEntity);
     }
 
+    @Override
+    public List<ContactEntity> getContactListBySubscriberGroupIdList(List<Long> subscriberGroupIdList) {
+
+        List<ContactEntity> contactEntityList = new ArrayList<>();
+        if (subscriberGroupIdList != null && !subscriberGroupIdList.isEmpty()) {
+            for (Long subscriberGroupId : subscriberGroupIdList) {
+                SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
+
+                List<SubscriberContactEntity> subscriberContactEntities = getSubscriberContactList(subscriberGroupEntity);
+                for (SubscriberContactEntity subscriberContactEntity : subscriberContactEntities) {
+                    contactEntityList.add(subscriberContactEntity.getContactEntity());
+                }
+            }
+        }
+        return contactEntityList;
+    }
+
     private Pageable getPageable(int page, int maxRecords) {
         Sort sort = new Sort(Sort.Direction.ASC, "groupName");
         return new PageRequest(page, maxRecords, sort);
@@ -134,7 +151,7 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
         return booleanMerchantPredicateBuilder;
     }
 
-    private Predicate getSubscriberContactEntityListPredicate(SubscriberGroupEntity subscriberGroupEntity){
+    private Predicate getSubscriberContactEntityListPredicate(SubscriberGroupEntity subscriberGroupEntity) {
         QSubscriberContactEntity qSubscriberContactEntity = QSubscriberContactEntity.subscriberContactEntity;
 
         return qSubscriberContactEntity.subscriberGroupEntity.eq(subscriberGroupEntity);
