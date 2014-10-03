@@ -4,7 +4,7 @@
 
 <div class="page-header">
     <h1>
-        <spring:message code="label.campaign.scheduled_send_date"/>
+        <spring:message code="label.campaign.email.review_and_confirm"/>
     </h1>
 </div>
 
@@ -15,90 +15,102 @@
 </br>
 </br>
 
-<!-- /.page-header -->
-<div class="row">
-    <div class="col-xs-12">
+<div class="widget-header widget-header-flat widget-header-small">
+    <h5>
+        <spring:message code="label.campaign.info"/>
+    </h5>
+</div>
+<div class="widget-body">
+    <div class="widget-main">
+        <div class="row">
+            <div class="col-xs-12">
 
-        <!-- #dialog-confirm -->
-        <div class="form-group">
-            <label class="col-sm-3 control-label no-padding-right">
-                <spring:message code="label.campaign.scheduled_send_date"></spring:message></label>
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"><b><spring:message
+                            code="label.campaign.name"></spring:message></b></label>
 
-            <div class="input-group col-sm-2">
-                <div class="input-group">
-                    <input class="form-control date-picker scheduled-date" id="id-date-picker-1" type="text"
-                           data-date-format="dd-mm-yyyy" value="${campaignDTO.scheduledSendDate}"/>
-                    <span class="input-group-addon">
-                        <i class="icon-calendar bigger-110"></i>
-                    </span>
-
+                    <div class="col-sm-9">
+                        <label class="col-sm-3 control-label no-padding-right">${campaignDTO.campaignName}</label>
+                    </div>
                 </div>
+
             </div>
-            <div class="input-group col-sm-2">
-                <div class="input-group  bootstrap-timepicker">
-                    <input id="timepicker1" type="text" class="form-control scheduled-time" value="${campaignDTO.scheduledSendTime}"/>
-                    <span class="input-group-addon">
-                        <i class="icon-time bigger-110"></i>
-                    </span>
+        </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"><b><spring:message
+                            code="label.campaign.email.from"></spring:message></b></label>
+
+                    <div class="col-sm-9">
+                        <label class="col-sm-3 control-label no-padding-right">${campaignDTO.emailFrom}</label>
+                    </div>
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="col-xs-12">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label no-padding-right"><b><spring:message
+                            code="label.campaign.subject"></spring:message></b></label>
 
-        </br>
-        </br>
-        <div class="clearfix form-actions">
-            <div class="col-md-offset-3 col-md-9">
-                <button id="back_to_user_id_list" class="btn" onclick="backToRecipients(${campaignDTO.id})">
-                    <i class="icon-arrow-left icon-on-right"></i>
-                    <spring:message code="label.prev"/>
-                </button>
-                &nbsp; &nbsp; &nbsp;
-
-                <button class="btn btn-success btn-next" type="submit" onclick="sendEmail(${campaignDTO.id})">
-                    <spring:message code="label.campaign.send"/>
-                    <i class="icon-inbox icon-on-right"></i>
-                </button>
-
+                    <div class="col-sm-9">
+                        <label class="col-sm-3 control-label no-padding-right">${campaignDTO.emailSubject}</label>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+</br>
+</br>
+
+
+<div class="widget-header widget-header-flat widget-header-small">
+    <h5>
+        <spring:message code="label.campaign.email.content"/>
+    </h5>
+</div>
+<div class="widget-body">
+    <div class="widget-main">
+        <div id="email-content-div" class="widget-main-email-content">
+            <c:out value="${campaignDTO.emailContent}"/>
+        </div>
+    </div>
+</div>
+</br>
+</br>
+<div class="clearfix form-actions">
+    <div class="col-md-offset-3 col-md-9">
+        <button id="back_to_user_id_list" class="btn" onclick="backToRecipients(${campaignDTO.id})">
+            <i class="icon-arrow-left icon-on-right"></i>
+            <spring:message code="label.prev"/>
+        </button>
+        &nbsp; &nbsp; &nbsp;
+
+        <button class="btn btn-success btn-next" type="submit" onclick="goToScheduleDeliveryDate(${campaignDTO.id})">
+            <spring:message code="label.confirm"/>
+            <i class="icon-arrow-right icon-on-right"></i>
+        </button>
+
+    </div>
+</div>
+
+<input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
+
+<script type="text/javascript">
+    var content = $('input#email-content').val();
+    $("#email-content-div").html(content);
+</script>
+
+
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
 
-    jQuery(function ($) {
-        $('.date-picker').datepicker({autoclose: true}).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-        $('#timepicker1').timepicker({
-            minuteStep: 1,
-            showSeconds: false,
-            showMeridian: false
-        }).next().on(ace.click_event, function () {
-            $(this).prev().focus();
-        });
-    });
 
-    function sendEmail(campaignId) {
-        var url = "${context}/main/merchant/campaign_management/" + campaignId + "/saveCampaignDelivery";
-
-        var scheduledDate =$('#id-date-picker-1').val();
-        var scheduledTime =$('#timepicker1').val();
-
-        $.ajax({
-            url: url,
-            type: "POST",
-            data: scheduledDate + " "+scheduledTime,
-
-            contentType: 'application/json',
-            success: function () {
-                window.location.replace("${context}/main/merchant/campaign_management/goToFinishPage");
-            },
-            error: function (jqXHR, textStatus, errorThrown) {
-                console.log("Save email content - the following error occured: " + textStatus, errorThrown);
-            }
-        });
+    function goToScheduleDeliveryDate(campaignId) {
+        window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementEmailDeliveryPage");
     }
 
     function backToRecipients(campaignId) {

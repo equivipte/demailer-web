@@ -108,7 +108,7 @@
     </definition>
 
     <!--CAMPAIGN MANAGEMENT STEP 4-->
-    <definition name="campaignManagementEmailDeliveryPage" extends="base.definition">
+    <definition name="campaignManagementEmailReviewPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb"
                        value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
@@ -117,12 +117,21 @@
     </definition>
 
     <!--CAMPAIGN MANAGEMENT STEP 5-->
-    <definition name="campaignManagementFinishPage" extends="base.definition">
+    <definition name="campaignManagementEmailDeliveryPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb"
                        value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_5.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 5-->
+    <definition name="campaignManagementFinishPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_6.jsp"/>
     </definition>
 
 
