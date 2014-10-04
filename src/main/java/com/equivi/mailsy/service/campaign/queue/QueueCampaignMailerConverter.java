@@ -6,7 +6,10 @@ import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
+import com.equivi.mailsy.util.WebConfigUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -32,8 +35,8 @@ public class QueueCampaignMailerConverter {
                     QueueCampaignMailerEntity queueCampaignMailerEntity = new QueueCampaignMailerEntity();
                     queueCampaignMailerEntity.setCampaignId(campaignSubscriberGroupEntity.getCampaignEntity().getId());
 
-                    //TODO: merge content with predefined contact info
-                    queueCampaignMailerEntity.setContent(campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent());
+                    queueCampaignMailerEntity.setContent(replaceEmailContentWithParams(subscriberContactEntity,
+                            campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent()));
                     queueCampaignMailerEntity.setSubject(campaignSubscriberGroupEntity.getCampaignEntity().getEmailSubject());
                     queueCampaignMailerEntity.setEmailFrom(campaignSubscriberGroupEntity.getCampaignEntity().getEmailFrom());
                     queueCampaignMailerEntity.setRecipient(subscriberContactEntity.getContactEntity().getEmailAddress());
@@ -50,6 +53,15 @@ public class QueueCampaignMailerConverter {
             }
         }
         return queueCampaignMailerEntityList;
+    }
+
+    private String replaceEmailContentWithParams(SubscriberContactEntity contactEntity, String emailContent) {
+        String emailContentWithParams = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_CONTENT_PARAMS);
+        String[] arrParams = StringUtils.split(emailContentWithParams, ',');
+        String[] arrValues = new String[]{contactEntity.getContactEntity().getFirstName(),
+                contactEntity.getContactEntity().getLastName(), contactEntity.getContactEntity().getCompanyName()};
+
+        return StringUtils.replaceEachRepeatedly(emailContent, arrParams, arrValues);
     }
 
 }
