@@ -17,7 +17,9 @@ public enum MailgunParameters {
     TRACKING_CLICKS("o:tracking-clicks"),
     TRACKING_OPEN("o:tracking-opens"),
     MESSAGE_ID("message-id"),
-    EVENT("event");
+    EVENT("event"),
+    ADDRESS("address"),
+    TAG("tag");
 
     private String value;
 

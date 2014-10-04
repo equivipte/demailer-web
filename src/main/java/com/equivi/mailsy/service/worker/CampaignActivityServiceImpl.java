@@ -44,7 +44,6 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Override
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {
 
-        LOG.error("SIZE:" + queueCampaignMailerEntityList.size());
         for (QueueCampaignMailerEntity queueCampaignMailerEntity : queueCampaignMailerEntityList) {
             String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
 
@@ -61,7 +60,6 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Override
     public void updateTracker() {
 
-        LOG.info("Campaign Update Tracker");
         List<CampaignTrackerEntity> campaignTrackerEntityList = campaignTrackerService.getCampaignTrackerEntityList(null);
 
         if (campaignTrackerEntityList != null && !campaignTrackerEntityList.isEmpty()) {
@@ -69,8 +67,6 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
 
                 //Refresh object from DB
                 try {
-                    //CampaignTrackerEntity campaignTrackerEntityFromDB = campaignTrackerService.getCampaignTrackerEntity(campaignTrackerEntity.getId());
-
                     campaignTrackerEntity = updateCampaignTrackerEntityPerEvent(campaignTrackerEntity);
 
                     campaignTrackerService.saveCampaignTrackerEntity(campaignTrackerEntity);
@@ -164,9 +160,8 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
 
     private void updateQueueCampaignStatus(QueueCampaignMailerEntity queueCampaignMailerEntity) {
         try {
-            QueueCampaignMailerEntity queueCampaignMailUpdated = queueCampaignMailerDao.findOne(queueCampaignMailerEntity.getId());
-            queueCampaignMailUpdated.setMailDeliveryStatus(MailDeliveryStatus.SUCCESS);
-            queueCampaignMailerDao.save(queueCampaignMailUpdated);
+            queueCampaignMailerEntity.setMailDeliveryStatus(MailDeliveryStatus.SUCCESS);
+            queueCampaignMailerDao.save(queueCampaignMailerEntity);
         } catch (HibernateOptimisticLockingFailureException hibernateOptimisticLockExc) {
             LOG.error("Stale object exception going it's fine");
 

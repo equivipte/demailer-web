@@ -47,7 +47,7 @@ public class DemailerRestTemplate extends RestTemplate {
         this.getMessageConverters().add(mappingJacksonHttpConverter);
     }
 
-    public RestTemplate setHttpAsyncClientFactory() {
+    public RestTemplate setHttpClientFactory() {
         this.setRequestFactory(httpClientFactory.getHttpComponentFactory(this.userName, this.password));
         return this;
     }

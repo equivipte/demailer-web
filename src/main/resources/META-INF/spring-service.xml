@@ -21,9 +21,9 @@
 
     <context:property-placeholder properties-ref="applicationProps"/>
 
-    <task:annotation-driven executor="myExecutor" scheduler="myScheduler"/>
-    <task:executor id="myExecutor" pool-size="5"/>
-    <task:scheduler id="myScheduler" pool-size="10"/>
+    <task:annotation-driven executor="mailsyExecutor" scheduler="mailsyScheduler"/>
+    <task:executor id="mailsyExecutor" pool-size="5"/>
+    <task:scheduler id="mailsyScheduler" pool-size="10"/>
 
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">

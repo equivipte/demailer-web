@@ -7,6 +7,7 @@ import com.equivi.mailsy.service.mailgun.response.MailgunResponseMessage;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.StringUtil;
 import com.equivi.mailsy.web.constant.WebConfiguration;
+import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.codehaus.jackson.JsonParseException;
@@ -17,13 +18,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.Resource;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,10 +54,8 @@ public class MailgunEmailServiceImpl implements MailgunService {
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
 
-        if (domain == null) {
-            domain = DOMAIN_SANDBOX;
-        }
-        String mailgunWebURLApi = buildSendMessageURL(campaignId, domain, from, recipientList, ccList, bccList, subject, message);
+
+        String mailgunWebURLApi = buildSendMessageURL(campaignId, getDomain(domain), from, recipientList, ccList, bccList, subject, message);
 
         setupHttpClientCredentials(mailgunWebURLApi);
 
@@ -91,7 +91,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
         demailerRestTemplate.setCredentials(API_USERNAME, mailgunAPIKey)
                 .setHostName(mailgunWebURLApi);
-        demailerRestTemplate.setHttpAsyncClientFactory();
+        demailerRestTemplate.setHttpClientFactory();
     }
 
     @Override
@@ -159,8 +159,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
 
     Map<String, String> buildSendParameters(String campaignId, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
-        Map<String, String> mailParameter = new HashMap<>();
-        //mailParameter.put(MailgunParameters.CAMPAIGN_ID.getValue(), campaignId);
+        Map<String, String> mailParameter = new THashMap<>();
         mailParameter.put(MailgunParameters.FROM.getValue(), from);
         mailParameter.put(MailgunParameters.TO.getValue(), StringUtil.buildStringWithSeparator(recipientList, ','));
         mailParameter.put(MailgunParameters.CC.getValue(), StringUtil.buildStringWithSeparator(ccList, ','));
@@ -175,8 +174,16 @@ public class MailgunEmailServiceImpl implements MailgunService {
     }
 
     Map<String, String> buildEventParameter(String messageId) {
-        Map<String, String> mailParameter = new HashMap<>();
+        Map<String, String> mailParameter = new THashMap<>();
         mailParameter.put(MailgunParameters.MESSAGE_ID.getValue(), messageId);
+        return mailParameter;
+    }
+
+    Map<String, String> buildUnsubscribeParameter(String emailAddress) {
+        Map<String, String> mailParameter = new THashMap<>();
+        mailParameter.put(MailgunParameters.ADDRESS.getValue(), emailAddress);
+        mailParameter.put(MailgunParameters.TAG.getValue(), "*");
+
         return mailParameter;
     }
 
@@ -184,6 +191,62 @@ public class MailgunEmailServiceImpl implements MailgunService {
     @Override
     public void sendMailWithAttachment(List<String> recipientList, List<Attachment> attachmentList, List<String> ccList, List<String> bccList, String subject, String message) {
 
+    }
+
+    @Override
+    public void deleteUnsubscribe(String domain, String emailAddress) {
+        String deleteUnsubscribeURL = buildUnsubscribeUrl(domain, emailAddress);
+        setupHttpClientCredentials(deleteUnsubscribeURL);
+        try {
+            LOG.info("Delete unsubscribe :" + emailAddress);
+            demailerRestTemplate.delete(deleteUnsubscribeURL, String.class);
+        } catch (HttpClientErrorException hex) {
+            if (hex.getStatusCode().equals(HttpStatus.NOT_FOUND)) {
+                LOG.error("Email address:" + emailAddress + " not found in unsubscribe list");
+            } else {
+                LOG.error(hex.getMessage(), hex);
+                throw new RuntimeException(hex);
+            }
+        }
+    }
+
+    @Override
+    public void registerUnsubscribe(String domain, String emailAddress) {
+        String registerUnsubscribeUrl = buildRegisterUnsubscribeUrl(domain, emailAddress);
+        setupHttpClientCredentials(registerUnsubscribeUrl);
+        ResponseEntity<String> response = demailerRestTemplate.postForEntity(registerUnsubscribeUrl, buildHttpEntity(), String.class);
+        if (response != null) {
+            LOG.info("Register unsubscribe :" + emailAddress + " ,HTTP Status code :" + response.getStatusCode());
+
+            String responseBody = response.getBody();
+
+            LOG.debug("Response From mailgun:" + responseBody);
+        } else {
+            LOG.error("Unable to get Response during send message");
+        }
+
+    }
+
+    private String buildUnsubscribeUrl(String domain, String emailAddress) {
+        StringBuilder sbUnsubscriberURL = new StringBuilder();
+        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), getDomain(domain), null, MailgunAPIType.UNSUBSCRIBES.getValue());
+        sbUnsubscriberURL.append(mailgunEventAPIURL);
+        sbUnsubscriberURL.append("/");
+        sbUnsubscriberURL.append(emailAddress);
+        return sbUnsubscriberURL.toString();
+    }
+
+    private String buildRegisterUnsubscribeUrl(String domain, String emailAddress) {
+        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), getDomain(domain), StringUtil.buildQueryParameters(buildUnsubscribeParameter(emailAddress)), MailgunAPIType.UNSUBSCRIBES.getValue());
+        return mailgunEventAPIURL;
+    }
+
+    private String getDomain(String domain) {
+        if (StringUtils.isEmpty(domain)) {
+            domain = DOMAIN_SANDBOX;
+        }
+
+        return domain;
     }
 
 

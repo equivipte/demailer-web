@@ -8,6 +8,7 @@ import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.dto.contact.ContactDTO;
+import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.mysema.query.types.Predicate;
 import org.springframework.data.domain.Page;
@@ -24,6 +25,9 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Resource
     private SubscriberContactDao subscriberContactDao;
+
+    @Resource
+    private MailgunService mailgunService;
 
     @Override
     public Page<ContactEntity> listContactEntity(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
@@ -77,6 +81,17 @@ public class ContactManagementServiceImpl implements ContactManagementService {
         contactEntity.setSubscribeStatus(subscribeStatus);
 
         contactDao.save(contactEntity);
+
+        updateMailgunUnsubscriberList(contactEntity);
+
+    }
+
+    private void updateMailgunUnsubscriberList(ContactEntity contactEntity) {
+        if (SubscribeStatus.SUBSCRIBED == contactEntity.getSubscribeStatus()) {
+            mailgunService.deleteUnsubscribe(null, contactEntity.getEmailAddress());
+        } else if (SubscribeStatus.UNSUBSCRIBED == contactEntity.getSubscribeStatus()) {
+            mailgunService.registerUnsubscribe(null, contactEntity.getEmailAddress());
+        }
     }
 
     @Override
