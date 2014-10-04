@@ -47,11 +47,11 @@
           class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
         <property name="velocityProperties">
             <props>
-                <prop key="resource.loader">file</prop>
+                <prop key="resource.loader">class</prop>
                 <prop key="file.resource.loader.class">
-                    org.apache.velocity.runtime.resource.loader.FileResourceLoader
+                    org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
                 </prop>
-                <prop key="file.resource.loader.path">file:/opt/demailer/conf/demailer/template</prop>
+                <prop key="file.resource.loader.path">classpath:/config/template</prop>
                 <prop key="file.resource.loader.cache">false</prop>
             </props>
         </property>

@@ -13,6 +13,7 @@ public enum dEmailerWebPropertyKey {
     EMAIL_VERIFIER_URL("email.verifier.url"),
     MAILGUN_WEB_URL("mailgun.web.url"),
     MAILGUN_API_KEY("mailgun.api.key"),
+    ADMIN_EMAIL_FROM("admin.email.from"),
     EMAIL_CRAWLING_STORAGE("email.crawling.storage.dir");
 
 

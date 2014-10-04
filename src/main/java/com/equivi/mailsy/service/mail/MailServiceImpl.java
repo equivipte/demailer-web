@@ -25,7 +25,7 @@ public class MailServiceImpl implements MailService {
     public void sendMailPlain(List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
-        String mailFrom = WebConfigUtil.getValue(dEmailerWebPropertyKey.NEW_USER_EMAIL_SUBJECT);
+        String mailFrom = WebConfigUtil.getValue(dEmailerWebPropertyKey.ADMIN_EMAIL_FROM);
         mailMessage.setFrom(mailFrom);
 
         if (recipientList != null && recipientList.size() > 0) {

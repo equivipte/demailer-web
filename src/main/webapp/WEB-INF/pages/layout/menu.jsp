@@ -63,18 +63,20 @@
             </a>
         </li>
 
-        <c:if test="${currentPage.currentSubMenu == 'USER_MANAGEMENT'}">
-        <li id="user-management" class="active">
-            </c:if>
+        <security:authorize ifAnyGranted="MAILSY_ADMIN">
+            <c:if test="${currentPage.currentSubMenu == 'USER_MANAGEMENT'}">
+            <li id="user-management" class="active">
+                </c:if>
 
-            <c:if test="${currentPage.currentSubMenu != 'USER_MANAGEMENT'}">
-        <li id="user-management">
-            </c:if>
-            <a href="${pageContext.request.contextPath}/main/admin/users/1">
-                <i class="icon-user"></i>
-                <spring:message code="label.menu.administration.usermanagement"/>
-            </a>
-        </li>
+                <c:if test="${currentPage.currentSubMenu != 'USER_MANAGEMENT'}">
+            <li id="user-management">
+                </c:if>
+                <a href="${pageContext.request.contextPath}/main/admin/users/1">
+                    <i class="icon-user"></i>
+                    <spring:message code="label.menu.administration.usermanagement"/>
+                </a>
+            </li>
+        </security:authorize>
 </div>
 
 <script type="text/javascript">
