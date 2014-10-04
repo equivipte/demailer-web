@@ -35,6 +35,7 @@
     <![endif]-->
 
     <!-- page specific plugin styles -->
+    <link href="${pageContext.request.contextPath}/resources/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
 
     <!-- fonts -->
 
@@ -116,6 +117,7 @@
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.dataTables.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.dataTables.bootstrap.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.gritter.min.js"></script>
 
 
 <script src="${pageContext.request.contextPath}/resources/js/ace-elements.min.js"></script>

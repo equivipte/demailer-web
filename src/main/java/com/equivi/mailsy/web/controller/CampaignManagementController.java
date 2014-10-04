@@ -4,6 +4,7 @@ package com.equivi.mailsy.web.controller;
 import com.equivi.mailsy.data.entity.CampaignEntity;
 import com.equivi.mailsy.data.entity.CampaignStatus;
 import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
@@ -13,10 +14,12 @@ import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
 import com.equivi.mailsy.service.constant.ConstantProperty;
 import com.equivi.mailsy.service.exception.InvalidDataException;
+import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
+import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
@@ -54,6 +57,9 @@ public class CampaignManagementController extends AbstractController {
 
     @Resource
     private CampaignTrackerService campaignTrackerService;
+
+    @Resource
+    private MailgunService mailgunEmailService;
 
     @Resource
     private SubscriberGroupService subscriberGroupService;
@@ -219,6 +225,16 @@ public class CampaignManagementController extends AbstractController {
         }
     }
 
+    @RequestMapping(value = "/main/merchant/campaign_management/test_email/{campaignId}", method = RequestMethod.POST)
+    @ResponseBody
+    public String sendTestEmail(@PathVariable Long campaignId, @RequestBody String emailTo) {
+
+        CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
+        mailgunEmailService.sendMessage(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), campaignDTO.getEmailContent());
+
+        return "SUCCESS";
+    }
+
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
         modelAndView.addObject("campaignDTO", campaignDTO);
         modelAndView.addObject("subscriberGroupDTOList", getSubscriberGroupDTOList(campaignDTO));
@@ -236,7 +252,9 @@ public class CampaignManagementController extends AbstractController {
 
         if (contactEntityList != null && !contactEntityList.isEmpty()) {
             for (ContactEntity contactEntity : contactEntityList) {
-                recipientList.add(contactEntity.getEmailAddress());
+                if (contactEntity.getSubscribeStatus().equals(SubscribeStatus.SUBSCRIBED)) {
+                    recipientList.add(contactEntity.getEmailAddress());
+                }
             }
         }
 

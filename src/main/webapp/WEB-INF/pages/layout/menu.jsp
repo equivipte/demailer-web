@@ -41,7 +41,7 @@
         <li id="campaign-management" class="active">
             </c:if>
 
-        <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
+            <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
         <li id="campaign-management">
             </c:if>
             <a href="${pageContext.request.contextPath}/main/merchant/campaign_management/1">
@@ -60,19 +60,6 @@
             <a href="${pageContext.request.contextPath}/main/merchant/subscriber_management/1">
                 <i class="icon-book"></i>
                 <spring:message code="label.menu.subscriber"/>
-            </a>
-        </li>
-
-        <c:if test="${currentPage.currentSubMenu == 'REPORT'}">
-        <li id="report" class="active">
-            </c:if>
-
-            <c:if test="${currentPage.currentSubMenu != 'REPORT'}">
-        <li id="report">
-            </c:if>
-            <a href="${pageContext.request.contextPath}/main/merchant/report">
-                <i class="icon-bar-chart"></i>
-                <spring:message code="label.menu.email.report"/>
             </a>
         </li>
 
