@@ -7,12 +7,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-@Service
+@Component
 public class CampaignUpdateWorker {
 
     @Resource
@@ -30,19 +31,18 @@ public class CampaignUpdateWorker {
         LOG.info("Collect Campaign Queue and send email");
         List<QueueCampaignMailerEntity> emailQueueToSend = queueCampaignService.getEmailQueueToSend();
 
-        if(emailQueueToSend!=null && !emailQueueToSend.isEmpty()){
+        if (emailQueueToSend != null && !emailQueueToSend.isEmpty()) {
             campaignActivityService.sendEmail(emailQueueToSend);
         }
     }
 
     //Run every 2 minute
     @Scheduled(fixedDelay = 45000)
-    public void updateTracker(){
+    public void updateTracker() {
         LOG.info("Campaign Update tracker");
-        try{
+        try {
             campaignActivityService.updateTracker();
-        }
-        catch(HibernateOptimisticLockingFailureException hex){
+        } catch (HibernateOptimisticLockingFailureException hex) {
             LOG.error("Stale Object State exception");
         }
     }

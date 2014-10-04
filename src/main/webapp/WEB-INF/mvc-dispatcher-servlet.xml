@@ -3,7 +3,6 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:task="http://www.springframework.org/schema/task"
        xmlns:beans="http://www.springframework.org/schema/beans"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -16,8 +15,6 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/aop
 	    http://www.springframework.org/schema/aop/spring-aop.xsd">
 
@@ -28,11 +25,7 @@
 
     <aop:aspectj-autoproxy/>
 
-    <task:annotation-driven/>
-
     <tx:annotation-driven/>
-
-    <task:scheduler id="taskScheduler" pool-size="5"/>
 
     <mvc:resources mapping="/resources/**" location="/resources/main_theme/"/>
     <mvc:interceptors>

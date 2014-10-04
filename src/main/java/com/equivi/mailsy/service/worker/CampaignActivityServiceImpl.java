@@ -74,7 +74,6 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
                     campaignTrackerEntity = updateCampaignTrackerEntityPerEvent(campaignTrackerEntity);
 
                     campaignTrackerService.saveCampaignTrackerEntity(campaignTrackerEntity);
-
                 } catch (HibernateOptimisticLockingFailureException hex) {
                     LOG.error("Stale object exception at update tracker");
                 }
