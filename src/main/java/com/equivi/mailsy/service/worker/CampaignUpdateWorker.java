@@ -1,8 +1,12 @@
 package com.equivi.mailsy.service.worker;
 
 
+import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.service.campaign.queue.QueueCampaignService;
+import com.equivi.mailsy.service.contact.ContactManagementService;
+import com.equivi.mailsy.service.mailgun.MailgunService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
@@ -22,6 +26,12 @@ public class CampaignUpdateWorker {
     @Resource
     private CampaignActivityService campaignActivityService;
 
+    @Resource
+    private ContactManagementService contactManagementService;
+
+    @Resource
+    private MailgunService mailgunService;
+
     private static final Logger LOG = LoggerFactory.getLogger(CampaignUpdateWorker.class);
 
     //Run every 30 seconds
@@ -34,6 +44,25 @@ public class CampaignUpdateWorker {
         if (emailQueueToSend != null && !emailQueueToSend.isEmpty()) {
             campaignActivityService.sendEmail(emailQueueToSend);
         }
+    }
+
+    //Run every 20 seconds
+    @Scheduled(fixedDelay = 120000)
+    public void updateUnsubscribeStatus() {
+
+        LOG.info("Update unsubscribe status");
+        List<String> unsubscribeEmailAddressList = mailgunService.getUnsubscribeList(null);
+
+        if (unsubscribeEmailAddressList.size() > 0) {
+
+            //Update unsubscribe status
+            for (String unsubscribeEmailAddress : unsubscribeEmailAddressList) {
+                ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(unsubscribeEmailAddress);
+                contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
+                contactManagementService.saveContactEntity(contactEntity);
+            }
+        }
+
     }
 
     //Run every 2 minute

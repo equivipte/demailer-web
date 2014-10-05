@@ -4,9 +4,12 @@ import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.mail.Attachment;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseMessage;
+import com.equivi.mailsy.service.mailgun.response.UnsubscribeResponse;
+import com.equivi.mailsy.service.mailgun.response.UnsubscribeResponseItems;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
-import com.equivi.mailsy.util.StringUtil;
+import com.equivi.mailsy.util.MailsyStringUtil;
 import com.equivi.mailsy.web.constant.WebConfiguration;
+import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -63,7 +66,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
         if (response != null) {
             try {
-                LOG.info("HTTP Status code :" + response.getStatusCode());
+                LOG.debug("HTTP Status code :" + response.getStatusCode());
 
                 String responseBody = response.getBody();
 
@@ -96,7 +99,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
     @Override
     public MailgunResponseEventMessage getEventForMessageId(String messageId) {
-        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), DOMAIN_SANDBOX, StringUtil.buildQueryParameters(buildEventParameter(messageId)), MailgunAPIType.EVENTS.getValue());
+        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), DOMAIN_SANDBOX, MailsyStringUtil.buildQueryParameters(buildEventParameter(messageId)), MailgunAPIType.EVENTS.getValue());
 
         setupHttpClientCredentials(mailgunEventAPIURL);
 
@@ -104,7 +107,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
         if (response != null) {
             try {
-                LOG.info("HTTP Status code :" + response.getStatusCode());
+                LOG.debug("HTTP Status code :" + response.getStatusCode());
 
                 String responseBody = response.getBody();
 
@@ -130,7 +133,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
     private String buildSendMessageURL(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         Map<String, String> mailParameter = buildSendParameters(campaignId, from, recipientList, ccList, bccList, subject, message);
 
-        return formatMailgunHostUrl(getMailgunBaseAPIURL(), domain, StringUtil.buildQueryParameters(mailParameter), MailgunAPIType.MESSAGES.getValue());
+        return formatMailgunHostUrl(getMailgunBaseAPIURL(), domain, MailsyStringUtil.buildQueryParameters(mailParameter), MailgunAPIType.MESSAGES.getValue());
     }
 
     String formatMailgunHostUrl(String mailgunBaseURL, String domain, String queryParameters, String resource) {
@@ -161,9 +164,9 @@ public class MailgunEmailServiceImpl implements MailgunService {
     Map<String, String> buildSendParameters(String campaignId, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         Map<String, String> mailParameter = new THashMap<>();
         mailParameter.put(MailgunParameters.FROM.getValue(), from);
-        mailParameter.put(MailgunParameters.TO.getValue(), StringUtil.buildStringWithSeparator(recipientList, ','));
-        mailParameter.put(MailgunParameters.CC.getValue(), StringUtil.buildStringWithSeparator(ccList, ','));
-        mailParameter.put(MailgunParameters.BCC.getValue(), StringUtil.buildStringWithSeparator(bccList, ','));
+        mailParameter.put(MailgunParameters.TO.getValue(), MailsyStringUtil.buildStringWithSeparator(recipientList, ','));
+        mailParameter.put(MailgunParameters.CC.getValue(), MailsyStringUtil.buildStringWithSeparator(ccList, ','));
+        mailParameter.put(MailgunParameters.BCC.getValue(), MailsyStringUtil.buildStringWithSeparator(bccList, ','));
         mailParameter.put(MailgunParameters.SUBJECT.getValue(), subject);
         mailParameter.put(MailgunParameters.HTML.getValue(), StringEscapeUtils.unescapeHtml4(message));
         mailParameter.put(MailgunParameters.TRACKING.getValue(), "yes");
@@ -216,7 +219,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
         setupHttpClientCredentials(registerUnsubscribeUrl);
         ResponseEntity<String> response = demailerRestTemplate.postForEntity(registerUnsubscribeUrl, buildHttpEntity(), String.class);
         if (response != null) {
-            LOG.info("Register unsubscribe :" + emailAddress + " ,HTTP Status code :" + response.getStatusCode());
+            LOG.debug("Register unsubscribe :" + emailAddress + " ,HTTP Status code :" + response.getStatusCode());
 
             String responseBody = response.getBody();
 
@@ -227,17 +230,75 @@ public class MailgunEmailServiceImpl implements MailgunService {
 
     }
 
+    @Override
+    public List<String> getUnsubscribeList(String domain) {
+        String getUnsubscibeListUrl = buildUnsubscribeUrl(getDomain(domain), null);
+        setupHttpClientCredentials(getUnsubscibeListUrl);
+        ResponseEntity<UnsubscribeResponse> response = demailerRestTemplate.getForEntity(getUnsubscibeListUrl, UnsubscribeResponse.class);
+        if (response != null) {
+
+            UnsubscribeResponse responseBody = response.getBody();
+
+            return getUnsubscribeEmailAddress(responseBody);
+
+        } else {
+            LOG.error("Unable to get Response during send message");
+        }
+        return Lists.newArrayList();
+    }
+
+    private List<String> getUnsubscribeEmailAddress(UnsubscribeResponse responseBody) {
+
+        List<String> unsubscribeEmailAddressList = Lists.newArrayList();
+        if (responseBody.getTotal() > 0) {
+            for (UnsubscribeResponseItems item : responseBody.getItems()) {
+                unsubscribeEmailAddressList.add(item.getAddress());
+            }
+
+        }
+        return Lists.newArrayList();
+    }
+
+    @Override
+    public boolean isUnsubscribe(String domain, String emailAddress) {
+        String unsubscribeUrl = buildRegisterUnsubscribeUrl(getDomain(domain), emailAddress);
+        setupHttpClientCredentials(unsubscribeUrl);
+        ResponseEntity<String> response = demailerRestTemplate.getForEntity(unsubscribeUrl, String.class);
+        if (response != null) {
+            LOG.debug("Check is unsubscribe :" + emailAddress + " ,HTTP Status code :" + response.getStatusCode());
+
+            String responseBody = response.getBody();
+
+            LOG.debug("Response From mailgun:" + responseBody);
+
+            try {
+                UnsubscribeResponse unsubscribeResponse = objectMapper.readValue(responseBody, UnsubscribeResponse.class);
+
+                return unsubscribeResponse.getTotal() > 0;
+            } catch (IOException e) {
+                LOG.error("Unable to get Response during send message");
+            }
+
+            LOG.debug("Response From mailgun:" + responseBody);
+        } else {
+            LOG.error("Unable to get Response during send message");
+        }
+        return false;
+    }
+
     private String buildUnsubscribeUrl(String domain, String emailAddress) {
         StringBuilder sbUnsubscriberURL = new StringBuilder();
         String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), getDomain(domain), null, MailgunAPIType.UNSUBSCRIBES.getValue());
         sbUnsubscriberURL.append(mailgunEventAPIURL);
-        sbUnsubscriberURL.append("/");
-        sbUnsubscriberURL.append(emailAddress);
+        if (!StringUtils.isEmpty(emailAddress)) {
+            sbUnsubscriberURL.append("/");
+            sbUnsubscriberURL.append(emailAddress);
+        }
         return sbUnsubscriberURL.toString();
     }
 
     private String buildRegisterUnsubscribeUrl(String domain, String emailAddress) {
-        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), getDomain(domain), StringUtil.buildQueryParameters(buildUnsubscribeParameter(emailAddress)), MailgunAPIType.UNSUBSCRIBES.getValue());
+        String mailgunEventAPIURL = formatMailgunHostUrl(getMailgunBaseAPIURL(), getDomain(domain), MailsyStringUtil.buildQueryParameters(buildUnsubscribeParameter(emailAddress)), MailgunAPIType.UNSUBSCRIBES.getValue());
         return mailgunEventAPIURL;
     }
 

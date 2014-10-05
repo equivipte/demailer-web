@@ -15,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 @Service
@@ -32,6 +33,11 @@ public class ContactManagementServiceImpl implements ContactManagementService {
     @Override
     public Page<ContactEntity> listContactEntity(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords) {
         return null;
+    }
+
+    @Override
+    public List<ContactEntity> listContactEntity() {
+        return contactDao.findAll();
     }
 
     @Override
@@ -84,6 +90,17 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
         updateMailgunUnsubscriberList(contactEntity);
 
+    }
+
+    @Override
+    public void updateUnsubscribeStatusFromMailgun(String emailAddress) {
+        if(mailgunService.isUnsubscribe(null, emailAddress)){
+            //Update unsubscribed in contact
+            ContactEntity contactEntity = getContactEntityByEmailAddress(emailAddress);
+            contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
+
+            saveContactEntity(contactEntity);
+        }
     }
 
     private void updateMailgunUnsubscriberList(ContactEntity contactEntity) {

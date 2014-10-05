@@ -75,10 +75,13 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         QCampaignTrackerEntity qCampaignTrackerEntity = QCampaignTrackerEntity.campaignTrackerEntity;
         Iterable<CampaignTrackerEntity> campaignTrackerEntities = campaignTrackerDao.findAll((qCampaignTrackerEntity.campaignId.eq(campaignId)));
 
-        CampaignStatisticDTO campaignStatisticDTO = buildCampaignStatisticDTO(campaignTrackerEntities);
-        campaignStatisticDTO.setCampaignId(campaignId);
+        if(campaignTrackerEntities!=null && campaignTrackerEntities.iterator().hasNext()){
+            CampaignStatisticDTO campaignStatisticDTO = buildCampaignStatisticDTO(campaignTrackerEntities);
+            campaignStatisticDTO.setCampaignId(campaignId);
+            return campaignStatisticDTO;
+        }
 
-        return campaignStatisticDTO;
+        return new CampaignStatisticDTO();
     }
 
     private CampaignStatisticDTO buildCampaignStatisticDTO(Iterable<CampaignTrackerEntity> campaignTrackerEntities) {

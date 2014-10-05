@@ -7,11 +7,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class ContactConverter {
 
-    public ContactEntity convertToEntity(ContactDTO contactDTO) {
-        ContactEntity contactEntity = new ContactEntity();
+    public ContactEntity convertToEntity(ContactEntity contactEntity, ContactDTO contactDTO) {
         contactEntity.setEmailAddress(contactDTO.getEmailAddress());
         contactEntity.setFirstName(contactDTO.getFirstName());
         contactEntity.setLastName(contactDTO.getLastName());
+        contactEntity.setCompanyName(contactDTO.getCompanyName());
         contactEntity.setCity(contactDTO.getCity());
         contactEntity.setCountry(contactDTO.getCountry());
         contactEntity.setPhone(contactDTO.getPhone());

@@ -13,11 +13,11 @@ import static org.junit.Assert.assertEquals;
 
 public class StringUtilTest {
 
-    private StringUtil stringUtil;
+    private MailsyStringUtil stringUtil;
 
     @Before
     public void setUp() throws Exception {
-        stringUtil = new StringUtil();
+        stringUtil = new MailsyStringUtil();
 
     }
 

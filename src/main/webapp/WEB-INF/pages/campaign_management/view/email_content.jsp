@@ -8,6 +8,7 @@
         <spring:message code="label.campaign.email.content"/>
     </h5>
 </div>
+
 <div class="widget-body">
     <div class="widget-main">
         <div id="email-content-div" class="widget-main-email-content">

@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public class StringUtil {
+public class MailsyStringUtil {
 
     public static String buildStringWithSeparator(List<String> list, char separator) {
         StringBuilder stringAppender = new StringBuilder();

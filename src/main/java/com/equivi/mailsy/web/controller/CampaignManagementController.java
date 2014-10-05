@@ -13,10 +13,12 @@ import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
 import com.equivi.mailsy.service.constant.ConstantProperty;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
+import com.equivi.mailsy.util.WebConfigUtil;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
 import com.google.common.collect.Lists;
@@ -192,8 +194,8 @@ public class CampaignManagementController extends AbstractController {
         CampaignStatisticDTO campaignStatisticDTO = campaignTrackerService.getCampaignStatistic(campaignId);
 
         setPredefinedData(modelAndView, campaignDTO);
-
         modelAndView.addObject("campaignStatisticDTO", campaignStatisticDTO);
+
         modelAndView.addObject("recipientList", getContactDTOList(campaignDTO));
         modelAndView.setViewName("campaignManagementViewPage");
         return modelAndView;
@@ -230,9 +232,19 @@ public class CampaignManagementController extends AbstractController {
     public String sendTestEmail(@PathVariable Long campaignId, @RequestBody String emailTo) {
 
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
-        mailgunEmailService.sendMessage(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), campaignDTO.getEmailContent());
+
+
+        mailgunEmailService.sendMessage(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), replaceEmailContentWithDefaultParams(campaignDTO.getEmailContent()));
 
         return "SUCCESS";
+    }
+
+    private String replaceEmailContentWithDefaultParams(String emailContent) {
+        String emailContentWithParams = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_CONTENT_PARAMS);
+        String[] arrParams = StringUtils.split(emailContentWithParams, ',');
+        String[] arrValues = new String[]{"First Name","Last Name", "Company Name"};
+
+        return StringUtils.replaceEachRepeatedly(emailContent, arrParams, arrValues);
     }
 
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {

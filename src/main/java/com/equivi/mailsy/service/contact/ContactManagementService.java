@@ -7,6 +7,7 @@ import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
 import java.util.Map;
 
 public interface ContactManagementService {
@@ -18,6 +19,12 @@ public interface ContactManagementService {
      * @return Page<SubscriberGroupEntity>
      */
     Page<ContactEntity> listContactEntity(Map<SubscriberGroupSearchFilter, String> searchFilter, int pageNumber, int maxRecords);
+
+    /**
+     *
+     * @return
+     */
+    List<ContactEntity> listContactEntity();
 
     /**
      * @param emailAddress
@@ -44,6 +51,12 @@ public interface ContactManagementService {
      */
     void subscribeUnsubscribeContact(final Long contactId, final SubscribeStatus subscribeStatus);
 
+
+    /**
+     *
+     * @param emailAddress
+     */
+    void updateUnsubscribeStatusFromMailgun(String emailAddress);
 
     /**
      *

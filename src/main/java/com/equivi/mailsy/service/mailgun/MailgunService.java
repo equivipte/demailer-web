@@ -15,7 +15,11 @@ public interface MailgunService {
 
     void sendMailWithAttachment(final List<String> recipientList, final List<Attachment> attachmentList, final List<String> ccList, final List<String> bccList, String subject, String message);
 
-    void deleteUnsubscribe(String domain, final String emailAddress);
+    void deleteUnsubscribe(String domain, String emailAddress);
 
-    void registerUnsubscribe(String domain, final String emailAddress);
+    void registerUnsubscribe(String domain, String emailAddress);
+
+    List<String> getUnsubscribeList(String domain);
+
+    boolean isUnsubscribe(String domain, String emailAddress);
 }

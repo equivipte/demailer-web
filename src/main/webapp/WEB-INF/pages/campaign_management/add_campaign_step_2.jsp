@@ -11,6 +11,17 @@
 <jsp:include page="campaign_wizard_header_step2.jsp"/>
 </br>
 </br>
+<div id="info-keyword" class="alert alert-info">
+    <strong>
+        <spring:message code="label.campaign.email_content.keyword_replacement.info"/>
+    </strong>
+    </br>
+    <spring:message code="label.campaign.email_content.keyword_replacement.keyword.first_name"/>
+    </br>
+    <spring:message code="label.campaign.email_content.keyword_replacement.keyword.last_name"/>
+    </br>
+    <spring:message code="label.campaign.email_content.keyword_replacement.keyword.company_name"/>
+</div>
 
 <div class="row-fluid">
     <div class="wysiwyg-editor" id="editor1"></div>

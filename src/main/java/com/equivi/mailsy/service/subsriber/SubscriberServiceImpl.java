@@ -34,6 +34,8 @@ public class SubscriberServiceImpl implements SubscriberService {
     @Resource
     private ContactManagementService contactManagementService;
 
+    @Resource
+    private ContactConverter contactConverter;
 
     @Override
     public Page<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords) {
@@ -70,6 +72,10 @@ public class SubscriberServiceImpl implements SubscriberService {
                 ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(contactDTO.getEmailAddress());
                 if (contactEntity == null) {
                     contactEntity = contactManagementService.saveContactEntity(contactDTO);
+                }
+                else{
+                    contactEntity = contactConverter.convertToEntity(contactEntity,contactDTO);
+                    contactManagementService.saveContactEntity(contactEntity);
                 }
                 SubscriberContactEntity subscriberContactEntity = new SubscriberContactEntity();
                 subscriberContactEntity.setContactEntity(contactEntity);

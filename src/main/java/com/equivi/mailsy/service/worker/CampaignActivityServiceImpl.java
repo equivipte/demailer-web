@@ -129,13 +129,6 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
             if (mailgunResponseUnsubscribedItem != null) {
                 campaignTrackerEntity.setUnsubscribed(true);
                 campaignTrackerEntity.setUnsubscribedDate(new Date(formatTimestamp(mailgunResponseUnsubscribedItem.getTimestamp())));
-
-                //Update unsubscribed in contact
-
-                ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(campaignTrackerEntity.getRecipient());
-                contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
-
-                contactManagementService.saveContactEntity(contactEntity);
             }
         }
 
