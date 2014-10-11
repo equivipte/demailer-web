@@ -54,6 +54,18 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
                     result.setResult(message);
                 }
 
+                if(EmailCrawler.queue.contains(message)) {
+                    for (EmailCollectorMessage messageFromQueue : EmailCrawler.queue) {
+                        if(message.equals(messageFromQueue)) {
+                            EmailCrawler.queue.remove(messageFromQueue);
+                        }
+                    }
+                }
+
+                if(!resultQueue.isEmpty()) {
+                    resultQueue.clear();
+                }
+
                 duplicateQueue.add(message);
 
 			} catch (InterruptedException e) {
