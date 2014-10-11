@@ -42,6 +42,10 @@ public class EmailScanningServiceImpl implements EmailScanningService, Runnable 
                 DeferredResult<EmailCollectorUrlMessage> resultUrl = resultUrlQueue.take();
                 EmailCollectorUrlMessage urlMessage = EmailCrawler.urlQueue.take();
                 resultUrl.setResult(urlMessage);
+
+                if(!resultUrlQueue.isEmpty()) {
+                    resultUrlQueue.clear();
+                }
             } catch (InterruptedException e) {
                 logger.warn("Interrupted when waiting for latest update. "
                         + e.getMessage());
