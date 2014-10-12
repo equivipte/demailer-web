@@ -6,7 +6,7 @@ import com.equivi.mailsy.data.entity.CampaignStatus;
 import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.GenericStatus;
-import com.equivi.mailsy.data.entity.MailDeliveryStatus;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
@@ -64,12 +64,12 @@ public class QueueCampaignServiceImplTest {
         QueueCampaignMailerEntity queueCampaignMailerEntity = new QueueCampaignMailerEntity();
         queueCampaignMailerEntity.setCampaignId(1L);
         queueCampaignMailerEntity.setRecipient("abc@email.com");
-        queueCampaignMailerEntity.setMailDeliveryStatus(MailDeliveryStatus.PENDING);
+        queueCampaignMailerEntity.setQueueProcessed(QueueProcessed.PENDING.getStatus());
 
         QueueCampaignMailerEntity queueCampaignMailerEntity2 = new QueueCampaignMailerEntity();
         queueCampaignMailerEntity2.setCampaignId(2L);
         queueCampaignMailerEntity2.setRecipient("xsd@email.com");
-        queueCampaignMailerEntity2.setMailDeliveryStatus(MailDeliveryStatus.PENDING);
+        queueCampaignMailerEntity2.setQueueProcessed(QueueProcessed.PENDING.getStatus());
 
         queueCampaignMailerEntityList.add(queueCampaignMailerEntity);
         queueCampaignMailerEntityList.add(queueCampaignMailerEntity2);

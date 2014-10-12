@@ -2,7 +2,7 @@ package com.equivi.mailsy.service.campaign.queue;
 
 import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.ContactEntity;
-import com.equivi.mailsy.data.entity.MailDeliveryStatus;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
@@ -13,6 +13,8 @@ import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.util.WebConfigUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -30,6 +32,8 @@ public class QueueCampaignMailerConverter {
 
     @Resource
     private MailgunService mailgunService;
+
+    private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignMailerConverter.class);
 
     public List<QueueCampaignMailerEntity> convertToQueueCampaignMailerList(List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntityList) {
         List<QueueCampaignMailerEntity> queueCampaignMailerEntityList = new ArrayList<>();
@@ -58,10 +62,11 @@ public class QueueCampaignMailerConverter {
                             queueCampaignMailerEntity.setScheduledSendDate(campaignSubscriberGroupEntity.getCampaignEntity().getScheduledSendDate());
 
                             //Set Mail Delivery status to PENDING send
-                            queueCampaignMailerEntity.setMailDeliveryStatus(MailDeliveryStatus.PENDING);
+                            queueCampaignMailerEntity.setQueueProcessed(QueueProcessed.PENDING.getStatus());
 
 
                             if (!queueCampaignMailerEntityList.contains(queueCampaignMailerEntity)) {
+                                LOG.info("Add email to queue:"+queueCampaignMailerEntity.getRecipient());
                                 queueCampaignMailerEntityList.add(queueCampaignMailerEntity);
                             }
                         }

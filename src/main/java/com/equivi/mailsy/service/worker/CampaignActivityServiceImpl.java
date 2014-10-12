@@ -3,10 +3,8 @@ package com.equivi.mailsy.service.worker;
 
 import com.equivi.mailsy.data.dao.QueueCampaignMailerDao;
 import com.equivi.mailsy.data.entity.CampaignTrackerEntity;
-import com.equivi.mailsy.data.entity.ContactEntity;
-import com.equivi.mailsy.data.entity.MailDeliveryStatus;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
-import com.equivi.mailsy.data.entity.SubscribeStatus;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
 import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.mailgun.MailgunService;
@@ -153,7 +151,7 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
 
     private void updateQueueCampaignStatus(QueueCampaignMailerEntity queueCampaignMailerEntity) {
         try {
-            queueCampaignMailerEntity.setMailDeliveryStatus(MailDeliveryStatus.SUCCESS);
+            queueCampaignMailerEntity.setQueueProcessed(QueueProcessed.SUCCESS.getStatus());
             queueCampaignMailerDao.save(queueCampaignMailerEntity);
         } catch (HibernateOptimisticLockingFailureException hibernateOptimisticLockExc) {
             LOG.error("Stale object exception going it's fine");

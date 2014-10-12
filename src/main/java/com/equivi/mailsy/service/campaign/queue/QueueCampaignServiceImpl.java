@@ -2,7 +2,7 @@ package com.equivi.mailsy.service.campaign.queue;
 
 import com.equivi.mailsy.data.dao.QueueCampaignMailerDao;
 import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
-import com.equivi.mailsy.data.entity.MailDeliveryStatus;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QQueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.google.common.collect.Lists;
@@ -63,7 +63,7 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
         BooleanBuilder booleanEmailQueueToSend = new BooleanBuilder();
 
         Date now = new Date();
-        booleanEmailQueueToSend.or(qQueueCampaignMailerEntity.mailDeliveryStatus.ne(MailDeliveryStatus.SUCCESS));
+        booleanEmailQueueToSend.or(qQueueCampaignMailerEntity.queueProcessed.ne(QueueProcessed.SUCCESS.getStatus()));
         booleanEmailQueueToSend.and(qQueueCampaignMailerEntity.scheduledSendDate.before(now)).or(qQueueCampaignMailerEntity.scheduledSendDate.eq(now));
 
         return booleanEmailQueueToSend;

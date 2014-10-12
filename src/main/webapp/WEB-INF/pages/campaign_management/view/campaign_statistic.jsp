@@ -9,125 +9,128 @@
     </h5>
 
 </div>
-<div class="widget-body">
-    <div class="widget-main">
-        <div class="infobox infobox-green ">
-            <div class="infobox-icon">
-                <i class="icon-eye-open"></i>
+<c:if test="${campaignStatisticDTO.totalSent gt 0}">
+    <div class="widget-body">
+        <div class="widget-main">
+            <div class="infobox infobox-green ">
+                <div class="infobox-icon">
+                    <i class="icon-eye-open"></i>
+                </div>
+
+                <div class="infobox-data">
+                    <span class="infobox-data-number">${campaignStatisticDTO.totalOpened}/${campaignStatisticDTO.totalSent}</span>
+
+                    <div class="infobox-content"><spring:message code="label.campaign.opened"/></div>
+                </div>
+                <div class="badge badge-success">
+                    <c:if test="${campaignStatisticDTO.openMailPercentage gt 0}">
+                        +${campaignStatisticDTO.openMailPercentage}%
+                        <i class="icon-arrow-up"></i>
+                    </c:if>
+                    <c:if test="${campaignStatisticDTO.openMailPercentage eq 0}">
+                        0%
+                    </c:if>
+                </div>
             </div>
 
-            <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalOpened}/${campaignStatisticDTO.totalSent}</span>
+            <div class="infobox infobox-blue">
+                <div class="infobox-icon">
+                    <i class="icon-inbox"></i>
+                </div>
 
-                <div class="infobox-content"><spring:message code="label.campaign.opened"/></div>
-            </div>
-            <div class="badge badge-success">
-                <c:if test="${campaignStatisticDTO.openMailPercentage gt 0}">
-                    +${campaignStatisticDTO.openMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.openMailPercentage eq 0}">
-                    0%
-                </c:if>
-            </div>
-        </div>
+                <div class="infobox-data">
+                    <span class="infobox-data-number">${campaignStatisticDTO.totalDelivered}/${campaignStatisticDTO.totalSent}</span>
 
-        <div class="infobox infobox-blue">
-            <div class="infobox-icon">
-                <i class="icon-inbox"></i>
-            </div>
+                    <div class="infobox-content"><spring:message code="label.campaign.delivered"/></div>
+                </div>
 
-            <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalDelivered}/${campaignStatisticDTO.totalSent}</span>
-
-                <div class="infobox-content"><spring:message code="label.campaign.delivered"/></div>
+                <div class="badge badge-info">
+                    <c:if test="${campaignStatisticDTO.deliverMailPercentage gt 0}">
+                        +${campaignStatisticDTO.deliverMailPercentage}%
+                        <i class="icon-arrow-up"></i>
+                    </c:if>
+                    <c:if test="${campaignStatisticDTO.deliverMailPercentage eq 0}">
+                        0%
+                    </c:if>
+                </div>
             </div>
 
-            <div class="badge badge-info">
-                <c:if test="${campaignStatisticDTO.deliverMailPercentage gt 0}">
-                    +${campaignStatisticDTO.deliverMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.deliverMailPercentage eq 0}">
-                     0%
-                </c:if>
-            </div>
-        </div>
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="icon-remove-circle"></i>
+                </div>
 
-        <div class="infobox infobox-red">
-            <div class="infobox-icon">
-                <i class="icon-remove-circle"></i>
-            </div>
+                <div class="infobox-data">
+                    <span class="infobox-data-number">${campaignStatisticDTO.totalFailed}/${campaignStatisticDTO.totalSent}</span>
 
-            <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalFailed}/${campaignStatisticDTO.totalSent}</span>
-
-                <div class="infobox-content"><spring:message code="label.campaign.failed"/></div>
+                    <div class="infobox-content"><spring:message code="label.campaign.failed"/></div>
+                </div>
+                <div class="badge badge-danger">
+                    <c:if test="${campaignStatisticDTO.failedMailPercentage gt 0}">
+                        +${campaignStatisticDTO.failedMailPercentage}%
+                        <i class="icon-arrow-up"></i>
+                    </c:if>
+                    <c:if test="${campaignStatisticDTO.failedMailPercentage eq 0}">
+                        0%
+                    </c:if>
+                </div>
             </div>
-            <div class="badge badge-danger">
-                <c:if test="${campaignStatisticDTO.failedMailPercentage gt 0}">
-                    +${campaignStatisticDTO.failedMailPercentage}%
-                    <i class="icon-arrow-up"></i>
-                </c:if>
-                <c:if test="${campaignStatisticDTO.failedMailPercentage eq 0}">
-                    0%
-                </c:if>
-            </div>
-        </div>
-        <div class="infobox infobox-red">
-            <div class="infobox-icon">
-                <i class="icon-eject"></i>
-            </div>
+            <div class="infobox infobox-red">
+                <div class="infobox-icon">
+                    <i class="icon-eject"></i>
+                </div>
 
-            <div class="infobox-data">
-                <span class="infobox-data-number">${campaignStatisticDTO.totalUnsubscribed}</span>
+                <div class="infobox-data">
+                    <span class="infobox-data-number">${campaignStatisticDTO.totalUnsubscribed}</span>
 
-                <div class="infobox-content"><spring:message code="label.campaign.unsubscribed"/></div>
+                    <div class="infobox-content"><spring:message code="label.campaign.unsubscribed"/></div>
+                </div>
             </div>
         </div>
     </div>
-</div>
-</br>
-</br>
-<div class="widget-header widget-header-flat widget-header-small">
-    <h5>
-        <i class="icon-eye-open"></i>
-        <spring:message code="label.campaign.reading_environment"/>
-    </h5>
+    </br>
+    </br>
+    <div class="widget-header widget-header-flat widget-header-small">
+        <h5>
+            <i class="icon-eye-open"></i>
+            <spring:message code="label.campaign.reading_environment"/>
+        </h5>
 
-</div>
+    </div>
 
-<div class="widget-body">
-    <div class="widget-main">
-        <div id="piechart-placeholder"></div>
+    <div class="widget-body">
+        <div class="widget-main">
+            <div id="piechart-placeholder"></div>
 
-        <div class="hr hr8 hr-double"></div>
+            <div class="hr hr8 hr-double"></div>
 
-        <div class="clearfix">
-            <div class="grid3">
+            <div class="clearfix">
+                <div class="grid3">
                 <span class="grey">
                     <i class="icon-mobile-phone icon-2x blue"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingMobile}</h4>
-            </div>
+                    <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingMobile}</h4>
+                </div>
 
-            <div class="grid3">
+                <div class="grid3">
                 <span class="grey">
                     <i class="icon-desktop icon-2x green"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingDesktop}</h4>
-            </div>
+                    <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingDesktop}</h4>
+                </div>
 
-            <div class="grid3">
+                <div class="grid3">
                 <span class="grey">
                     <i class="icon-question-sign icon-2x red"></i>
                 </span>
-                <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingOthers}</h4>
+                    <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingOthers}</h4>
+                </div>
             </div>
         </div>
+        <!-- /widget-main -->
     </div>
-    <!-- /widget-main -->
-</div>
+</c:if>
+
 <div class="clearfix form-actions">
     <div class="col-md-offset-3 col-md-9">
         <button id="back_to_subscriber_list" class="btn" onclick="backToCampaignList()" type="reset">
