@@ -34,8 +34,7 @@ public class CampaignUpdateWorker {
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignUpdateWorker.class);
 
-    //Run every 30 seconds
-//    @Scheduled(fixedDelay = 30000)
+    @Scheduled(fixedDelay = 30000)
     public void collectCampaignQueueAndSendMail() {
 
         LOG.info("Collect Campaign Queue and send email");
@@ -46,8 +45,7 @@ public class CampaignUpdateWorker {
         }
     }
 
-    //Run every 20 seconds
-//    @Scheduled(fixedDelay = 120000)
+    @Scheduled(fixedDelay = 120000)
     public void updateUnsubscribeStatus() {
 
         LOG.info("Update unsubscribe status");
@@ -65,8 +63,7 @@ public class CampaignUpdateWorker {
 
     }
 
-    //Run every 2 minute
-//    @Scheduled(fixedDelay = 45000)
+    @Scheduled(fixedDelay = 45000)
     public void updateTracker() {
         LOG.info("Campaign Update tracker");
         try {
