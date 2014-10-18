@@ -1,7 +1,7 @@
 package com.equivi.mailsy.service.emailverifier.webemailverifier;
 
+import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.WebConfigUtil;
@@ -29,8 +29,8 @@ public class WebEmailVerifierImpl implements VerifierService {
     private DemailerRestTemplate restTemplate;
 
     @Override
-    public List<EmailVerifierResponse> filterValidEmail(List<String> emailList) {
-        List<EmailVerifierResponse> emailVerifierResponseList = new ArrayList<>();
+    public List<EmailVerifierResult> filterValidEmail(List<String> emailList) {
+        List<EmailVerifierResult> emailVerifierResponseList = new ArrayList<>();
         if (!emailList.isEmpty()) {
             for (String emailAddress : emailList) {
                 emailVerifierResponseList.add(getEmailAddressStatus(emailAddress));
@@ -42,7 +42,7 @@ public class WebEmailVerifierImpl implements VerifierService {
 
 
     @Override
-    public EmailVerifierResponse getEmailAddressStatus(String emailAddress) {
+    public EmailVerifierResult getEmailAddressStatus(String emailAddress) {
 
         HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
@@ -55,8 +55,8 @@ public class WebEmailVerifierImpl implements VerifierService {
             ObjectMapper objectMapper = new ObjectMapper();
             LOG.info("Result:" + emailVerifierResponse.getBody());
 
-            EmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), EmailVerifierResponse.class);
-            return emailVerifierResponseEntity;
+            WebEmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), WebEmailVerifierResponse.class);
+            return new EmailVerifierResult();
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }

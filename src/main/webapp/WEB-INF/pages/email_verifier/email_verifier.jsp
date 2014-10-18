@@ -40,10 +40,10 @@
             <tbody>
             <c:forEach items="${emailVerifierList}" var="email">
                 <tr>
-                    <td>${email.address}</td>
+                    <td>${email.emailAddress}</td>
                     <td>
                         <c:if test="${email.status == 'UNAVAILABLE'}">
-                            <span class="label label-sm label-inverse">${email.statusCode}</span>
+                            <span class="label label-sm label-inverse">${email.infoDetails}</span>
                         </c:if>
                     </td>
                 </tr>
@@ -148,19 +148,19 @@
                 $.ajax({
                     url : url,
                     type : "POST",
-                    data : "{\"Address\" : " + "\"" + email + "\"}",
+                    data : "{\"emailAddress\" : " + "\"" + email + "\"}",
 
                     contentType: 'application/json',
                     success: function(verifier) {
-                        var status = verifier.Status;
-                        var statusCode = verifier.StatusCode;
+                        var status = verifier.status;
+                        var statusDescription = verifier.statusDescription;
 
                         if('Valid' === status) {
-                            $tds.eq(1).html('<span class="label label-sm label-success">' + statusCode + '</span>');
+                            $tds.eq(1).html('<span class="label label-sm label-success">' + status + '</span>');
                         } else if('Invalid' === status) {
-                            $tds.eq(1).html('<span class="label label-sm label-danger">' + statusCode + '</span>');
+                            $tds.eq(1).html('<span class="label label-sm label-danger">' + status + '</span>');
                         } else if('Unknown' === status) {
-                            $tds.eq(1).html('<span class="label label-sm label-grey">' + statusCode + '</span>');
+                            $tds.eq(1).html('<span class="label label-sm label-grey">' + status + '</span>');
                         }
                     },
                     error: function(jqXHR, textStatus, errorThrown) {

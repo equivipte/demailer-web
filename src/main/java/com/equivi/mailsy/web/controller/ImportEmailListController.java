@@ -1,8 +1,8 @@
 package com.equivi.mailsy.web.controller;
 
 
+import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
 import com.equivi.mailsy.service.emailverifier.ExcelEmailReader;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.web.constant.WebConfiguration;
@@ -57,10 +57,10 @@ public class ImportEmailListController {
                 //Get Email address list from file
                 List<String> emailAddressList = excelEmailReader.getEmailAddressList(file);
 
-                List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
+                List<EmailVerifierResult> emailVerifierResponses = Lists.newArrayList();
 
                 for (String emailAddress : emailAddressList) {
-                    emailVerifierResponses.add(new EmailVerifierResponse(emailAddress, "UNAVAILABLE", "Not Available"));
+                    emailVerifierResponses.add(new EmailVerifierResult().setEmailAddressResult(emailAddress).setStatusResult("UNAVAILABLE").setInfoDetailResult("Unavailable"));
                 }
 
                 model.addAttribute("emailVerifierList", emailVerifierResponses);

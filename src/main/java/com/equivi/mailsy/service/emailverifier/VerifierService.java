@@ -1,6 +1,9 @@
 package com.equivi.mailsy.service.emailverifier;
 
 
+
+import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
+
 import java.util.List;
 
 public interface VerifierService {
@@ -10,12 +13,13 @@ public interface VerifierService {
      * @param emailList
      * @return List of EmailVerifierResponse
      */
-    List<EmailVerifierResponse> filterValidEmail(List<String> emailList);
+    List<?> filterValidEmail(List<String> emailList);
 
     /**
      *
      * @param emailAddress
      * @return EmailVerifierResponse
      */
-    EmailVerifierResponse getEmailAddressStatus(String emailAddress);
+    EmailVerifierResult getEmailAddressStatus(String emailAddress);
+
 }

@@ -1,6 +1,6 @@
 package com.equivi.mailsy.web.controller;
 
-import com.equivi.mailsy.service.emailverifier.EmailVerifierResponse;
+import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.google.common.collect.Lists;
 import org.springframework.http.MediaType;
@@ -23,7 +23,7 @@ import java.util.Map;
 @RequestMapping("/main/merchant")
 public class EmailVerifierController {
 
-    @Resource(name = "webEmailVerifierImpl")
+    @Resource(name = "bytePlantVerifierService")
     private VerifierService verifierService;
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.GET)
@@ -34,18 +34,23 @@ public class EmailVerifierController {
     @RequestMapping(value = "emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody EmailVerifierResponse verifyEmail(@RequestBody EmailVerifierResponse emailVerifierResponse) {
-        return verifierService.getEmailAddressStatus(emailVerifierResponse.getAddress());
+    public
+    @ResponseBody
+    EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
+        return verifierService.getEmailAddressStatus(emailVerifierResult.getEmailAddress());
     }
 
     @RequestMapping(value = "emailverifier/verify", method = RequestMethod.GET)
     public String verifyEmail(HttpServletRequest request, Model model) {
-        List<EmailVerifierResponse> emailVerifierResponses = Lists.newArrayList();
+        List<EmailVerifierResult> emailVerifierResponses = Lists.newArrayList();
         List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 
-        if(resultEmails != null && !resultEmails.isEmpty()) {
+        if (resultEmails != null && !resultEmails.isEmpty()) {
             for (String email : resultEmails) {
-                emailVerifierResponses.add(new EmailVerifierResponse(email, "UNAVAILABLE", "Not Available"));
+                emailVerifierResponses.add(new EmailVerifierResult()
+                        .setEmailAddressResult(email)
+                        .setStatusResult("UNAVAILABLE")
+                        .setInfoDetailResult("Not Available"));
             }
 
             model.addAttribute("emailVerifierList", emailVerifierResponses);
