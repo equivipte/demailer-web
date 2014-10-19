@@ -17,6 +17,12 @@
         <put-attribute name="body" value=""/>
     </definition>
 
+    <definition name="base.popup"
+                template="/WEB-INF/pages/layout/base_popup.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="body" value=""/>
+    </definition>
+
     <definition name="base.non_secure.definition"
                 template="/WEB-INF/pages/layout/base_non_secured_layout.jsp">
         <put-attribute name="title" value=""/>
@@ -70,6 +76,11 @@
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_collector/email_collector_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector.jsp"/>
+    </definition>
+
+    <definition name="emailCollectorPopup" extends="base.popup">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector_popup.jsp"/>
     </definition>
 
     <!--Campaign Management Page-->

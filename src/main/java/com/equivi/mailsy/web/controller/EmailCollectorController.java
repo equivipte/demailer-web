@@ -36,6 +36,7 @@ import java.util.Map;
 @RequestMapping("/main/emailcollector")
 public class EmailCollectorController {
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
+    private static final String EMAIL_COLLECTOR_POPUP = "emailCollectorPopup";
     private static final String SESSION_CRAWLING = "sessionCrawling";
 
     public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
@@ -54,6 +55,11 @@ public class EmailCollectorController {
 		model.addAttribute("collector", new EmailCollector());
 
         return EMAIL_COLLECTOR_PAGE;
+    }
+
+    @RequestMapping(value = "/popup", method = RequestMethod.GET)
+    public String loadPopup(Model model, HttpServletRequest request) {
+        return EMAIL_COLLECTOR_POPUP;
     }
     
     @RequestMapping(value = "async/begin", method = RequestMethod.POST, headers = {"Content-type=application/json"})

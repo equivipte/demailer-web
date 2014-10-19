@@ -101,13 +101,32 @@
     }
 </style>
 
+<script type="text/javascript" src="<c:url value='/resources/js/jquery.popupwindow.js' /> "></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
 	$(document).ready(function() {
+
 		$('#crawling').click(function(){
-		    window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+            $("#progress").removeClass("hide");
+            $("#progress").addClass("show");
+            $("#url").prop('disabled', true);
+            $("#crawlingsearch").toggleClass("hide");
+            $("#crawlingcancel").toggleClass("hide");
+
+            $("#cancelcrawling").removeAttr('disabled');
+
+            $("#emailTable").find("tr:gt(0)").remove();
+
+            var url = $("#url").val();
+
+            var startUrl = "${context}/main/emailcollector/async/begin";
+            var pollUrl = "${context}/main/emailcollector/async/update";
+            var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
+            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
+            var poll = new Poll();
+            poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
         });
 
 		$("#cancelcrawling").click(function() {
