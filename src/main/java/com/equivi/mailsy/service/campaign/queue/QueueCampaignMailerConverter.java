@@ -30,7 +30,7 @@ public class QueueCampaignMailerConverter {
     @Resource
     private ContactManagementService contactManagementService;
 
-    @Resource
+    @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
     private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignMailerConverter.class);

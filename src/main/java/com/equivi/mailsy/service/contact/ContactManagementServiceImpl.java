@@ -27,7 +27,7 @@ public class ContactManagementServiceImpl implements ContactManagementService {
     @Resource
     private SubscriberContactDao subscriberContactDao;
 
-    @Resource
+    @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
     @Override

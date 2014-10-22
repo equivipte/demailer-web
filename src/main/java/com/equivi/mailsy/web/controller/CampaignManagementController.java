@@ -60,7 +60,7 @@ public class CampaignManagementController extends AbstractController {
     @Resource
     private CampaignTrackerService campaignTrackerService;
 
-    @Resource
+    @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunEmailService;
 
     @Resource

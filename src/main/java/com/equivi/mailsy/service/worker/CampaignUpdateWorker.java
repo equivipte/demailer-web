@@ -29,7 +29,7 @@ public class CampaignUpdateWorker {
     @Resource
     private ContactManagementService contactManagementService;
 
-    @Resource
+    @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignUpdateWorker.class);

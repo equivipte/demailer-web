@@ -25,7 +25,7 @@ import java.util.List;
 @Service
 public class CampaignActivityServiceImpl implements CampaignActivityService {
 
-    @Resource
+    @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
     @Resource

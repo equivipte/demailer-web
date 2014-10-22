@@ -1,7 +1,6 @@
 package com.equivi.mailsy.service.mailgun;
 
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.service.mail.Attachment;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseMessage;
 import com.equivi.mailsy.service.mailgun.response.UnsubscribeResponse;
@@ -28,13 +27,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.Resource;
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
 
-@Service
-public class MailgunEmailServiceImpl implements MailgunService {
+@Service("mailgunRestTemplateEmailService")
+public class MailgunRestTemplateEmailServiceImpl implements MailgunService {
 
     @Resource
     private WebConfiguration webConfiguration;
@@ -42,7 +42,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
     @Resource
     private DemailerRestTemplate demailerRestTemplate;
 
-    private static final Logger LOG = LoggerFactory.getLogger(MailgunEmailServiceImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(MailgunRestTemplateEmailServiceImpl.class);
 
     private static final String API_USERNAME = "api";
 
@@ -130,6 +130,11 @@ public class MailgunEmailServiceImpl implements MailgunService {
         return null;
     }
 
+    @Override
+    public String sendMessageWithAttachment(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message, File attachmentFile) {
+        return null;
+    }
+
     private String buildSendMessageURL(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
         Map<String, String> mailParameter = buildSendParameters(campaignId, from, recipientList, ccList, bccList, subject, message);
 
@@ -190,13 +195,7 @@ public class MailgunEmailServiceImpl implements MailgunService {
         return mailParameter;
     }
 
-
-    @Override
-    public void sendMailWithAttachment(List<String> recipientList, List<Attachment> attachmentList, List<String> ccList, List<String> bccList, String subject, String message) {
-
-    }
-
-    @Override
+   @Override
     public void deleteUnsubscribe(String domain, String emailAddress) {
         String deleteUnsubscribeURL = buildUnsubscribeUrl(domain, emailAddress);
         setupHttpClientCredentials(deleteUnsubscribeURL);

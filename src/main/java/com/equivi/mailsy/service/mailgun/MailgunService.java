@@ -1,9 +1,9 @@
 package com.equivi.mailsy.service.mailgun;
 
 
-import com.equivi.mailsy.service.mail.Attachment;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 
+import java.io.File;
 import java.util.List;
 
 public interface MailgunService {
@@ -13,7 +13,7 @@ public interface MailgunService {
 
     MailgunResponseEventMessage getEventForMessageId(String messageId);
 
-    void sendMailWithAttachment(final List<String> recipientList, final List<Attachment> attachmentList, final List<String> ccList, final List<String> bccList, String subject, String message);
+    String sendMessageWithAttachment(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message, File attachmentFile);
 
     void deleteUnsubscribe(String domain, String emailAddress);
 

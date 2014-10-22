@@ -19,6 +19,8 @@ public class CampaignStatisticDTO implements Serializable {
 
     private Long totalUnsubscribed;
 
+    private Long totalClicked;
+
     private Long totalOpenUsingMobile;
 
     private Long totalOpenUsingDesktop;
@@ -32,6 +34,8 @@ public class CampaignStatisticDTO implements Serializable {
     private Double openUsingOtherPercentage;
 
     private Double openMailPercentage;
+
+    private Double clickedMailPercentage;
 
     private Double deliverMailPercentage;
 
@@ -155,5 +159,21 @@ public class CampaignStatisticDTO implements Serializable {
 
     public void setOpenUsingOtherPercentage(Double openUsingOtherPercentage) {
         this.openUsingOtherPercentage = openUsingOtherPercentage;
+    }
+
+    public Long getTotalClicked() {
+        return totalClicked;
+    }
+
+    public void setTotalClicked(Long totalClicked) {
+        this.totalClicked = totalClicked;
+    }
+
+    public Double getClickedMailPercentage() {
+        return clickedMailPercentage;
+    }
+
+    public void setClickedMailPercentage(Double clickedMailPercentage) {
+        this.clickedMailPercentage = clickedMailPercentage;
     }
 }

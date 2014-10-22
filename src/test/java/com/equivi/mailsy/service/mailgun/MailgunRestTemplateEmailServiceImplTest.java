@@ -16,7 +16,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
 
 
-public class MailgunEmailServiceImplTest {
+public class MailgunRestTemplateEmailServiceImplTest {
 
     @Mock
     private DemailerRestTemplate demailerRestTemplate;
@@ -25,7 +25,7 @@ public class MailgunEmailServiceImplTest {
     private WebConfiguration webConfiguration;
 
     @InjectMocks
-    private MailgunEmailServiceImpl mailgunEmailService;
+    private MailgunRestTemplateEmailServiceImpl mailgunEmailService;
 
     private static final String TO_LIST = "someone@email.com";
     private static final String CC_LIST = "cclist@email.com";
@@ -65,16 +65,6 @@ public class MailgunEmailServiceImplTest {
         mailgunEmailService.sendMessage(CAMPAIGN_ID, DOMAIN, FROM, toList, ccList, bccList, TEST_EMAIL, EMAIL_CONTENT);
 
         verify(demailerRestTemplate, times(3));
-
-    }
-
-    @Test
-    public void testSendMailPlainSync() throws Exception {
-
-    }
-
-    @Test
-    public void testSendMailWithAttachment() throws Exception {
 
     }
 }
