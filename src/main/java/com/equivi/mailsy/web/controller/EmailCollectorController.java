@@ -36,7 +36,6 @@ import java.util.Map;
 @RequestMapping("/main/emailcollector")
 public class EmailCollectorController {
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
-    private static final String EMAIL_COLLECTOR_POPUP = "emailCollectorPopup";
     private static final String SESSION_CRAWLING = "sessionCrawling";
 
     public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
@@ -47,38 +46,33 @@ public class EmailCollectorController {
 
     @Autowired
     private EmailScanningService emailScanningService;
-    
-	@RequestMapping(value = "/new", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/new", method = RequestMethod.GET)
     public String loadNewPage(Model model, HttpServletRequest request) {
         Boolean crawlingStatus = (Boolean) request.getSession().getAttribute(SESSION_CRAWLING);
 
-		model.addAttribute("collector", new EmailCollector());
+        model.addAttribute("collector", new EmailCollector());
 
         return EMAIL_COLLECTOR_PAGE;
     }
 
-    @RequestMapping(value = "/popup", method = RequestMethod.GET)
-    public String loadPopup(Model model, HttpServletRequest request) {
-        return EMAIL_COLLECTOR_POPUP;
-    }
-    
     @RequestMapping(value = "async/begin", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseStatus(value = HttpStatus.OK)
     public void start(@RequestBody EmailCollector emailCollector, HttpServletRequest request) throws Exception {
-    	emailCollectorService.subscribe(emailCollector.getSite());
+        emailCollectorService.subscribe(emailCollector.getSite());
         emailScanningService.subscribe();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.TRUE);
         request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
 
     }
-    
+
     @RequestMapping(value = "async/update", method = RequestMethod.GET)
     public @ResponseBody DeferredResult<EmailCollectorMessage> getUpdate(HttpServletRequest request) {
-    	final DeferredResult<EmailCollectorMessage> result = new DeferredResult<>();
-    	emailCollectorService.getUpdate(result);
+        final DeferredResult<EmailCollectorMessage> result = new DeferredResult<>();
+        emailCollectorService.getUpdate(result);
         return result;
-    	
+
     }
 
     @RequestMapping(value = "async/updateUrlScanning", method = RequestMethod.GET)
@@ -97,7 +91,7 @@ public class EmailCollectorController {
 
         return result;
     }
-    
+
     @RequestMapping(value = "updateCrawlingStatus", method = RequestMethod.GET)
     public @ResponseBody EmailCollectorStatusMessage getUpdateCrawlingStatus(HttpServletRequest request) {
         boolean crawlingStatus = emailCollectorService.getUpdateCrawlingStatus();

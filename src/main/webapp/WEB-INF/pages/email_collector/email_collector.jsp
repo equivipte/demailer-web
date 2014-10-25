@@ -3,12 +3,12 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <script>
-		paceOptions = {  
-		  // Configuration goes here. Example:  
-		  elements: false,  
-		  restartOnPushState: false,  
-		  restartOnRequestAfter: false  
-		};  	
+    paceOptions = {
+        // Configuration goes here. Example:
+        elements: false,
+        restartOnPushState: false,
+        restartOnRequestAfter: false
+    };
 </script>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
@@ -27,11 +27,11 @@
 
 <div id="progress" class="hide">
     <div class="spinner">
-      <div class="rect1"></div>
-      <div class="rect2"></div>
-      <div class="rect3"></div>
-      <div class="rect4"></div>
-      <div class="rect5"></div>
+        <div class="rect1"></div>
+        <div class="rect2"></div>
+        <div class="rect3"></div>
+        <div class="rect4"></div>
+        <div class="rect5"></div>
     </div>
 
     <span id="scanning"><span></span></span>
@@ -39,27 +39,27 @@
 </div>
 
 <div class="widget-main no-padding">
-	<table>
-	    <td>
-	        <div>
-	        	<spring:message code="label.please.type.site.search" var="siteSearch"/>
-	        	<input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
-	        </div>
-	    </td>
-	    <td>
-           <div id="crawlingsearch">
-           		<button id="crawling" class="btn btn-sm btn-info">
-	           		<i class="icon-search white bigger-120 crawlingsearch"></i>
-	            	<spring:message code="label.search"/>
-            	</button>
-           </div>
-           <div id="crawlingcancel" class="hide">
-           		<button id="cancelcrawling" class="btn btn-sm btn-info">
-           			<spring:message code="label.stop"/>
-           		</button>
-           </div>
-	    </td>
-	</table>
+    <table>
+        <td>
+            <div>
+                <spring:message code="label.please.type.site.search" var="siteSearch"/>
+                <input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
+            </div>
+        </td>
+        <td>
+            <div id="crawlingsearch">
+                <button id="crawling" class="btn btn-sm btn-info">
+                    <i class="icon-search white bigger-120 crawlingsearch"></i>
+                    <spring:message code="label.search"/>
+                </button>
+            </div>
+            <div id="crawlingcancel" class="hide">
+                <button id="cancelcrawling" class="btn btn-sm btn-info">
+                    <spring:message code="label.stop"/>
+                </button>
+            </div>
+        </td>
+    </table>
 </div>
 &nbsp;
 &nbsp;
@@ -71,7 +71,7 @@
             <th><spring:message code="label.common.emailaddress"/></th>
         </tr>
         </thead>
-        
+
         <tbody>
         </tbody>
     </table>
@@ -105,19 +105,37 @@
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
-	$(document).ready(function() {
-		$('#crawling').click(function(){
-		    window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+    $(document).ready(function() {
+
+        $("#crawling").click(function(){
+            $("#progress").removeClass("hide");
+            $("#progress").addClass("show");
+            $("#url").prop('disabled', true);
+            $("#crawlingsearch").toggleClass("hide");
+            $("#crawlingcancel").toggleClass("hide");
+
+            $("#cancelcrawling").removeAttr('disabled');
+
+            $("#emailTable").find("tr:gt(0)").remove();
+
+            var url = $("#url").val();
+
+            var startUrl = "${context}/main/emailcollector/async/begin";
+            var pollUrl = "${context}/main/emailcollector/async/update";
+            var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
+            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
+            var poll = new Poll();
+            poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
         });
 
-		$("#cancelcrawling").click(function() {
+        $("#cancelcrawling").click(function() {
             var poll = new Poll();
 
             var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
             poll.cancelCrawling(cancelUrl);
-		});
+        });
 
-		$("#verify-emails-btn").click(function() {
+        $("#verify-emails-btn").click(function() {
             var emails = getEmailsInTable();
 
             $.ajax({
@@ -133,9 +151,9 @@
                 }
             });
 
-		});
+        });
 
-		$("#export-btn").click(function() {
+        $("#export-btn").click(function() {
             var emails = getEmailsInTable();
 
             $.ajax({
@@ -150,10 +168,10 @@
                     console.log("Export to excel - the following error occured: " + textStatus, errorThrown);
                 }
             });
-		});
-	});
+        });
+    });
 
-	function getEmailsInTable() {
+    function getEmailsInTable() {
         var table = $("#emailTable > tbody");
 
         var emails = [];
@@ -166,5 +184,5 @@
         });
 
         return emails;
-	}
+    }
 </script>
