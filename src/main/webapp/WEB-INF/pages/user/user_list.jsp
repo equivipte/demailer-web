@@ -75,13 +75,17 @@
                     </td>
                     <td>
                         <div class="visible-md visible-lg hidden-sm hidden-xs action-buttons">
-                            <button class="btn btn-xs btn-info" onclick="redirectToEdit(${user.id})">
-                                <i class="icon-edit bigger-120"></i>
-                            </button>
-
-                            <button class="btn btn-xs btn-danger" onclick="deleteUser(${user.id})">
-                                <i class="icon-trash bigger-120"></i>
-                            </button>
+                            <a id="${user.id}" href="#" class="tooltip-success green editUser"
+                               data-rel="tooltip"
+                               title="<spring:message code="label.edit"/>">
+                                <i class="icon-pencil bigger-130"></i>
+                            </a>
+                            <a id="${user.id}" href="#" class="tooltip-error red deleteUser"
+                               data-rel="tooltip"
+                               class="deleteUser"
+                               title="<spring:message code="label.delete"/>">
+                                <i class="icon-trash bigger-130"></i>
+                            </a>
                         </div>
                         <div class="visible-xs visible-sm hidden-md hidden-lg">
                             <div class="inline position-relative">
@@ -166,12 +170,11 @@
     $(document).ready(function () {
         $(".editUser").click(function (event) {
             var userId = $(this).attr("id");
-            redirectToEdit(userId)
+            redirectToEdit(userId);
         });
-
         $(".deleteUser").click(function (event) {
             var userId = $(this).attr("id");
-            deleteUser(userId)
+            deleteUser(userId);
         });
 
     });
@@ -181,7 +184,7 @@
         window.location.replace("${context}/main/admin/user/" + id);
     }
 
-    function deleteUser(id) {
+    function deleteUser(id){
         var href = "${context}/main/admin/users/1";
         $("#dialog-confirm").removeClass('hide').dialog({
             resizable: false,
@@ -190,7 +193,7 @@
             title_html: true,
             buttons: [
                 {
-                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.user.delete"/> ",
+                    html: "<i class='icon-trash bigger-110'></i>&nbsp; <spring:message code="label.delete"/>",
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
@@ -202,12 +205,7 @@
                             },
                             success: function (data) {
                                 if (data != 'SUCCESS') {
-                                    if (data == 'import.process_running.warning.message') {
-                                        alert("<spring:message code="import.process_running.warning.message"/>");
-                                    }
-                                    else {
-                                        alert("<spring:message code="general.exception.delete"/>");
-                                    }
+                                    alert("<spring:message code="general.exception.delete"/>");
                                 }
                                 else {
                                     //Do stuff here on success such as modal info
@@ -231,4 +229,4 @@
         });
     }
 
-</script>
+S</script>

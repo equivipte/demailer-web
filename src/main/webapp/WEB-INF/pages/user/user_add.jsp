@@ -164,10 +164,6 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
 
-    $(document).ready(function () {
-        $('#form-user-role').val(0);
-    });
-
     function backToUserList() {
 
         window.location.replace("${pageContext.request.contextPath}/main/admin/users/1");

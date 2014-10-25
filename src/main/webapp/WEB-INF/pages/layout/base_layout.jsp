@@ -35,6 +35,7 @@
     <![endif]-->
 
     <!-- page specific plugin styles -->
+    <link href="${pageContext.request.contextPath}/resources/css/jquery.gritter.css" rel="stylesheet" type="text/css"/>
 
     <!-- fonts -->
 
@@ -52,6 +53,7 @@
 
     <link href="${pageContext.request.contextPath}/resources/css/chosen.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/bootstrap-timepicker.css" rel="stylesheet"/>
+    <link href="${pageContext.request.contextPath}/resources/css/datepicker.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/daterangepicker.css" rel="stylesheet"/>
     <link href="${pageContext.request.contextPath}/resources/css/colorpicker.css" rel="stylesheet"/>
 
@@ -82,15 +84,32 @@
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.validate.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.multi-select.js"></script>
-<script src="${pageContext.request.contextPath}/resources/js/additional-methods.min.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.maskedinput.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/bootstrap.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/typeahead-bs2.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.validate.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/additional-methods.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootbox.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/fuelux/fuelux.wizard.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/markdown/markdown.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/markdown/bootstrap-markdown.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.hotkeys.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/bootstrap-wysiwyg.min.js"></script>
+
 <script src="${pageContext.request.contextPath}/resources/js/shadowbox.js"></script>
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery-ui-1.10.3.full.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.ui.touch-punch.min.js"></script>
+
+<script src="${pageContext.request.contextPath}/resources/js/jquery.slimscroll.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.easy-pie-chart.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.sparkline.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/flot/jquery.flot.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/flot/jquery.flot.pie.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/flot/jquery.flot.resize.min.js"></script>
 
 <![if !IE]>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.session.js"></script>
@@ -98,11 +117,14 @@
 
 <script src="${pageContext.request.contextPath}/resources/js/jquery.dataTables.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/jquery.dataTables.bootstrap.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/jquery.gritter.min.js"></script>
 
 
 <script src="${pageContext.request.contextPath}/resources/js/ace-elements.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/ace.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/ace-extra.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/select2.min.js"></script>
+
 
 <script src="${pageContext.request.contextPath}/resources/js/chosen.jquery.min.js"></script>
 
@@ -110,6 +132,7 @@
 <script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-datepicker.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-timepicker.min.js"></script>
 <script src="${pageContext.request.contextPath}/resources/js/date-time/daterangepicker.min.js"></script>
+<script src="${pageContext.request.contextPath}/resources/js/date-time/bootstrap-datetimepicker.min.js"></script>
 
 <!-- inline styles related to this page -->
 

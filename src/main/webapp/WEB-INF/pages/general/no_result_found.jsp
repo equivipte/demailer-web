@@ -10,7 +10,7 @@
     <strong>
         <i class="icon-info"></i>
     </strong>
-    <spring:message code="label.transaction.no_record_found"/>
+    <spring:message code="label.no_record_found"/>
 
     <br/>
 </div>

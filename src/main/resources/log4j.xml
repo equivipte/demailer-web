@@ -12,8 +12,18 @@
         </layout>
     </appender>
 
+    <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
+        <param name="Append" value="true"/>
+        <param name="Threshold" value="ALL"/>
+        <param name="DatePattern" value="'.'yyyy-MM-dd"/>
+        <layout class="org.apache.log4j.PatternLayout">
+            <param name="ConversionPattern" value="%d %-5p [%c] (%t:%X{user}) %m%n"/>
+        </layout>
+    </appender>
+
     <root>
         <priority value="INFO"/>
         <appender-ref ref="FILE"/>
+        <appender-ref ref="CONSOLE"/>
     </root>
 </log4j:configuration>

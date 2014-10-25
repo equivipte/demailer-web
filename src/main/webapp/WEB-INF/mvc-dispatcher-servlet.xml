@@ -3,7 +3,6 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc"
        xmlns:aop="http://www.springframework.org/schema/aop"
        xmlns:tx="http://www.springframework.org/schema/tx"
-       xmlns:task="http://www.springframework.org/schema/task"
        xmlns:beans="http://www.springframework.org/schema/beans"
        xmlns="http://www.springframework.org/schema/beans"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
@@ -16,29 +15,23 @@
         http://www.springframework.org/schema/tx/spring-tx.xsd
         http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd
-        http://www.springframework.org/schema/task
-        http://www.springframework.org/schema/task/spring-task.xsd
         http://www.springframework.org/schema/aop
 	    http://www.springframework.org/schema/aop/spring-aop.xsd">
 
     <mvc:annotation-driven conversion-service="conversionService"/>
 
-    <context:component-scan base-package="com.equivi.demailer"/>
+    <context:component-scan base-package="com.equivi.mailsy"/>
     <context:annotation-config/>
 
     <aop:aspectj-autoproxy/>
 
-    <task:annotation-driven/>
-
     <tx:annotation-driven/>
-
-    <task:scheduler id="taskScheduler" pool-size="5"/>
 
     <mvc:resources mapping="/resources/**" location="/resources/main_theme/"/>
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/main/**"/>
-            <bean class="com.equivi.demailer.web.interceptor.MenuIndicatorInterceptor"/>
+            <bean class="com.equivi.mailsy.web.interceptor.MenuIndicatorInterceptor"/>
         </mvc:interceptor>
     </mvc:interceptors>
 
@@ -52,6 +45,13 @@
             </value>
         </property>
     </bean>
+
+    <bean class="org.springframework.web.servlet.view.XmlViewResolver">
+        <property name="location">
+            <value>/WEB-INF/views.xml</value>
+        </property>
+    </bean>
+
     <bean id="tilesConfigurer"
           class="org.springframework.web.servlet.view.tiles2.TilesConfigurer">
         <property name="definitions">
@@ -60,7 +60,6 @@
             </list>
         </property>
     </bean>
-
 
     <!--i18n-->
     <bean id="localeResolver"
@@ -99,10 +98,10 @@
                 class="org.springframework.format.support.FormattingConversionServiceFactoryBean">
         <beans:property name="formatters">
             <beans:set>
-                <beans:bean class="com.equivi.demailer.web.formatter.RoleFormatter"/>
-                <beans:bean class="com.equivi.demailer.web.formatter.StatusFormatter"/>
+                <beans:bean class="com.equivi.mailsy.web.formatter.RoleFormatter"/>
+                <beans:bean class="com.equivi.mailsy.web.formatter.StatusFormatter"/>
             </beans:set>
         </beans:property>
     </beans:bean>
-
+    
 </beans>

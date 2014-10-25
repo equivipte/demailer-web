@@ -17,6 +17,12 @@
         <put-attribute name="body" value=""/>
     </definition>
 
+    <definition name="base.popup"
+                template="/WEB-INF/pages/layout/base_popup.jsp">
+        <put-attribute name="title" value=""/>
+        <put-attribute name="body" value=""/>
+    </definition>
+
     <definition name="base.non_secure.definition"
                 template="/WEB-INF/pages/layout/base_non_secured_layout.jsp">
         <put-attribute name="title" value=""/>
@@ -24,33 +30,33 @@
     </definition>
 
     <definition name="loginPage" extends="base.non_secure.definition">
-        <put-attribute name="title" value="dEmailer Login"/>
+        <put-attribute name="title" value="Mailsy Login"/>
         <put-attribute name="body" value="/WEB-INF/pages/login.jsp"/>
     </definition>
 
     <definition name="welcomePage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/welcome.jsp"/>
     </definition>
 
     <definition name="forceChangePasswordPage" extends="base.definition.non.menu">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="body" value="/WEB-INF/pages/general/force_change_password.jsp"/>
     </definition>
 
     <!--General Error Page-->
     <definition name="error500Page" extends="base.definition.non.menu">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="body" value="/WEB-INF/pages/errors/error500.jsp"/>
     </definition>
 
     <!--Illegal Access Exception Page-->
     <definition name="illegalAccessPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value=""/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/errors/illegal_access_page.jsp"/>
@@ -58,7 +64,7 @@
 
     <!--Email Verifier Page-->
     <definition name="emailVerifierPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_verifier/email_verifier_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_verifier/email_verifier.jsp"/>
@@ -66,31 +72,125 @@
 
     <!--Email Collector Page-->
     <definition name="emailCollectorPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/email_collector/email_collector_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector.jsp"/>
     </definition>
 
+    <definition name="emailCollectorPopup" extends="base.popup">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector_popup.jsp"/>
+    </definition>
+
     <!--Campaign Management Page-->
     <definition name="campaignManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management.jsp"/>
     </definition>
 
-    <!--Contact Management Page-->
-    <definition name="contactManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
-        <put-attribute name="breadcrumb" value="/WEB-INF/pages/contact_management/contact_management_breadcrumb.jsp"/>
+    <!--CAMPAIGN MANAGEMENT STEP 1-->
+    <definition name="campaignManagementAddPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
-        <put-attribute name="body" value="/WEB-INF/pages/contact_management/contact_management.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_1.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 2-->
+    <definition name="campaignManagementEmailContentPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 3-->
+    <definition name="campaignManagementRecipientsPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_3.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 4-->
+    <definition name="campaignManagementEmailReviewPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_4.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 5-->
+    <definition name="campaignManagementEmailDeliveryPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_5.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 5-->
+    <definition name="campaignManagementFinishPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_6.jsp"/>
+    </definition>
+
+
+    <definition name="campaignManagementEditPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/campaign_management_edit.jsp"/>
+    </definition>
+
+    <definition name="campaignManagementViewPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/view/campaign_management_view.jsp"/>
+    </definition>
+
+    <!--Subcriber Management Page-->
+    <definition name="subscriberManagementPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management.jsp"/>
+    </definition>
+
+
+    <definition name="subscriberManagementAddPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management_add.jsp"/>
+    </definition>
+
+    <definition name="subscriberManagementEditPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/subscriber_management/subcriber_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/subscriber_management/subscriber_management_edit.jsp"/>
     </definition>
 
     <!--Report Page-->
     <definition name="reportPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/report/report_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/report/report.jsp"/>
@@ -98,21 +198,21 @@
 
     <!--User Management Page-->
     <definition name="userManagementPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_list.jsp"/>
     </definition>
 
     <definition name="userManagementAddPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_add.jsp"/>
     </definition>
 
     <definition name="userManagementEditPage" extends="base.definition">
-        <put-attribute name="title" value="dEmailer"/>
+        <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb" value="/WEB-INF/pages/user/user_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
         <put-attribute name="body" value="/WEB-INF/pages/user/user_edit.jsp"/>

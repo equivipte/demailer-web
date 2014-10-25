@@ -3,20 +3,29 @@
        xmlns="http://www.springframework.org/schema/beans"
        xmlns:util="http://www.springframework.org/schema/util"
        xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:task="http://www.springframework.org/schema/task"
+       xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
                            http://www.springframework.org/schema/beans/spring-beans.xsd
                            http://www.springframework.org/schema/util
                            http://www.springframework.org/schema/util/spring-util.xsd
                            http://www.springframework.org/schema/context
-                           http://www.springframework.org/schema/context/spring-context.xsd">
+                           http://www.springframework.org/schema/context/spring-context.xsd
+                           http://www.springframework.org/schema/task
+                           http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--Import dEmailer Web Data Access-->
-    <context:component-scan base-package="com.equivi"/>
     <import resource="demailer-web-data-access.xml"/>
+    <context:component-scan base-package="com.equivi.mailsy"/>
 
-    <util:properties id="applicationProps" location="file:${catalina.home}/conf/demailer/demailer_web.properties"/>
+    <util:properties id="applicationProps" location="file:/opt/demailer/conf/demailer_web.properties"/>
 
     <context:property-placeholder properties-ref="applicationProps"/>
+
+    <task:annotation-driven executor="mailsyExecutor" scheduler="mailsyScheduler"/>
+    <task:executor id="mailsyExecutor" pool-size="5"/>
+    <task:scheduler id="mailsyScheduler" pool-size="10"/>
+
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 
@@ -34,37 +43,16 @@
         </property>
     </bean>
 
-    <bean id="dEmailerWebProperties"
-          class="org.springframework.beans.factory.config.PropertiesFactoryBean">
-        <property name="locations">
-            <list>
-                <value>classpath:config/demailer_web.properties</value>
-            </list>
-        </property>
-        <property name="ignoreResourceNotFound" value="true"/>
-    </bean>
-
-
     <bean id="dEmailerEmailProperties"
           class="org.springframework.beans.factory.config.PropertiesFactoryBean">
         <property name="locations">
             <list>
-                <value>file:${catalina.home}/conf/demailer/email_setup.properties</value>
+                <value>file:/opt/demailer/conf/email_setup.properties</value>
             </list>
         </property>
     </bean>
 
     <bean id="velocityEngine"
-          class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
-        <property name="velocityProperties">
-            <props>
-                <prop key="resource.loader">file</prop>
-                <prop key="file.resource.loader.class">
-                    org.apache.velocity.runtime.resource.loader.FileResourceLoader
-                </prop>
-                <prop key="file.resource.loader.path">${catalina.home}/conf/demailer/template</prop>
-                <prop key="file.resource.loader.cache">false</prop>
-            </props>
-        </property>
-    </bean>
+          class="org.springframework.ui.velocity.VelocityEngineFactoryBean" p:resourceLoaderPath="classpath:/config/template"/>
+
 </beans>
