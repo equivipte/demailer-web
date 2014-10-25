@@ -122,6 +122,8 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 		}
 	}
 
+
+
 	@Override
 	public void getUpdate(DeferredResult<EmailCollectorMessage> result) {
 		resultQueue.add(result);
