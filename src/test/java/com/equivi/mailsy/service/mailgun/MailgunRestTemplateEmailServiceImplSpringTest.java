@@ -14,7 +14,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:META-INF/spring-service.xml")
-public class MailgunRestTemplateEmailServiceImplIntegrationTest {
+public class MailgunRestTemplateEmailServiceImplSpringTest {
 
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunEmailService;

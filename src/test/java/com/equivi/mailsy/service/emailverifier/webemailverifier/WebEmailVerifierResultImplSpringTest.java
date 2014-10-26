@@ -10,7 +10,7 @@ import javax.annotation.Resource;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:META-INF/spring-service.xml")
-public class WebEmailVerifierResultImplTest {
+public class WebEmailVerifierResultImplSpringTest {
 
     @Resource
     private WebEmailVerifierImpl webEmailVerifier;

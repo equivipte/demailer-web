@@ -3,6 +3,7 @@ package com.equivi.mailsy.service.authentication;
 import com.equivi.mailsy.data.dao.UserDao;
 import com.equivi.mailsy.data.entity.UserEntity;
 import com.equivi.mailsy.data.entity.UserRole;
+import com.equivi.mailsy.data.entity.UserStatus;
 import com.equivi.mailsy.service.exception.AuthenticationFailureException;
 import com.mysema.query.types.Predicate;
 import org.junit.Before;
@@ -48,9 +49,9 @@ public class AuthenticationServiceImplTest {
         List<UserEntity> userEntities = prepareUserEntityList();
 
         //Given
-        when(userDao.findAll(any(Predicate.class))).thenReturn(userEntities);
-
         when(authenticationPredicate.getUserByUserName(anyString())).thenReturn(mockPredicate);
+
+        when(userDao.findAll(any(Predicate.class))).thenReturn(userEntities);
 
         //When
         authenticationService.getUser(USERNAME);
@@ -98,6 +99,7 @@ public class AuthenticationServiceImplTest {
         userEntity.setUserName(USERNAME);
         userEntity.setPassword(PASSWORD);
         userEntity.setUserRole(UserRole.MAILSY_ADMIN);
+        userEntity.setUserStatus(UserStatus.ACTIVE);
 
         List<UserEntity> userEntities = new ArrayList<>();
         userEntities.add(userEntity);
