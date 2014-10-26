@@ -13,7 +13,7 @@ public interface MailgunService {
 
     MailgunResponseEventMessage getEventForMessageId(String messageId);
 
-    String sendMessageWithAttachment(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message, File attachmentFile);
+    String sendMessageWithAttachment(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message);
 
     void deleteUnsubscribe(String domain, String emailAddress);
 

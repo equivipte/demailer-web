@@ -12,7 +12,7 @@ import java.util.List;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:META-INF/spring-service.xml")
-public class MailgunJerseyEmailServiceImplIntegrationTest {
+public class MailgunJerseyEmailServiceImplSpringTest {
 
     private static final String CAMPAIGN_ID ="1";
     private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";

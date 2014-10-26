@@ -28,14 +28,15 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
+    @Resource(name = "mailgunJerseyService")
+    private MailgunService mailgunJerseyService;
+
     @Resource
     private CampaignTrackerService campaignTrackerService;
 
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
 
-    @Resource
-    private ContactManagementService contactManagementService;
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
 
@@ -43,7 +44,9 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {
 
         for (QueueCampaignMailerEntity queueCampaignMailerEntity : queueCampaignMailerEntityList) {
-            String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
+            //String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
+
+            String messageId = mailgunJerseyService.sendMessageWithAttachment(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
 
             if (!StringUtils.isEmpty(messageId)) {
 

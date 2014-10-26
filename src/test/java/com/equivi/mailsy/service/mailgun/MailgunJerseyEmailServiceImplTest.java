@@ -3,10 +3,8 @@ package com.equivi.mailsy.service.mailgun;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.google.common.collect.Lists;
-import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.multipart.FormDataMultiPart;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,15 +14,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.List;
 
 import static junit.framework.Assert.assertNotNull;
-import static org.hamcrest.core.IsAnything.any;
-import static org.mockito.Matchers.anyObject;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.when;
 
@@ -41,6 +33,9 @@ public class MailgunJerseyEmailServiceImplTest {
 
     @Mock
     private WebResource webResource;
+
+    @Mock
+    private MailgunUtility mailgunUtility;
 
     @Mock
     private ClientResponse clientResponse;
@@ -79,37 +74,19 @@ public class MailgunJerseyEmailServiceImplTest {
 
 
     @Test
-    public void testSendMessageWithAttachmentWithNoFileShouldThrowException() throws Exception {
-
-        //Then
-        expectedException.expect(MailgunServiceException.class);
-        expectedException.expectMessage(MailgunServiceException.ATTACHMENT_EMPTY_EXCEPTION_MESSAGE);
-
-        //Given & When
-        mailgunEmailJerseyService.sendMessageWithAttachment(CAMPAIGN_ID, DOMAIN_SANDBOX, FROM, TO_LIST_STRING, CC_LIST_STRING, BCC_LIST_STRING, SUBJECT, MAIL_MESSAGE, null);
-    }
-
-    @Test
     public void testSendMessageWithAttachmentSuccess() throws Exception {
 
         //Given
-        File attachmentFile = prepareAttachmentFile("test.jpg");
+        when(mailgunUtility.sanitizeEmailContentFromEmbeddedImage(anyString())).thenReturn("email content");
+        when(mailgunUtility.getAttachmentFileList(anyString())).thenReturn(Lists.newArrayList(tempFolder.newFile("1"), tempFolder.newFile("2")));
+
 
         //When
-        String eventMessageId = mailgunEmailJerseyService.sendMessageWithAttachment(CAMPAIGN_ID, DOMAIN_SANDBOX, FROM, TO_LIST_STRING, CC_LIST_STRING, BCC_LIST_STRING, SUBJECT, MAIL_MESSAGE, attachmentFile);
+        String eventMessageId = mailgunEmailJerseyService.sendMessageWithAttachment(CAMPAIGN_ID, DOMAIN_SANDBOX, FROM, TO_LIST_STRING, CC_LIST_STRING, BCC_LIST_STRING, SUBJECT, MAIL_MESSAGE);
 
         //Then
         assertNotNull(eventMessageId);
 
-    }
-
-    private File prepareAttachmentFile(String fileName) throws IOException {
-        File attachmentFile = tempFolder.newFile(fileName);
-
-        BufferedWriter out = new BufferedWriter(new FileWriter(attachmentFile));
-        out.write("test file");
-        out.close();
-        return attachmentFile;
     }
 
 }

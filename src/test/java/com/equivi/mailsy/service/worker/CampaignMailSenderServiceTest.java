@@ -8,6 +8,7 @@ import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -29,6 +30,7 @@ public class CampaignMailSenderServiceTest {
     }
 
     @Test
+    @Ignore
     public void testSendCampaignMail() throws Exception {
 
 

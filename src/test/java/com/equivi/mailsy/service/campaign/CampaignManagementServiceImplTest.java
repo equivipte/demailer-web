@@ -9,15 +9,18 @@ import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.GenericStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.service.campaign.queue.QueueCampaignService;
+import com.google.common.collect.Lists;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
+import javax.sql.rowset.Predicate;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -57,13 +60,15 @@ public class CampaignManagementServiceImplTest {
         CampaignEntity campaignEntity = getCampaignEntity();
 
         when(campaignDao.findOne(anyLong())).thenReturn(campaignEntity);
+        List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntities = campaignEntity.getCampaignSubscriberGroupEntities();
+        when(campaignSubscriberGroupDao.findAll((com.mysema.query.types.Predicate) any(Predicate.class))).thenReturn(campaignSubscriberGroupEntities);
 
         //When
         campaignManagementService.sendCampaignToQueueMailer(1L);
 
         //Then
         verify(campaignDao).save(campaignEntity);
-        verify(queueCampaignService).sendCampaignToQueueMailer(campaignEntity.getCampaignSubscriberGroupEntities());
+        verify(queueCampaignService).sendCampaignToQueueMailer(campaignSubscriberGroupEntities);
     }
 
     private CampaignEntity getCampaignEntity() {
