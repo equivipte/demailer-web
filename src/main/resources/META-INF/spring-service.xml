@@ -26,6 +26,7 @@
     <task:executor id="mailsyExecutor" pool-size="5"/>
     <task:scheduler id="mailsyScheduler" pool-size="10"/>
 
+    <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
 
     <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
 

@@ -39,13 +39,11 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
     private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
 
-    private static final ObjectMapper objectMapper = new ObjectMapper();
+    @Resource
+    private ObjectMapper objectMapper;
 
     private static final Logger LOG = LoggerFactory.getLogger(MailgunJerseyEmailServiceImpl.class);
 
-    static {
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
 
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
@@ -70,6 +68,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
         MailgunResponseMessage mailgunResponseMessage = null;
         try {
+            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
         } catch (IOException e) {
             LOG.error(e.getMessage(),e);
@@ -145,6 +144,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
         MailgunResponseMessage mailgunResponseMessage = null;
         try {
+            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
         } catch (IOException e) {
            LOG.error(e.getMessage(),e);
