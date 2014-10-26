@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
@@ -42,6 +43,8 @@ public class EmailCollectorController {
     public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
     public static final String KEY_RESULT_EMAILS = "resultEmails";
 
+    public static final String SESSION_SITE_URL = "sessionSiteUrl";
+
     @Autowired
     private EmailCollectorService emailCollectorService;
 
@@ -57,8 +60,19 @@ public class EmailCollectorController {
         return EMAIL_COLLECTOR_PAGE;
     }
 
+    @RequestMapping(value = "passToPopup", method = RequestMethod.POST, headers = {"Content-type=application/json"})
+    @ResponseStatus(HttpStatus.OK)
+    public void passSiteToPopup(@RequestBody String url, HttpServletRequest request) {
+        request.getSession().setAttribute(SESSION_SITE_URL, url);
+    }
+
     @RequestMapping(value = "/popup", method = RequestMethod.GET)
-    public String loadPopup(Model model, HttpServletRequest request) {
+    public String loadPopup(HttpServletRequest request) {
+        String url = (String) request.getSession().getAttribute(SESSION_SITE_URL);
+        request.setAttribute("siteUrl", url);
+
+        request.getSession().removeAttribute(SESSION_SITE_URL);
+
         return EMAIL_COLLECTOR_POPUP;
     }
     

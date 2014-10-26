@@ -43,7 +43,7 @@
 	    <td>
 	        <div>
 	        	<spring:message code="label.please.type.site.search" var="siteSearch"/>
-	        	<input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
+	        	<input id="url" path="site" size="100" maxlength="255" value="${siteUrl}" placeholder="${siteSearch}"/>
 	        </div>
 	    </td>
 	    <td>
@@ -108,32 +108,14 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 
-		$('#crawling').click(function(){
-            $("#progress").removeClass("hide");
-            $("#progress").addClass("show");
-            $("#url").prop('disabled', true);
-            $("#crawlingsearch").toggleClass("hide");
-            $("#crawlingcancel").toggleClass("hide");
+		runCrawling();
 
-            $("#cancelcrawling").removeAttr('disabled');
-
-            $("#emailTable").find("tr:gt(0)").remove();
-
-            var url = $("#url").val();
-
-            var startUrl = "${context}/main/emailcollector/async/begin";
-            var pollUrl = "${context}/main/emailcollector/async/update";
-            var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
-            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
-            var poll = new Poll();
-            poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
+        $('#crawling').click(function(){
+            runCrawling();
         });
 
 		$("#cancelcrawling").click(function() {
-            var poll = new Poll();
-
-            var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
-            poll.cancelCrawling(cancelUrl);
+            cancelcrawling();
 		});
 
 		$("#verify-emails-btn").click(function() {
@@ -170,7 +152,40 @@
                 }
             });
 		});
+
+		$(window).bind('beforeunload', function(){
+            cancelcrawling();
+            return 'closing';
+        });
 	});
+
+	function runCrawling() {
+	    $("#progress").removeClass("hide");
+        $("#progress").addClass("show");
+        $("#url").prop('disabled', true);
+        $("#crawlingsearch").toggleClass("hide");
+        $("#crawlingcancel").toggleClass("hide");
+
+        $("#cancelcrawling").removeAttr('disabled');
+
+        $("#emailTable").find("tr:gt(0)").remove();
+
+        var url = $("#url").val();
+
+        var startUrl = "${context}/main/emailcollector/async/begin";
+        var pollUrl = "${context}/main/emailcollector/async/update";
+        var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
+        var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
+        var poll = new Poll();
+        poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
+	}
+
+	function cancelcrawling() {
+	    var poll = new Poll();
+
+        var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+        poll.cancelCrawling(cancelUrl);
+	}
 
 	function getEmailsInTable() {
         var table = $("#emailTable > tbody");

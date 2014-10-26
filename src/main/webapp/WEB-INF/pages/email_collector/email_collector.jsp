@@ -26,16 +26,7 @@
 </div>
 
 <div id="progress" class="hide">
-    <div class="spinner">
-      <div class="rect1"></div>
-      <div class="rect2"></div>
-      <div class="rect3"></div>
-      <div class="rect4"></div>
-      <div class="rect5"></div>
-    </div>
-
-    <span id="scanning"><span></span></span>
-    <span id="terminating"><span></span></span>
+    <span id="crawlinginprogress"><span></span></span>
 </div>
 
 <div class="widget-main no-padding">
@@ -77,21 +68,6 @@
     </table>
 </div>
 
-<div class="pull-left">
-    <a href="#">
-        <button class="btn btn-info" id="export-btn">
-            <i class="icon-mail-forward white bigger-120"></i>
-            <spring:message code="label.common.export_results_to_excel"/>
-        </button>
-    </a>
-
-    <a href="#">
-        <button class="btn btn-info" id="verify-emails-btn">
-            <i class="icon-ok white bigger-120"></i>
-            <spring:message code="label.common.verify_email_list"/>
-        </button>
-    </a>
-</div>
 </br>
 </br>
 </br>
@@ -107,64 +83,27 @@
 <script type="text/javascript">
 	$(document).ready(function() {
 		$('#crawling').click(function(){
-		    window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+		    var url = $("#url").val();
+
+		    $("#url").prop('disabled', true);
+		    $("#crawling").prop('disabled', true);
+
+            $("#progress").removeClass("hide");
+            $("#progress").addClass("show");
+		    $('#crawlinginprogress span').text('Crawling in progress ...');
+
+		    $.ajax({
+                url : "${context}/main/emailcollector/passToPopup",
+                type : "POST",
+                data : url,
+                contentType: 'application/json',
+                success: function() {
+                    window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Email collector pop up- the following error occured: " + textStatus, errorThrown);
+                }
+            });
         });
-
-		$("#cancelcrawling").click(function() {
-            var poll = new Poll();
-
-            var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
-            poll.cancelCrawling(cancelUrl);
-		});
-
-		$("#verify-emails-btn").click(function() {
-            var emails = getEmailsInTable();
-
-            $.ajax({
-                url : "${context}/main/emailcollector/putResultToSession",
-                type : "POST",
-                data : JSON.stringify(emails),
-                contentType: 'application/json',
-                success: function() {
-                    window.location.href = "${context}/main/merchant/emailverifier/verify";
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
-                }
-            });
-
-		});
-
-		$("#export-btn").click(function() {
-            var emails = getEmailsInTable();
-
-            $.ajax({
-                url : "${context}/main/emailcollector/putResultToSession",
-                type : "POST",
-                data : JSON.stringify(emails),
-                contentType: 'application/json',
-                success: function() {
-                    window.location.href = "${context}/main/emailcollector/exportToExcel";
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Export to excel - the following error occured: " + textStatus, errorThrown);
-                }
-            });
-		});
 	});
-
-	function getEmailsInTable() {
-        var table = $("#emailTable > tbody");
-
-        var emails = [];
-
-        table.find('tr').each(function (i) {
-            var $tds = $(this).find('td'),email = $tds.eq(0).text();
-
-            emails.push(email);
-
-        });
-
-        return emails;
-	}
 </script>
