@@ -48,6 +48,13 @@ public class SubscriberServiceImpl implements SubscriberService {
     }
 
     @Override
+    public List<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId) {
+        Predicate subscribeGroupQueryPredicate = getSubscriberContactPredicate(subscriberGroupId);
+
+        return Lists.newArrayList(subscriberContactDao.findAll(subscribeGroupQueryPredicate));
+    }
+
+    @Override
     public List<ContactEntity> getSubscriberEntityListBySubscriberGroupId(Long subscriberGroupId) {
         Predicate subscribeGroupQueryPredicate = getSubscriberPredicate(subscriberGroupId);
 

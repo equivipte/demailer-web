@@ -42,6 +42,13 @@ public interface SubscriberGroupService {
      */
     SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId, int pageNumber, int maxRecords);
 
+    /**
+     *
+     * @param subscriberGroupId
+     * @return
+     */
+    SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId);
+
 
     /**
      * @param subscriberGroupId

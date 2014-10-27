@@ -86,6 +86,13 @@ public class SubscriberGroupServiceImpl implements SubscriberGroupService {
     }
 
     @Override
+    public SubscriberGroupDTO getSubscriberGroupAndSubscriberList(Long subscriberGroupId) {
+        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberGroupId);
+        List<SubscriberContactEntity> subscriberContactEntityList = subscriberService.getSubscriberEntityPageBySubscriberGroupId(subscriberGroupId);
+        return subscriberConverter.convertToSubscribeGroupDTO(subscriberGroupEntity, subscriberContactEntityList);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public void deleteSubscriberGroup(Long subscriberGroupId) {
         subscriberGroupDao.delete(subscriberGroupId);
