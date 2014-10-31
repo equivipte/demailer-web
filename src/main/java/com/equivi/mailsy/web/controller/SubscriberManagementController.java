@@ -121,7 +121,8 @@ public class SubscriberManagementController extends AbstractController {
         String nextPage = httpServletRequest.getParameter(PageConstant.NEXT_PAGE.getPageName());
 
 
-        SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId, pageNumber, webConfiguration.getMaxRecordsPerPage());
+        //Temporary enable no paging service
+        SubscriberGroupDTO subscriberGroupDTO = subscriberService.getSubscriberGroupAndSubscriberList(subscriberGroupId);
         setPredefinedData(modelAndView, subscriberGroupDTO);
 
         modelAndView.addObject("mainScreen", nextPage);

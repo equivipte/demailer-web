@@ -19,6 +19,13 @@ public interface SubscriberService {
     Page<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId, int pageNumber, int maxRecords);
 
     /**
+     *
+     * @param subscriberGroupId
+     * @return
+     */
+    List<SubscriberContactEntity> getSubscriberEntityPageBySubscriberGroupId(Long subscriberGroupId);
+
+    /**
      * @param subscriberGroupId
      * @return
      */
