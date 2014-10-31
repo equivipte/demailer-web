@@ -13,16 +13,6 @@ function Poll() {
     this.cancelCrawling = function cancelCrawling(cancel) {
         cancelUrl = cancel;
 
-        $("#scanning").removeClass("show");
-        $("#scanning").addClass("hide");
-
-        $("#terminating").removeClass("hide");
-        $("#terminating").addClass("show");
-
-        $("#cancelcrawling").attr('disabled', 'disabled');
-
-        $('#terminating span').text('Terminating site crawlers...Please wait..');
-
         $.ajax({
             url : cancelUrl,
             type : "DELETE",
@@ -45,14 +35,6 @@ function Poll() {
 		siteUrl = url;
 		crawlingStatusUrl = crawlingStatus;
 
-        $("#terminating").removeClass("show");
-        $("#terminating").addClass("hide");
-
-        $("#scanning").removeClass("hide");
-        $("#scanning").addClass("show");
-
-		$('#scanning span').text('');
-		
 		$.ajax({
 			url : startUrl,
 			type : "POST",
@@ -156,31 +138,32 @@ function Poll() {
     function getUpdateCrawlerStatus() {
         console.log("Get update crawling status");
 
-        var requestComplete = $.ajax({
-            url : crawlingStatusUrl,
-            type : "get",
-        });
+            var requestComplete = $.ajax({
+                url : crawlingStatusUrl,
+                type : "get",
+            });
 
-        requestComplete.done(function(message) {
-            console.log("Received status");
+            requestComplete.done(function(message) {
+                console.log("Received status");
 
-            var status = message.status;
+                var status = message.status;
 
-            if(status) {
-                 allow = false;
-                 $("#progress").removeClass("show");
-                 $("#progress").addClass("hide");
-                 $("#url").prop('disabled', false);
-                 $("#crawlingsearch").toggleClass("hide");
-                 $("#crawlingcancel").toggleClass("hide");
-             } else {
-                 allow = true;
-             }
-        });
+                if(status) {
+                     allow = false;
+                     $("#progress").removeClass("show");
+                     $("#progress").addClass("hide");
+                     $("#url").prop('disabled', false);
+                     $("#crawlingsearch").toggleClass("hide");
+                     $("#crawlingcancel").toggleClass("hide");
+                     $("#crawling").removeAttr('disabled');
+                 } else {
+                     allow = true;
+                 }
+            });
 
-        requestComplete.fail(function(jqXHR, textStatus, errorThrown) {
-            console.log("Polling - the following error occured: " + textStatus, errorThrown);
-        });
+            requestComplete.fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Polling - the following error occured: " + textStatus, errorThrown);
+            });
 
     };
 

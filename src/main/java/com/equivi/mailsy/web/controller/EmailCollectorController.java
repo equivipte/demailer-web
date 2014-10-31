@@ -10,6 +10,7 @@ import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
 import com.equivi.mailsy.web.views.CollectorResultExcelView;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.log4j.NDC;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,9 +37,11 @@ import java.util.Map;
 @Controller
 @RequestMapping("/main/emailcollector")
 public class EmailCollectorController {
+    private static final String SITE_URL = "siteUrl";
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
     private static final String EMAIL_COLLECTOR_POPUP = "emailCollectorPopup";
     private static final String SESSION_CRAWLING = "sessionCrawling";
+    private static final String SESSION_POPUP = "sessionPopup";
 
     public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
     public static final String KEY_RESULT_EMAILS = "resultEmails";
@@ -53,9 +56,11 @@ public class EmailCollectorController {
     
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
     public String loadNewPage(Model model, HttpServletRequest request) {
-        Boolean crawlingStatus = (Boolean) request.getSession().getAttribute(SESSION_CRAWLING);
+        Boolean popupSessionStatus = (Boolean) request.getSession().getAttribute(SESSION_POPUP);
 
-		model.addAttribute("collector", new EmailCollector());
+        if(BooleanUtils.isTrue(popupSessionStatus)) {
+            model.addAttribute("inProgress", Boolean.TRUE.toString());
+        }
 
         return EMAIL_COLLECTOR_PAGE;
     }
@@ -64,14 +69,13 @@ public class EmailCollectorController {
     @ResponseStatus(HttpStatus.OK)
     public void passSiteToPopup(@RequestBody String url, HttpServletRequest request) {
         request.getSession().setAttribute(SESSION_SITE_URL, url);
+        request.getSession().setAttribute(SESSION_POPUP, Boolean.TRUE);
     }
 
     @RequestMapping(value = "/popup", method = RequestMethod.GET)
-    public String loadPopup(HttpServletRequest request) {
+    public String loadPopup(Model model, HttpServletRequest request) {
         String url = (String) request.getSession().getAttribute(SESSION_SITE_URL);
-        request.setAttribute("siteUrl", url);
-
-        request.getSession().removeAttribute(SESSION_SITE_URL);
+        model.addAttribute(SITE_URL, url);
 
         return EMAIL_COLLECTOR_POPUP;
     }
@@ -100,7 +104,7 @@ public class EmailCollectorController {
         Boolean crawlingStatus = (Boolean) request.getSession().getAttribute(SESSION_CRAWLING);
         final DeferredResult<EmailCollectorUrlMessage> result = new DeferredResult<>();
 
-        if(crawlingStatus) {
+        if(BooleanUtils.isTrue(crawlingStatus)) {
             emailScanningService.getUrlScanningUpdate(result);
         } else {
             EmailScanningServiceImpl.resultUrlQueue.clear();
@@ -123,12 +127,26 @@ public class EmailCollectorController {
         return new EmailCollectorStatusMessage(crawlingStatus);
     }
 
+    @RequestMapping(value = "updatePopupSessionStatus", method = RequestMethod.GET)
+    public @ResponseBody String getUpdatePopupSessionStatus(HttpServletRequest request) {
+        Boolean popupSessionStatus = (Boolean) request.getSession().getAttribute(SESSION_POPUP);
+
+        return popupSessionStatus != null ? popupSessionStatus.toString() : Boolean.FALSE.toString();
+    }
+
     @RequestMapping(value = "cancelCrawling", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
     public void cancelCrawling(HttpServletRequest request) {
         emailCollectorService.cancel();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.FALSE);
+        request.getSession().removeAttribute(SESSION_SITE_URL);
+    }
+
+    @RequestMapping(value = "terminatePopupSession", method = RequestMethod.GET)
+    @ResponseStatus(HttpStatus.OK)
+    public void terminatePopupSession(HttpServletRequest request) {
+        request.getSession().setAttribute(SESSION_POPUP, Boolean.FALSE);
     }
 
     @RequestMapping(value = "putResultToSession", method = RequestMethod.POST)

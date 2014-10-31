@@ -106,11 +106,21 @@
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
+    var poll = new Poll();
+
 	$(document).ready(function() {
 
 		runCrawling();
 
         $('#crawling').click(function(){
+            $("#terminating").removeClass("show");
+            $("#terminating").addClass("hide");
+
+            $("#scanning").removeClass("hide");
+            $("#scanning").addClass("show");
+
+            $('#scanning span').text('');
+
             runCrawling();
         });
 
@@ -154,7 +164,18 @@
 		});
 
 		$(window).bind('beforeunload', function(){
-            cancelcrawling();
+		    cancelcrawling();
+
+            $.ajax({
+                url : "${context}/main/emailcollector/terminatePopupSession",
+                type : "GET",
+                success: function() {
+                    console.log("Crawling session is terminated");
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Crawling session termination - the following error occured: " + textStatus, errorThrown);
+                }
+            });
         });
 	});
 
@@ -175,14 +196,23 @@
         var pollUrl = "${context}/main/emailcollector/async/update";
         var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
         var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
-        var poll = new Poll();
         poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
 	}
 
 	function cancelcrawling() {
-	    var poll = new Poll();
-
         var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+
+        $("#scanning").removeClass("show");
+        $("#scanning").addClass("hide");
+
+        $("#terminating").removeClass("hide");
+        $("#terminating").addClass("show");
+
+        $("#cancelcrawling").attr('disabled', 'disabled');
+
+        $('#terminating span').text('Terminating site crawlers...Please wait..');
+
+
         poll.cancelCrawling(cancelUrl);
 	}
 
