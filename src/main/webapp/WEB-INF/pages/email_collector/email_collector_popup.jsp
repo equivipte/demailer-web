@@ -155,7 +155,6 @@
 
 		$(window).bind('beforeunload', function(){
             cancelcrawling();
-            return 'closing';
         });
 	});
 

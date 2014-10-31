@@ -73,7 +73,7 @@ function Poll() {
 						allow = false;
 						getUpdate();
 					}
-				}, 1000);
+				}, 500);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log("Start - the following error occured: " + textStatus, errorThrown);
@@ -183,5 +183,10 @@ function Poll() {
         });
 
     };
+
+    this.getCrawlingCompleteStatus = function getCrawlingCompleteStatus(crawlingStatus) {
+        crawlingStatusUrl = crawlingStatus;
+        getUpdateCrawlerStatus();
+    }
 
 };

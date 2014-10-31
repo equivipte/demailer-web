@@ -81,7 +81,11 @@
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
+    var allow = true;
+
 	$(document).ready(function() {
+	    checkStatus();
+
 		$('#crawling').click(function(){
 		    var url = $("#url").val();
 
@@ -92,18 +96,36 @@
             $("#progress").addClass("show");
 		    $('#crawlinginprogress span').text('Crawling in progress ...');
 
-		    $.ajax({
+		    var request = $.ajax({
                 url : "${context}/main/emailcollector/passToPopup",
                 type : "POST",
                 data : url,
-                contentType: 'application/json',
-                success: function() {
-                    window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Email collector pop up- the following error occured: " + textStatus, errorThrown);
-                }
+                contentType: 'application/json'
             });
+
+            request.done(function() {
+                window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+
+                checkStatus();
+            });
+
+            request.fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Polling - the following error occured: " + textStatus, errorThrown);
+            });
+
+
         });
+
+        function checkStatus() {
+            var poll = new Poll();
+            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
+
+            setInterval(function() {
+                    if(allow === true) {
+                    allow = false;
+                    poll.getCrawlingCompleteStatus(crawlingStatusUrl);
+                }
+            }, 500);
+        }
 	});
 </script>
