@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration("classpath:META-INF/spring-service.xml")
-public class BytePlantVerifierServiceImplTest {
+public class BytePlantVerifierServiceImplIntegrationTest {
 
     @Resource(name = "bytePlantVerifierService")
     private VerifierService emailVerifierService;
