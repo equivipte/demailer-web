@@ -75,7 +75,7 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         QCampaignTrackerEntity qCampaignTrackerEntity = QCampaignTrackerEntity.campaignTrackerEntity;
         Iterable<CampaignTrackerEntity> campaignTrackerEntities = campaignTrackerDao.findAll((qCampaignTrackerEntity.campaignId.eq(campaignId)));
 
-        if(campaignTrackerEntities!=null && campaignTrackerEntities.iterator().hasNext()){
+        if (campaignTrackerEntities != null && campaignTrackerEntities.iterator().hasNext()) {
             CampaignStatisticDTO campaignStatisticDTO = buildCampaignStatisticDTO(campaignTrackerEntities);
             campaignStatisticDTO.setCampaignId(campaignId);
             return campaignStatisticDTO;
@@ -95,6 +95,7 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
 
         Long totalOpenUsingMobile = 0L;
         Long totalOpenUsingDesktop = 0L;
+        Long totalOpenUsingTablet = 0L;
         Long totalOpenUsingUnknownDevice = 0L;
 
 
@@ -102,10 +103,13 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
             for (CampaignTrackerEntity campaignTrackerEntity : campaignTrackerEntities) {
                 if (campaignTrackerEntity.isOpened()) {
                     totalOpen += 1;
-                    if (!StringUtils.isEmpty(campaignTrackerEntity.getClientDeviceType()) && campaignTrackerEntity.getClientDeviceType().equalsIgnoreCase("mobile")) {
+                    String clientDeviceType = campaignTrackerEntity.getClientDeviceType();
+                    if (isClientDevice(clientDeviceType, ClientDeviceType.MOBILE)) {
                         totalOpenUsingMobile += 1;
-                    } else if (!StringUtils.isEmpty(campaignTrackerEntity.getClientDeviceType()) && campaignTrackerEntity.getClientDeviceType().equalsIgnoreCase("desktop")) {
+                    } else if (isClientDevice(clientDeviceType, ClientDeviceType.DESKTOP)) {
                         totalOpenUsingDesktop += 1;
+                    } else if (isClientDevice(clientDeviceType, ClientDeviceType.TABLET)) {
+                        totalOpenUsingTablet += 1;
                     } else {
                         totalOpenUsingUnknownDevice += 1;
                     }
@@ -128,13 +132,14 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         campaignStatisticDTO.setTotalFailed(totalBounced);
         campaignStatisticDTO.setTotalOpenUsingMobile(totalOpenUsingMobile);
         campaignStatisticDTO.setTotalOpenUsingDesktop(totalOpenUsingDesktop);
+        campaignStatisticDTO.setTotalOpenUsingTablet(totalOpenUsingTablet);
         campaignStatisticDTO.setTotalOpenUsingOthers(totalOpenUsingUnknownDevice);
         campaignStatisticDTO.setTotalUnsubscribed(totalUnsubscribed);
         campaignStatisticDTO.setTotalSent(totalSent);
 
         //Set Percentage
         Double openPercentage = 0D;
-        if(totalDelivered > 0){
+        if (totalDelivered > 0) {
             openPercentage = Double.valueOf(totalOpen * 100 / totalDelivered);
         }
         Double failurePercentage = Double.valueOf(totalBounced * 100 / totalSent);
@@ -142,24 +147,40 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
 
         Double desktopPercentage = 0D;
         Double mobilePercentage = 0D;
+        Double tabletPercentage = 0D;
         Double unknownPercentage = 0D;
 
-        if(totalOpen!=null && totalOpen > 0L){
+        if (totalOpen != null && totalOpen > 0L) {
             desktopPercentage = Double.valueOf(totalOpenUsingDesktop * 100 / totalOpen);
             mobilePercentage = Double.valueOf(totalOpenUsingMobile * 100 / totalOpen);
+            tabletPercentage = Double.valueOf(totalOpenUsingTablet * 100 / totalOpen);
             unknownPercentage = Double.valueOf(totalOpenUsingUnknownDevice * 100 / totalOpen);
         }
 
         campaignStatisticDTO.setOpenUsingDesktopPercentage(desktopPercentage);
         campaignStatisticDTO.setOpenUsingMobilePercentage(mobilePercentage);
+        campaignStatisticDTO.setOpenUsingTabletPercentage(tabletPercentage);
         campaignStatisticDTO.setOpenUsingOtherPercentage(unknownPercentage);
 
         campaignStatisticDTO.setOpenMailPercentage(openPercentage);
         campaignStatisticDTO.setFailedMailPercentage(failurePercentage);
         campaignStatisticDTO.setDeliverMailPercentage(deliverPercentage);
 
+        adjustFailPercentageIfAllDeliverSuccesfully(campaignStatisticDTO);
 
         return campaignStatisticDTO;
+    }
+
+    //Adjust Fail percentage if all deliver succesfully eventually
+    private void adjustFailPercentageIfAllDeliverSuccesfully(CampaignStatisticDTO campaignStatisticDTO) {
+        if (campaignStatisticDTO.getDeliverMailPercentage() == 100D) {
+            campaignStatisticDTO.setTotalFailed(0L);
+            campaignStatisticDTO.setFailedMailPercentage(0D);
+        }
+    }
+
+    private boolean isClientDevice(String clientDeviceType, ClientDeviceType deviceType) {
+        return !StringUtils.isEmpty(clientDeviceType) && clientDeviceType.equalsIgnoreCase(deviceType.getClientDeviceType());
     }
 
     private Predicate getCampaignTrackerPredicate(Map<CampaignTrackerSearchFilter, String> campaignTrackerSearchFilterStringMap) {
