@@ -30,7 +30,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -54,41 +53,6 @@ public class SubscriberManagementController extends AbstractController {
 
     static {
         sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
-    }
-
-    @RequestMapping(value = "/main/merchant/subscriber_management", method = RequestMethod.GET)
-    public String getContactManagementPage(Model model) {
-
-        List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
-
-        SubscriberGroupDTO contactDTO = new SubscriberGroupDTO();
-        contactDTO.setSubscriberGroupName("Equivi Contact Group 1");
-        contactDTO.setSubscriberGroupStatus("ACTIVE");
-        contactDTO.setSubscriberLastUpdateDate("2014/07/30 10:00");
-
-        SubscriberGroupDTO contactDTO2 = new SubscriberGroupDTO();
-        contactDTO2.setSubscriberGroupName("Equivi Contact Group 1-1");
-        contactDTO2.setSubscriberGroupStatus("ACTIVE");
-        contactDTO2.setSubscriberLastUpdateDate("2014/07/30 13:00");
-
-        SubscriberGroupDTO contactDTO3 = new SubscriberGroupDTO();
-        contactDTO3.setSubscriberGroupName("Equivi Contact Group 2");
-        contactDTO3.setSubscriberGroupStatus("INACTIVE");
-        contactDTO3.setSubscriberLastUpdateDate("2014/07/30 11:00");
-
-        SubscriberGroupDTO contactDTO4 = new SubscriberGroupDTO();
-        contactDTO4.setSubscriberGroupName("Equivi Contact Group 3");
-        contactDTO4.setSubscriberGroupStatus("DISABLED");
-        contactDTO4.setSubscriberLastUpdateDate("2014/07/30 10:00");
-
-        subscriberGroupDTOList.add(contactDTO);
-        subscriberGroupDTOList.add(contactDTO2);
-        subscriberGroupDTOList.add(contactDTO3);
-        subscriberGroupDTOList.add(contactDTO4);
-
-        model.addAttribute("subscriberGroupDTOList", subscriberGroupDTOList);
-
-        return "subscriberManagementPage";
     }
 
 

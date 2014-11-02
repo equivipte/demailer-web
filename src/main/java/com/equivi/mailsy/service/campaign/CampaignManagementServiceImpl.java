@@ -93,6 +93,10 @@ public class CampaignManagementServiceImpl implements CampaignManagementService 
             booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignStatus.eq(CampaignStatus.getStatusByDescription(filterMap.get(CampaignSearchFilter.CAMPAIGN_STATUS))));
         }
 
+        if (filterMap.get(CampaignSearchFilter.CAMPAIGN_NAME) != null) {
+            booleanMerchantPredicateBuilder.or(qCampaignEntity.campaignName.like("%" + filterMap.get(CampaignSearchFilter.CAMPAIGN_NAME) + "%"));
+        }
+
         return booleanMerchantPredicateBuilder;
     }
 
