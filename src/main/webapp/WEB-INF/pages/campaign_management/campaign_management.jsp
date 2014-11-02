@@ -32,7 +32,7 @@
 </tr>
 </thead>
 <c:if test="${campaignDTOList.size() > 0 }">
-    <tbody>
+    <tbody  class="campaign-table">
     <c:forEach items="${campaignDTOList}" var="campaign">
         <tr>
             <td>${campaign.id}</td>
