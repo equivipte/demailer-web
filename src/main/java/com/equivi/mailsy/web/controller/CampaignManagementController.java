@@ -301,11 +301,15 @@ public class CampaignManagementController extends AbstractController {
     private Map<CampaignSearchFilter, String> buildMapFilter(HttpServletRequest request) {
 
         String campaignSubjectName = request.getParameter(CampaignSearchFilter.CAMPAIGN_SUBJECT.getFilterName());
+        String campaignName = request.getParameter(CampaignSearchFilter.CAMPAIGN_NAME.getFilterName());
 
 
         Map<CampaignSearchFilter, String> filterMap = new THashMap<>();
-        if (!StringUtils.isBlank(campaignSubjectName)) {
+        if (!StringUtils.isEmpty(campaignSubjectName)) {
             filterMap.put(CampaignSearchFilter.CAMPAIGN_SUBJECT, campaignSubjectName);
+        }
+        if (!StringUtils.isEmpty(campaignName)) {
+            filterMap.put(CampaignSearchFilter.CAMPAIGN_NAME, campaignName);
         }
 
 

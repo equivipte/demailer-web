@@ -5,6 +5,7 @@ public enum CampaignSearchFilter {
 
     CAMPAIGN_STATUS("campaignStatus"),
     CAMPAIGN_SUBJECT("campaignSubject"),
+    CAMPAIGN_NAME("campaignName"),
     CAMPAIGN_SCHEDULED_SEND_DATE("scheduledSendDate"),
     CAMPAIGN_DATE("campaignDate");
 
