@@ -11,7 +11,7 @@
     <table>
         <td>
             <a href="#" class="add-campaign-button" title="<spring:message code="label.create.campaign"/>">
-                <button class="btn btn-info" type="button">
+                <button class="btn btn-info" type="button" id="campaign-create">
                     <i class="icon-plus-sign white bigger-120"></i>
                     <spring:message code="label.create"/>
                 </button>
@@ -19,7 +19,7 @@
         </td>
         <td>
             <a href="#">
-                <button class="btn btn-info">
+                <button class="btn btn-info" id="campaign-search">
                     <i class="icon-search white bigger-120"></i>
                     <spring:message code="label.search"/>
                 </button>
