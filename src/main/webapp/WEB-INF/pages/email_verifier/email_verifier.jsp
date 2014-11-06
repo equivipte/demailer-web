@@ -59,13 +59,6 @@
                 <spring:message code="label.common.export_results_to_excel"/>
             </button>
         </a>
-
-        <a href="#">
-            <button class="btn btn-info" id="import-btn">
-                <i class="icon-book white bigger-120"></i>
-                <spring:message code="label.emailverifier.import.to.contact"/>
-            </button>
-        </a>
     </div>
 </c:if>
 </br>
@@ -153,7 +146,6 @@
                     contentType: 'application/json',
                     success: function(verifier) {
                         var status = verifier.status;
-                        var statusDescription = verifier.statusDescription;
 
                         if('Valid' === status) {
                             $tds.eq(1).html('<span class="label label-sm label-success">' + status + '</span>');
@@ -183,7 +175,7 @@
                 table.find('tr').each(function (i) {
                     var $tds = $(this).find('td'),email = $tds.eq(0).text(), status = $tds.eq(1).text();
 
-                    if('Success' === status) {
+                    if('Valid' === status) {
                         emails.push(email);
                     }
                 });

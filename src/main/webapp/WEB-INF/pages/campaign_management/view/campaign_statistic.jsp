@@ -121,10 +121,11 @@
 
                 <div class="grid3">
                 <span class="grey">
-                    <i class="icon-question-sign icon-2x red"></i>
+                    <i class="icon-tablet icon-2x red"></i>
                 </span>
-                    <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingOthers}</h4>
+                    <h4 class="bigger pull-right">${campaignStatisticDTO.totalOpenUsingTablet}</h4>
                 </div>
+
             </div>
         </div>
         <!-- /widget-main -->
@@ -143,6 +144,7 @@
 <c:set var="mobilePercentage" value="${campaignStatisticDTO.openUsingMobilePercentage}"/>
 <c:set var="desktopPercentage" value="${campaignStatisticDTO.openUsingDesktopPercentage}"/>
 <c:set var="otherPercentage" value="${campaignStatisticDTO.openUsingOtherPercentage}"/>
+<c:set var="tabletPercentage" value="${campaignStatisticDTO.openUsingTabletPercentage}"/>
 
 <!-- /widget-body -->
 <script type="text/javascript">
@@ -174,7 +176,8 @@
         var data = [
             { label: "Mobile", data: ${mobilePercentage}, color: "#2091CF"},
             { label: "Desktop", data: ${desktopPercentage}, color: "#68BC31"},
-            { label: "Other", data: ${otherPercentage}, color: "#DA5430"}
+            { label: "Tablet", data: ${tabletPercentage}, color: "#DA5430"},
+            { label: "Other", data: ${otherPercentage}, color: "#FEE074"}
         ]
 
         function drawPieChart(placeholder, data, position) {

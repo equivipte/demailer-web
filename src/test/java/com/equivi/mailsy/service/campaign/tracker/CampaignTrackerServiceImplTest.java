@@ -40,16 +40,18 @@ public class CampaignTrackerServiceImplTest {
 
         //Then
         Assert.assertEquals((Long) 1L, campaignStatisticDTO.getCampaignId());
-        Assert.assertEquals((Long) 2L, campaignStatisticDTO.getTotalOpened());
-        Assert.assertEquals((Long) 2L, campaignStatisticDTO.getTotalDelivered());
+        Assert.assertEquals((Long) 3L, campaignStatisticDTO.getTotalOpened());
+        Assert.assertEquals((Long) 3L, campaignStatisticDTO.getTotalDelivered());
         Assert.assertEquals((Long) 1L, campaignStatisticDTO.getTotalFailed());
         Assert.assertEquals((Long) 1L, campaignStatisticDTO.getTotalOpenUsingDesktop());
         Assert.assertEquals((Long) 1L, campaignStatisticDTO.getTotalOpenUsingMobile());
         Assert.assertEquals((Long) 0L, campaignStatisticDTO.getTotalOpenUsingOthers());
-        Assert.assertEquals((Double) 50.0,campaignStatisticDTO.getOpenUsingMobilePercentage());
-        Assert.assertEquals((Double) 50.0,campaignStatisticDTO.getOpenUsingDesktopPercentage());
-        Assert.assertEquals((Double) 0D,campaignStatisticDTO.getOpenUsingOtherPercentage());
+        Assert.assertEquals((Long) 1L, campaignStatisticDTO.getTotalOpenUsingTablet());
 
+        Assert.assertEquals((Double) 33.0,campaignStatisticDTO.getOpenUsingMobilePercentage());
+        Assert.assertEquals((Double) 33.0,campaignStatisticDTO.getOpenUsingDesktopPercentage());
+        Assert.assertEquals((Double) 33.0,campaignStatisticDTO.getOpenUsingTabletPercentage());
+        Assert.assertEquals((Double) 0D,campaignStatisticDTO.getOpenUsingOtherPercentage());
 
     }
 
@@ -71,7 +73,7 @@ public class CampaignTrackerServiceImplTest {
 
         //Campaign track 2 open with desktop
         CampaignTrackerEntity campaignTrackerEntity2 = new CampaignTrackerEntity();
-        campaignTrackerEntity2.setCampaignId(1L);
+        campaignTrackerEntity2.setCampaignId(2L);
         campaignTrackerEntity2.setOpened(true);
         campaignTrackerEntity2.setBounced(false);
         campaignTrackerEntity2.setClicked(true);
@@ -81,18 +83,28 @@ public class CampaignTrackerServiceImplTest {
 
         //Campaign 3 failed
         CampaignTrackerEntity campaignTrackerEntity3 = new CampaignTrackerEntity();
-        campaignTrackerEntity3.setCampaignId(1L);
+        campaignTrackerEntity3.setCampaignId(3L);
         campaignTrackerEntity3.setOpened(false);
         campaignTrackerEntity3.setBounced(true);
         campaignTrackerEntity3.setClicked(true);
         campaignTrackerEntity3.setDelivered(false);
         campaignTrackerEntity3.setClientDeviceType("unknown");
-
         campaignTrackerEntity3.setRecipient("cvf@email.com");
+
+        //Campaign 4 open with tablet
+        CampaignTrackerEntity campaignTrackerEntity4 = new CampaignTrackerEntity();
+        campaignTrackerEntity4.setCampaignId(4L);
+        campaignTrackerEntity4.setOpened(true);
+        campaignTrackerEntity4.setBounced(false);
+        campaignTrackerEntity4.setClicked(true);
+        campaignTrackerEntity4.setDelivered(true);
+        campaignTrackerEntity4.setClientDeviceType("tablet");
 
         campaignTrackerEntityList.add(campaignTrackerEntity);
         campaignTrackerEntityList.add(campaignTrackerEntity2);
         campaignTrackerEntityList.add(campaignTrackerEntity3);
+        campaignTrackerEntityList.add(campaignTrackerEntity4);
+
 
         return campaignTrackerEntityList;
     }

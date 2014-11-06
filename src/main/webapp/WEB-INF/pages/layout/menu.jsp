@@ -18,7 +18,7 @@
             <c:if test="${currentPage.currentSubMenu != 'EMAIL_COLLECTOR'}">
         <li id="email-collector">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/emailcollector/new">
+            <a id="email-collector-menu" href="${pageContext.request.contextPath}/main/emailcollector/new">
                 <i class="icon-search"></i>
                 <spring:message code="label.menu.email.collector"/>
             </a>
@@ -31,7 +31,7 @@
             <c:if test="${currentPage.currentSubMenu != 'EMAIL_VERIFIER'}">
         <li id="email-verifier">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/merchant/emailverifier">
+            <a id="email-verifier-menu" href="${pageContext.request.contextPath}/main/merchant/emailverifier">
                 <i class="icon-ok-sign"></i>
                 <spring:message code="label.menu.email.verifier"/>
             </a>
@@ -44,7 +44,8 @@
             <c:if test="${currentPage.currentSubMenu != 'CAMPAIGN_MANAGEMENT'}">
         <li id="campaign-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/merchant/campaign_management/1">
+            <a id="campaign-management-menu"
+               href="${pageContext.request.contextPath}/main/merchant/campaign_management/1">
                 <i class="icon-envelope"></i>
                 <spring:message code="label.menu.campaign"/>
             </a>
@@ -57,25 +58,26 @@
             <c:if test="${currentPage.currentSubMenu != 'SUBSCRIBER_MANAGEMENT'}">
         <li id="contact-management">
             </c:if>
-            <a href="${pageContext.request.contextPath}/main/merchant/subscriber_management/1">
+            <a id="subscriber-management-menu"
+               href="${pageContext.request.contextPath}/main/merchant/subscriber_management/1">
                 <i class="icon-book"></i>
                 <spring:message code="label.menu.subscriber"/>
             </a>
         </li>
 
         <security:authorize ifAnyGranted="MAILSY_ADMIN">
-            <c:if test="${currentPage.currentSubMenu == 'USER_MANAGEMENT'}">
-            <li id="user-management" class="active">
-                </c:if>
+        <c:if test="${currentPage.currentSubMenu == 'USER_MANAGEMENT'}">
+        <li id="user-management" class="active">
+            </c:if>
 
-                <c:if test="${currentPage.currentSubMenu != 'USER_MANAGEMENT'}">
-            <li id="user-management">
-                </c:if>
-                <a href="${pageContext.request.contextPath}/main/admin/users/1">
-                    <i class="icon-user"></i>
-                    <spring:message code="label.menu.administration.usermanagement"/>
-                </a>
-            </li>
+            <c:if test="${currentPage.currentSubMenu != 'USER_MANAGEMENT'}">
+        <li id="user-management">
+            </c:if>
+            <a id="user-management-menu" href="${pageContext.request.contextPath}/main/admin/users/1">
+                <i class="icon-user"></i>
+                <spring:message code="label.menu.administration.usermanagement"/>
+            </a>
+        </li>
         </security:authorize>
 </div>
 
