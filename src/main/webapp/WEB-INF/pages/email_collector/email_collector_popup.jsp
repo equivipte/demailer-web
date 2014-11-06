@@ -77,7 +77,7 @@
     </table>
 </div>
 
-<div class="pull-left">
+<div id="buttons" class="pull-left">
     <a href="#">
         <button class="btn btn-info" id="export-btn">
             <i class="icon-mail-forward white bigger-120"></i>
@@ -101,15 +101,14 @@
     }
 </style>
 
-<script type="text/javascript" src="<c:url value='/resources/js/jquery.popupwindow.js' /> "></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
-    var poll = new Poll();
 
 	$(document).ready(function() {
-
+        var poll = new Poll();
+        poll.showHideButtons();
 		runCrawling();
 
         $('#crawling').click(function(){
@@ -129,7 +128,7 @@
 		});
 
 		$("#verify-emails-btn").click(function() {
-            var emails = getEmailsInTable();
+		    var emails = getEmailsInTable();
 
             $.ajax({
                 url : "${context}/main/emailcollector/putResultToSession",
@@ -137,13 +136,13 @@
                 data : JSON.stringify(emails),
                 contentType: 'application/json',
                 success: function() {
-                    window.location.href = "${context}/main/merchant/emailverifier/verify";
+                    window.opener.verifyEmail();
+                    window.close();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
                 }
             });
-
 		});
 
 		$("#export-btn").click(function() {
@@ -179,6 +178,8 @@
         });
 	});
 
+	var poll = new Poll();
+
 	function runCrawling() {
 	    $("#progress").removeClass("hide");
         $("#progress").addClass("show");
@@ -211,7 +212,6 @@
         $("#cancelcrawling").attr('disabled', 'disabled');
 
         $('#terminating span').text('Terminating site crawlers...Please wait..');
-
 
         poll.cancelCrawling(cancelUrl);
 	}

@@ -10,6 +10,18 @@ var cancelUrl;
 
 function Poll() {
 
+    this.showHideButtons = function showHideButtons() {
+        var table = $("#emailTable > tbody");
+
+        if(table.find('tr').length > 0) {
+            $("#buttons").removeClass("hide");
+            $("#buttons").addClass("show");
+        } else {
+            $("#buttons").removeClass("show");
+            $("#buttons").addClass("hide");
+        }
+    };
+
     this.cancelCrawling = function cancelCrawling(cancel) {
         cancelUrl = cancel;
 
@@ -156,6 +168,9 @@ function Poll() {
                      $("#crawlingsearch").toggleClass("hide");
                      $("#crawlingcancel").toggleClass("hide");
                      $("#crawling").removeAttr('disabled');
+
+                     var poll = new Poll();
+                     poll.showHideButtons();
                  } else {
                      allow = true;
                  }

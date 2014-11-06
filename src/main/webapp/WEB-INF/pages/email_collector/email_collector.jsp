@@ -60,6 +60,10 @@
     var allow = true;
     var timer = null;
 
+    function verifyEmail() {
+        window.location.href = "${context}/main/merchant/emailverifier/verify";
+    }
+
 	$(document).ready(function() {
 	    checkStatus();
 
