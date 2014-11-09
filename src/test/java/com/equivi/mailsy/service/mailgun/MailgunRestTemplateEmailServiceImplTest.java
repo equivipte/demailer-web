@@ -5,6 +5,7 @@ import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.google.common.collect.Lists;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -46,6 +47,7 @@ public class MailgunRestTemplateEmailServiceImplTest {
     }
 
     @Test
+    @Ignore
     public void testSendMessages() throws Exception {
 
         List<String> toList = Lists.newArrayList();
