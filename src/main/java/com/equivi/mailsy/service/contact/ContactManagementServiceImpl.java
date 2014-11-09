@@ -1,15 +1,16 @@
 package com.equivi.mailsy.service.contact;
 
+import com.equivi.mailsy.data.dao.CampaignSubscriberGroupDao;
 import com.equivi.mailsy.data.dao.ContactDao;
 import com.equivi.mailsy.data.dao.SubscriberContactDao;
 import com.equivi.mailsy.data.dao.SubscriberGroupDao;
+import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.QContactEntity;
-import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
-import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.contact.ContactDTO;
+import com.equivi.mailsy.service.campaign.CampaignSubscriberGroupPredicate;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.mysema.query.types.Predicate;
@@ -23,15 +24,19 @@ import java.util.Map;
 @Service
 public class ContactManagementServiceImpl implements ContactManagementService {
 
+    static final String ERROR_DELETE_SUBSCRIBER_GROUP_MSG_USED_BY_CAMPAIGN = "Unable to delete subscriber group id, there's already campaign using this subscriber group";
     @Resource
     private ContactDao contactDao;
-
     @Resource
-    private SubscriberContactDao subscriberContactDao;
-
+    private CampaignSubscriberGroupPredicate campaignSubscriberGroupPredicate;
+    @Resource
+    private CampaignSubscriberGroupDao campaignSubscriberGroupDao;
     @Resource
     private SubscriberGroupDao subscriberGroupDao;
-
+    @Resource
+    private SubscriberContactDao subscriberContactDao;
+    @Resource
+    private ContactPredicate contactPredicate;
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
 
@@ -99,7 +104,7 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public void updateUnsubscribeStatusFromMailgun(String emailAddress) {
-        if(mailgunService.isUnsubscribe(null, emailAddress)){
+        if (mailgunService.isUnsubscribe(null, emailAddress)) {
             //Update unsubscribed in contact
             ContactEntity contactEntity = getContactEntityByEmailAddress(emailAddress);
             contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
@@ -117,22 +122,22 @@ public class ContactManagementServiceImpl implements ContactManagementService {
     }
 
     @Override
-    public void deleteContact(Long subscriberGroupId) {
+    public void deleteSubscriberGroup(Long subscriberGroupId) {
+
+        Iterable<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntityList = campaignSubscriberGroupDao.findAll(campaignSubscriberGroupPredicate.getCampaignSubscriberGroupEntityBySubscriberGroup(subscriberGroupId));
+
+        if (campaignSubscriberGroupEntityList != null && campaignSubscriberGroupEntityList.iterator().hasNext()) {
+            throw new IllegalArgumentException(ERROR_DELETE_SUBSCRIBER_GROUP_MSG_USED_BY_CAMPAIGN);
+        }
+
         //Delete subscriber contact entity
-        Iterable<SubscriberContactEntity> subscriberContactEntities = subscriberContactDao.findAll(getSubscriberContactEntity(subscriberGroupId));
+        Iterable<SubscriberContactEntity> subscriberContactEntities = subscriberContactDao.findAll(contactPredicate.getSubscriberContactEntity(subscriberGroupId));
 
         if (subscriberContactEntities != null && subscriberContactEntities.iterator().hasNext()) {
             subscriberContactDao.delete(subscriberContactEntities);
         }
 
         subscriberGroupDao.delete(subscriberGroupId);
-    }
-
-    private Predicate getSubscriberContactEntity(Long subscriberContactId) {
-        QSubscriberContactEntity subscriberContactPredicate = QSubscriberContactEntity.subscriberContactEntity;
-        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberContactId);
-
-        return subscriberContactPredicate.subscriberGroupEntity.eq(subscriberGroupEntity);
     }
 
 

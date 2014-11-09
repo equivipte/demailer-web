@@ -62,7 +62,7 @@ public interface ContactManagementService {
      *
      * @param contactId
      */
-    void deleteContact(final Long contactId);
+    void deleteSubscriberGroup(final Long contactId);
 }
 
 

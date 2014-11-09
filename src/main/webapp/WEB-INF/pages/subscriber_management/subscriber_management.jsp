@@ -180,7 +180,7 @@
                             },
                             success: function (data) {
                                 if (data != 'SUCCESS') {
-                                    alert("<spring:message code="general.exception.delete"/>");
+                                    alert(data);
                                 }
                                 else {
                                     //Do stuff here on success such as modal info

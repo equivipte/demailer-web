@@ -3,7 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
-<c:set var="campaignSubjectName"><spring:message code="label.campaign.subject"/></c:set>
+<c:set var="campaignSubject"><spring:message code="label.campaign.subject"/></c:set>
 <c:set var="campaignName"><spring:message code="label.campaign.name"/></c:set>
 
 
@@ -29,12 +29,12 @@
 
             <div>
                 <input type="text"
-                       name="campaignSubjectName"
-                       path="campaignSubjectName"
+                       name="campaignSubject"
+                       path="campaignSubject"
                        size="30"
                        maxlength="30"
-                       value="${fn:escapeXml(param.campaignSubjectName)}"
-                       placeholder="${campaignSubjectName}"
+                       value="${fn:escapeXml(param.campaignSubject)}"
+                       placeholder="${campaignSubject}"
                        class="col-lg-12"/>
             </div>
         </td>

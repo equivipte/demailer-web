@@ -37,24 +37,19 @@ import java.util.Map;
 @Controller
 public class SubscriberManagementController extends AbstractController {
 
-    @Resource
-    private WebConfiguration webConfiguration;
-
-    @Resource
-    private ErrorMessage errorMessage;
-
-    @Resource
-    private SubscriberGroupService subscriberService;
-
-    @Resource
-    private ContactManagementService contactManagementService;
-
     private static SimpleDateFormat sdf;
 
     static {
         sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
     }
-
+    @Resource
+    private WebConfiguration webConfiguration;
+    @Resource
+    private ErrorMessage errorMessage;
+    @Resource
+    private SubscriberGroupService subscriberService;
+    @Resource
+    private ContactManagementService contactManagementService;
 
     @RequestMapping(value = "/main/merchant/subscriber_management/{pageNumber}", method = RequestMethod.GET)
     public String getSubscriberManagementPage(@PathVariable Integer pageNumber, final HttpServletRequest request, Model model) {
@@ -110,7 +105,12 @@ public class SubscriberManagementController extends AbstractController {
     @ResponseBody
     public String deleteContact(@PathVariable String subscriberId) {
 
-        contactManagementService.deleteContact(Long.valueOf(subscriberId));
+        try {
+            contactManagementService.deleteSubscriberGroup(Long.valueOf(subscriberId));
+        } catch (IllegalArgumentException iex) {
+            //Get Error message from service
+            return iex.getMessage();
+        }
 
         return "SUCCESS";
     }
