@@ -160,7 +160,7 @@
     }
 
     function deleteSubscriberGroup(id) {
-        var href = "${context}/main/subscriber/1";
+        var href = "${context}/main/merchant/subscriber_management/1";
         $("#dialog-confirm").removeClass('hide').dialog({
             resizable: false,
             modal: true,
@@ -172,7 +172,7 @@
                     "class": "btn btn-danger btn-xs",
                     click: function () {
                         $.ajax({
-                            url: "${pageContext.request.contextPath}/main/merchant/subscriber/delete/" + id,
+                            url: "${pageContext.request.contextPath}/main/merchant/subscriber_management/delete_subscriber/" + id,
                             type: "DELETE",
                             error: function (XMLHttpRequest, textStatus, errorThrown) {
                                 alert("An error has occurred making the request: " + errorThrown);

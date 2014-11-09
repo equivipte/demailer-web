@@ -2,11 +2,13 @@ package com.equivi.mailsy.service.contact;
 
 import com.equivi.mailsy.data.dao.ContactDao;
 import com.equivi.mailsy.data.dao.SubscriberContactDao;
+import com.equivi.mailsy.data.dao.SubscriberGroupDao;
 import com.equivi.mailsy.data.entity.ContactEntity;
 import com.equivi.mailsy.data.entity.QContactEntity;
 import com.equivi.mailsy.data.entity.QSubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
+import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.contact.ContactDTO;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
@@ -26,6 +28,9 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Resource
     private SubscriberContactDao subscriberContactDao;
+
+    @Resource
+    private SubscriberGroupDao subscriberGroupDao;
 
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
@@ -112,21 +117,22 @@ public class ContactManagementServiceImpl implements ContactManagementService {
     }
 
     @Override
-    public void deleteContact(Long contactId) {
+    public void deleteContact(Long subscriberGroupId) {
         //Delete subscriber contact entity
-        Iterable<SubscriberContactEntity> subscriberContactEntities = subscriberContactDao.findAll(getSubscriberContactEntity(contactId));
+        Iterable<SubscriberContactEntity> subscriberContactEntities = subscriberContactDao.findAll(getSubscriberContactEntity(subscriberGroupId));
 
         if (subscriberContactEntities != null && subscriberContactEntities.iterator().hasNext()) {
             subscriberContactDao.delete(subscriberContactEntities);
         }
-        contactDao.delete(contactId);
+
+        subscriberGroupDao.delete(subscriberGroupId);
     }
 
-    private Predicate getSubscriberContactEntity(Long contactId) {
+    private Predicate getSubscriberContactEntity(Long subscriberContactId) {
         QSubscriberContactEntity subscriberContactPredicate = QSubscriberContactEntity.subscriberContactEntity;
-        ContactEntity contactEntity = contactDao.findOne(contactId);
+        SubscriberGroupEntity subscriberGroupEntity = subscriberGroupDao.findOne(subscriberContactId);
 
-        return subscriberContactPredicate.contactEntity.eq(contactEntity);
+        return subscriberContactPredicate.subscriberGroupEntity.eq(subscriberGroupEntity);
     }
 
 
