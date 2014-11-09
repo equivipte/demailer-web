@@ -48,34 +48,25 @@ import java.util.StringTokenizer;
 @Controller
 public class CampaignManagementController extends AbstractController {
 
-    @Resource
-    private WebConfiguration webConfiguration;
-
-    @Resource
-    private ErrorMessage errorMessage;
-
-    @Resource
-    private CampaignManagementService campaignManagementService;
-
-    @Resource
-    private CampaignTrackerService campaignTrackerService;
-
-    @Resource(name = "mailgunRestTemplateEmailService")
-    private MailgunService mailgunEmailService;
-
-    @Resource
-    private SubscriberGroupService subscriberGroupService;
-
     private static final String EMAIL_CONTENT_PAGE = "campaignManagementEmailContentPage";
-
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
-
     private static SimpleDateFormat dateTimeFormat;
 
     static {
         dateTimeFormat = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
     }
-
+    @Resource
+    private WebConfiguration webConfiguration;
+    @Resource
+    private ErrorMessage errorMessage;
+    @Resource
+    private CampaignManagementService campaignManagementService;
+    @Resource
+    private CampaignTrackerService campaignTrackerService;
+    @Resource(name = "mailgunRestTemplateEmailService")
+    private MailgunService mailgunEmailService;
+    @Resource
+    private SubscriberGroupService subscriberGroupService;
 
     @RequestMapping(value = "/main/merchant/campaignmanagement", method = RequestMethod.GET)
     public String getCampaignManagementPage() {
@@ -122,6 +113,7 @@ public class CampaignManagementController extends AbstractController {
             } else {
 
                 campaignDTO.setCampaignStatus(CampaignStatus.DRAFT.getCampaignStatusDescription());
+                campaignDTO.setEmailContent("</br></br></br></br></br></br></br></br></br></br><a href=\"%unsubscribe_url%\">Click here</> to unsubscribe");
                 campaignDTO = campaignManagementService.saveCampaignDTO(campaignDTO);
 
                 modelAndView = new ModelAndView();
@@ -144,6 +136,7 @@ public class CampaignManagementController extends AbstractController {
     public String saveUpdateEmailContent(@RequestBody String emailContent, @PathVariable String campaignId) {
 
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(Long.valueOf(campaignId));
+
         campaignDTO.setEmailContent(emailContent);
 
         campaignManagementService.saveCampaign(campaignDTO);
@@ -175,7 +168,6 @@ public class CampaignManagementController extends AbstractController {
 
         return "SUCCESS";
     }
-
 
     @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/{pageName}", method = RequestMethod.GET)
     public ModelAndView goToEditCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId, @PathVariable String pageName, final HttpServletRequest httpServletRequest) {
