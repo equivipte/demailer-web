@@ -63,8 +63,8 @@ public class CampaignManagementController extends AbstractController {
     private CampaignManagementService campaignManagementService;
     @Resource
     private CampaignTrackerService campaignTrackerService;
-    @Resource(name = "mailgunRestTemplateEmailService")
-    private MailgunService mailgunEmailService;
+    @Resource(name = "mailgunJerseyService")
+    private MailgunService mailgunJerseyService;
     @Resource
     private SubscriberGroupService subscriberGroupService;
 
@@ -226,7 +226,7 @@ public class CampaignManagementController extends AbstractController {
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
 
 
-        mailgunEmailService.sendMessage(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), replaceEmailContentWithDefaultParams(campaignDTO.getEmailContent()));
+        mailgunJerseyService.sendMessageWithAttachment(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), replaceEmailContentWithDefaultParams(campaignDTO.getEmailContent()));
 
         return "SUCCESS";
     }
