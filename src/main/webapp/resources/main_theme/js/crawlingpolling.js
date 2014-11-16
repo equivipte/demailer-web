@@ -123,18 +123,19 @@ function Poll() {
 		});
 
 		request.done(function(message) {
-			console.log("Received a message");
-            var update = getUpdate(message);
-            $('#emailTable > tbody:last').append(update);
+            updateEmailsTable(message);
 		});
 		
-		function getUpdate(message) {
+		function updateEmailsTable(message) {
+            var arrEmails = message.email.split(',');
 
-			var update = "<tr>" + 
-							"<td>" + message.email + "</td>" + 
-						 "</tr>";
-			
-			return update;
+            for (var i = 0; i < arrEmails.length; i++) {
+                 var update = "<tr>" +
+                                    "<td>" + arrEmails[i] + "</td>" +
+                              "</tr>";
+
+                 $('#emailTable > tbody:last').append(update);
+            }
 		};
 		
 

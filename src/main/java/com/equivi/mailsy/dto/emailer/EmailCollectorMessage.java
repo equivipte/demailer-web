@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class EmailCollectorMessage {
-    private List<String> emails;
 	private String email;
 
     public EmailCollectorMessage() {
@@ -21,14 +20,6 @@ public class EmailCollectorMessage {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-
-    public List<String> getEmails() {
-        return emails;
-    }
-
-    public void setEmails(List<String> emails) {
-        this.emails = emails;
-    }
 
     @Override
 	public int hashCode() {
