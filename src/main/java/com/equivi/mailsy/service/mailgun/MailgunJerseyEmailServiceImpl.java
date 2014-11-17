@@ -29,21 +29,15 @@ import java.util.List;
 @Service("mailgunJerseyService")
 public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
+    private static final String API_USERNAME = "api";
+    private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
+    private static final Logger LOG = LoggerFactory.getLogger(MailgunJerseyEmailServiceImpl.class);
     @Resource
     private WebConfiguration webConfiguration;
-
     @Resource
     private MailgunUtility mailgunUtility;
-
-    private static final String API_USERNAME = "api";
-
-    private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
-
     @Resource
     private ObjectMapper objectMapper;
-
-    private static final Logger LOG = LoggerFactory.getLogger(MailgunJerseyEmailServiceImpl.class);
-
 
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
@@ -170,7 +164,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
     }
 
     @Override
-    public boolean isUnsubscribe(String domain, String emailAddress) {
+    public boolean checkIfEmailAddressHasBeenUnsubscribed(String domain, String emailAddress) {
         return false;
     }
 

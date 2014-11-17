@@ -3,7 +3,6 @@ package com.equivi.mailsy.service.mailgun;
 
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 
-import java.io.File;
 import java.util.List;
 
 public interface MailgunService {
@@ -21,5 +20,5 @@ public interface MailgunService {
 
     List<String> getUnsubscribeList(String domain);
 
-    boolean isUnsubscribe(String domain, String emailAddress);
+    boolean checkIfEmailAddressHasBeenUnsubscribed(String domain, String emailAddress);
 }

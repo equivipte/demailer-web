@@ -2,8 +2,8 @@ package com.equivi.mailsy.service.campaign.queue;
 
 import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.ContactEntity;
-import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberContactEntity;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
@@ -24,16 +24,13 @@ import java.util.List;
 @Component
 public class QueueCampaignMailerConverter {
 
+    private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignMailerConverter.class);
     @Resource
     private SubscriberGroupService subscriberGroupService;
-
     @Resource
     private ContactManagementService contactManagementService;
-
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignMailerConverter.class);
 
     public List<QueueCampaignMailerEntity> convertToQueueCampaignMailerList(List<CampaignSubscriberGroupEntity> campaignSubscriberGroupEntityList) {
         List<QueueCampaignMailerEntity> queueCampaignMailerEntityList = new ArrayList<>();
@@ -45,28 +42,15 @@ public class QueueCampaignMailerConverter {
 
             if (subscriberContactEntityList != null && !subscriberContactEntityList.isEmpty()) {
                 for (SubscriberContactEntity subscriberContactEntity : subscriberContactEntityList) {
-                    if (subscriberContactEntity.getContactEntity().getSubscribeStatus().equals(SubscribeStatus.SUBSCRIBED)) {
-
+                    if (isSubscribed(subscriberContactEntity)) {
                         //Check latest unsubscribe status at Mailgun
-                        if (mailgunService.isUnsubscribe(null, subscriberContactEntity.getContactEntity().getEmailAddress())) {
+                        if (mailgunService.checkIfEmailAddressHasBeenUnsubscribed(null, subscriberContactEntity.getContactEntity().getEmailAddress())) {
                             updateContactEntityToUnsubscribed(subscriberContactEntity);
                         } else {
-                            QueueCampaignMailerEntity queueCampaignMailerEntity = new QueueCampaignMailerEntity();
-                            queueCampaignMailerEntity.setCampaignId(campaignSubscriberGroupEntity.getCampaignEntity().getId());
+                            QueueCampaignMailerEntity queueCampaignMailerEntity = createQueueCampaignMailerEntity(campaignSubscriberGroupEntity, subscriberContactEntity);
 
-                            queueCampaignMailerEntity.setContent(replaceEmailContentWithParams(subscriberContactEntity,
-                                    campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent()));
-                            queueCampaignMailerEntity.setSubject(campaignSubscriberGroupEntity.getCampaignEntity().getEmailSubject());
-                            queueCampaignMailerEntity.setEmailFrom(campaignSubscriberGroupEntity.getCampaignEntity().getEmailFrom());
-                            queueCampaignMailerEntity.setRecipient(subscriberContactEntity.getContactEntity().getEmailAddress());
-                            queueCampaignMailerEntity.setScheduledSendDate(campaignSubscriberGroupEntity.getCampaignEntity().getScheduledSendDate());
-
-                            //Set Mail Delivery status to PENDING send
-                            queueCampaignMailerEntity.setQueueProcessed(QueueProcessed.PENDING.getStatus());
-
-
-                            if (!queueCampaignMailerEntityList.contains(queueCampaignMailerEntity)) {
-                                LOG.info("Add email to queue:"+queueCampaignMailerEntity.getRecipient());
+                            if (isUniqueCampaign(queueCampaignMailerEntityList, queueCampaignMailerEntity)) {
+                                LOG.info("Add email to queue:" + queueCampaignMailerEntity.getRecipient());
                                 queueCampaignMailerEntityList.add(queueCampaignMailerEntity);
                             }
                         }
@@ -75,6 +59,30 @@ public class QueueCampaignMailerConverter {
             }
         }
         return queueCampaignMailerEntityList;
+    }
+
+    private boolean isSubscribed(SubscriberContactEntity subscriberContactEntity) {
+        return subscriberContactEntity.getContactEntity().getSubscribeStatus().equals(SubscribeStatus.SUBSCRIBED);
+    }
+
+    private QueueCampaignMailerEntity createQueueCampaignMailerEntity(CampaignSubscriberGroupEntity campaignSubscriberGroupEntity, SubscriberContactEntity subscriberContactEntity) {
+        QueueCampaignMailerEntity queueCampaignMailerEntity = new QueueCampaignMailerEntity();
+        queueCampaignMailerEntity.setCampaignId(campaignSubscriberGroupEntity.getCampaignEntity().getId());
+
+        queueCampaignMailerEntity.setContent(replaceEmailContentWithParams(subscriberContactEntity,
+                campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent()));
+        queueCampaignMailerEntity.setSubject(campaignSubscriberGroupEntity.getCampaignEntity().getEmailSubject());
+        queueCampaignMailerEntity.setEmailFrom(campaignSubscriberGroupEntity.getCampaignEntity().getEmailFrom());
+        queueCampaignMailerEntity.setRecipient(subscriberContactEntity.getContactEntity().getEmailAddress());
+        queueCampaignMailerEntity.setScheduledSendDate(campaignSubscriberGroupEntity.getCampaignEntity().getScheduledSendDate());
+
+        //Set Mail Delivery status to PENDING send
+        queueCampaignMailerEntity.setQueueProcessed(QueueProcessed.PENDING.getStatus());
+        return queueCampaignMailerEntity;
+    }
+
+    private boolean isUniqueCampaign(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList, QueueCampaignMailerEntity queueCampaignMailerEntity) {
+        return !queueCampaignMailerEntityList.contains(queueCampaignMailerEntity);
     }
 
     private void updateContactEntityToUnsubscribed(SubscriberContactEntity subscriberContactEntity) {

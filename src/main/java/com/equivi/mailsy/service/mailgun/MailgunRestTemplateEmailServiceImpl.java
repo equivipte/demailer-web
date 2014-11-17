@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.Resource;
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -36,23 +35,18 @@ import java.util.Map;
 @Service("mailgunRestTemplateEmailService")
 public class MailgunRestTemplateEmailServiceImpl implements MailgunService {
 
-    @Resource
-    private WebConfiguration webConfiguration;
-
-    @Resource
-    private DemailerRestTemplate demailerRestTemplate;
-
     private static final Logger LOG = LoggerFactory.getLogger(MailgunRestTemplateEmailServiceImpl.class);
-
     private static final String API_USERNAME = "api";
-
     private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
-
     private static final ObjectMapper objectMapper = new ObjectMapper();
-
     static {
         objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     }
+
+    @Resource
+    private WebConfiguration webConfiguration;
+    @Resource
+    private DemailerRestTemplate demailerRestTemplate;
 
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
@@ -259,7 +253,7 @@ public class MailgunRestTemplateEmailServiceImpl implements MailgunService {
     }
 
     @Override
-    public boolean isUnsubscribe(String domain, String emailAddress) {
+    public boolean checkIfEmailAddressHasBeenUnsubscribed(String domain, String emailAddress) {
         String unsubscribeUrl = buildRegisterUnsubscribeUrl(getDomain(domain), emailAddress);
         setupHttpClientCredentials(unsubscribeUrl);
         ResponseEntity<String> response = demailerRestTemplate.getForEntity(unsubscribeUrl, String.class);
