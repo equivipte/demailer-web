@@ -3,12 +3,12 @@
 <%@taglib uri="http://www.springframework.org/tags/form" prefix="form"%>
 
 <script>
-    paceOptions = {
-        // Configuration goes here. Example:
-        elements: false,
-        restartOnPushState: false,
-        restartOnRequestAfter: false
-    };
+		paceOptions = {  
+		  // Configuration goes here. Example:  
+		  elements: false,  
+		  restartOnPushState: false,  
+		  restartOnRequestAfter: false  
+		};  	
 </script>
 
 <c:set var="context" value="${pageContext.request.contextPath}"/>
@@ -25,164 +25,148 @@
     </p>
 </div>
 
-<div id="progress" class="hide">
-    <div class="spinner">
-        <div class="rect1"></div>
-        <div class="rect2"></div>
-        <div class="rect3"></div>
-        <div class="rect4"></div>
-        <div class="rect5"></div>
-    </div>
-
-    <span id="scanning"><span></span></span>
-    <span id="terminating"><span></span></span>
+<div id="progresspanel" class="hide">
+    <span id="crawlinginprogress"><span></span></span>
 </div>
 
 <div class="widget-main no-padding">
-    <table>
-        <td>
-            <div>
-                <spring:message code="label.please.type.site.search" var="siteSearch"/>
-                <input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
-            </div>
-        </td>
-        <td>
-            <div id="crawlingsearch">
-                <button id="crawling" class="btn btn-sm btn-info">
-                    <i class="icon-search white bigger-120 crawlingsearch"></i>
-                    <spring:message code="label.search"/>
-                </button>
-            </div>
-            <div id="crawlingcancel" class="hide">
-                <button id="cancelcrawling" class="btn btn-sm btn-info">
-                    <spring:message code="label.stop"/>
-                </button>
-            </div>
-        </td>
-    </table>
+	<table>
+	    <td>
+	        <div>
+	        	<spring:message code="label.please.type.site.search" var="siteSearch"/>
+	        	<input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
+	        	<input id="progressstatus" type="hidden" value="${inProgress}"/>
+	        </div>
+	    </td>
+	    <td>
+           <div id="searchcrawling">
+           		<button id="crawlingbtn" class="btn btn-sm btn-info">
+	           		<i class="icon-search white bigger-120 crawlingsearch"></i>
+	            	<spring:message code="label.search"/>
+            	</button>
+           </div>
+	    </td>
+	</table>
 </div>
-&nbsp;
-&nbsp;
-&nbsp;
-<div id="table_result" class="table-responsive">
-    <table id="emailTable" class="table table-striped table-bordered table-hover">
-        <thead>
-        <tr>
-            <th><spring:message code="label.common.emailaddress"/></th>
-        </tr>
-        </thead>
-
-        <tbody>
-        </tbody>
-    </table>
-</div>
-
-<div class="pull-left">
-    <a href="#">
-        <button class="btn btn-info" id="export-btn">
-            <i class="icon-mail-forward white bigger-120"></i>
-            <spring:message code="label.common.export_results_to_excel"/>
-        </button>
-    </a>
-
-    <a href="#">
-        <button class="btn btn-info" id="verify-emails-btn">
-            <i class="icon-ok white bigger-120"></i>
-            <spring:message code="label.common.verify_email_list"/>
-        </button>
-    </a>
-</div>
-</br>
-</br>
-</br>
 <style>
     div#sb-container {
         z-index: 10000;
     }
 </style>
 
-<script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
-    $(document).ready(function() {
+    var allow = true;
+    var timer = null;
 
-        $("#crawling").click(function(){
-            $("#progress").removeClass("hide");
-            $("#progress").addClass("show");
-            $("#url").prop('disabled', true);
-            $("#crawlingsearch").toggleClass("hide");
-            $("#crawlingcancel").toggleClass("hide");
+    function verifyEmail() {
+        window.location.href = "${context}/main/merchant/emailverifier/verify";
+    }
 
-            $("#cancelcrawling").removeAttr('disabled');
+	$(document).ready(function() {
+	    checkStatus();
 
-            $("#emailTable").find("tr:gt(0)").remove();
+		$('#crawlingbtn').click(function(){
+            inProgressMode();
 
             var url = $("#url").val();
 
-            var startUrl = "${context}/main/emailcollector/async/begin";
-            var pollUrl = "${context}/main/emailcollector/async/update";
-            var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
-            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
-            var poll = new Poll();
-            poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
-        });
-
-        $("#cancelcrawling").click(function() {
-            var poll = new Poll();
-
-            var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
-            poll.cancelCrawling(cancelUrl);
-        });
-
-        $("#verify-emails-btn").click(function() {
-            var emails = getEmailsInTable();
-
-            $.ajax({
-                url : "${context}/main/emailcollector/putResultToSession",
+		    var request = $.ajax({
+                url : "${context}/main/emailcollector/passToPopup",
                 type : "POST",
-                data : JSON.stringify(emails),
-                contentType: 'application/json',
-                success: function() {
-                    window.location.href = "${context}/main/merchant/emailverifier/verify";
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
-                }
+                data : url,
+                contentType: 'application/json'
+            });
+
+            request.done(function() {
+                window.open("${context}/main/emailcollector/popup", "Email Collector", "scrollbars=yes,height=640,width=860");
+
+                setInterval(function() {
+                        if(allow === true) {
+                            allow = false;
+                            updatePopupSessionStatus();
+                        }
+                }, 500);
+
+                $("#url").val('');
+            });
+
+            request.fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Polling - the following error occured: " + textStatus, errorThrown);
+            });
+
+            request.always(function() {
+                updatePopupSessionStatus();
             });
 
         });
 
-        $("#export-btn").click(function() {
-            var emails = getEmailsInTable();
+        function updatePopupSessionStatus() {
+            var popUpStatusUrl = "${context}/main/emailcollector/updatePopupSessionStatus";
 
-            $.ajax({
-                url : "${context}/main/emailcollector/putResultToSession",
-                type : "POST",
-                data : JSON.stringify(emails),
-                contentType: 'application/json',
-                success: function() {
-                    window.location.href = "${context}/main/emailcollector/exportToExcel";
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Export to excel - the following error occured: " + textStatus, errorThrown);
-                }
+            var requestComplete = $.ajax({
+                url : popUpStatusUrl,
+                type : "get",
             });
-        });
-    });
 
-    function getEmailsInTable() {
-        var table = $("#emailTable > tbody");
+            requestComplete.done(function(message) {
+                var inprogress = message;
 
-        var emails = [];
+                if(inprogress == 'true') {
+                     allow = true;
 
-        table.find('tr').each(function (i) {
-            var $tds = $(this).find('td'),email = $tds.eq(0).text();
+                     inProgressMode();
 
-            emails.push(email);
+                 } else {
+                     allow = false;
 
-        });
+                     nonProgressMode();
+                     clearInterval(timer);
+                 }
+            });
 
-        return emails;
-    }
+            requestComplete.fail(function(jqXHR, textStatus, errorThrown) {
+                console.log("Polling - the following error occured: " + textStatus, errorThrown);
+            });
+        }
+
+        function checkStatus() {
+            var progressstatus = $("#progressstatus").val();
+
+            if(progressstatus === 'true') {
+                inProgressMode();
+
+                var fCheckStatus = function() {
+                    updatePopupSessionStatus();
+                };
+                timer = setInterval(fCheckStatus, 1000);
+            } else {
+                nonProgressMode();
+                clearInterval(timer);
+            }
+        }
+
+        function inProgressMode() {
+            $("#url").prop('disabled', true);
+            $("#crawlingbtn").prop('disabled', true);
+
+            $("#progresspanel").removeClass("hide");
+            $("#progresspanel").addClass("show");
+
+            $('#crawlinginprogress span').text('Crawling session has already started');
+        }
+
+        function nonProgressMode() {
+            $("#url").prop('disabled', false);
+            $("#url").val('');
+
+            $("#progresspanel").removeClass("show");
+            $("#progresspanel").addClass("hide");
+
+            $("#crawlingbtn").removeAttr('disabled');
+            $('#crawlinginprogress span').text('');
+        }
+
+	});
 </script>

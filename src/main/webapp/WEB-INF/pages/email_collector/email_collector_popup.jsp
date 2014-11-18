@@ -43,7 +43,7 @@
 	    <td>
 	        <div>
 	        	<spring:message code="label.please.type.site.search" var="siteSearch"/>
-	        	<input id="url" path="site" size="100" maxlength="255" placeholder="${siteSearch}"/>
+	        	<input id="url" path="site" size="100" maxlength="255" value="${siteUrl}" placeholder="${siteSearch}"/>
 	        </div>
 	    </td>
 	    <td>
@@ -77,7 +77,7 @@
     </table>
 </div>
 
-<div class="pull-left">
+<div id="buttons" class="pull-left">
     <a href="#">
         <button class="btn btn-info" id="export-btn">
             <i class="icon-mail-forward white bigger-120"></i>
@@ -101,43 +101,34 @@
     }
 </style>
 
-<script type="text/javascript" src="<c:url value='/resources/js/jquery.popupwindow.js' /> "></script>
 <script type="text/javascript" src="<c:url value='/resources/js/crawlingpolling.js' /> "></script>
 <link href="<c:url value="/resources/css/crawlingpolling.css" />" rel="stylesheet">
 
 <script type="text/javascript">
+
 	$(document).ready(function() {
+        var poll = new Poll();
+        poll.showHideButtons();
+		runCrawling();
 
-		$('#crawling').click(function(){
-            $("#progress").removeClass("hide");
-            $("#progress").addClass("show");
-            $("#url").prop('disabled', true);
-            $("#crawlingsearch").toggleClass("hide");
-            $("#crawlingcancel").toggleClass("hide");
+        $('#crawling').click(function(){
+            $("#terminating").removeClass("show");
+            $("#terminating").addClass("hide");
 
-            $("#cancelcrawling").removeAttr('disabled');
+            $("#scanning").removeClass("hide");
+            $("#scanning").addClass("show");
 
-            $("#emailTable").find("tr:gt(0)").remove();
+            $('#scanning span').text('');
 
-            var url = $("#url").val();
-
-            var startUrl = "${context}/main/emailcollector/async/begin";
-            var pollUrl = "${context}/main/emailcollector/async/update";
-            var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
-            var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
-            var poll = new Poll();
-            poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
+            runCrawling();
         });
 
 		$("#cancelcrawling").click(function() {
-            var poll = new Poll();
-
-            var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
-            poll.cancelCrawling(cancelUrl);
+            cancelcrawling();
 		});
 
 		$("#verify-emails-btn").click(function() {
-            var emails = getEmailsInTable();
+		    var emails = getEmailsInTable();
 
             $.ajax({
                 url : "${context}/main/emailcollector/putResultToSession",
@@ -145,13 +136,13 @@
                 data : JSON.stringify(emails),
                 contentType: 'application/json',
                 success: function() {
-                    window.location.href = "${context}/main/merchant/emailverifier/verify";
+                    window.opener.verifyEmail();
+                    window.close();
                 },
                 error: function(jqXHR, textStatus, errorThrown) {
                     console.log("Email verifier - the following error occured: " + textStatus, errorThrown);
                 }
             });
-
 		});
 
 		$("#export-btn").click(function() {
@@ -170,7 +161,60 @@
                 }
             });
 		});
+
+		$(window).bind('beforeunload', function(){
+		    cancelcrawling();
+
+            $.ajax({
+                url : "${context}/main/emailcollector/terminatePopupSession",
+                type : "GET",
+                success: function() {
+                    console.log("Crawling session is terminated");
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    console.log("Crawling session termination - the following error occured: " + textStatus, errorThrown);
+                }
+            });
+        });
 	});
+
+	var poll = new Poll();
+
+	function runCrawling() {
+	    $("#progress").removeClass("hide");
+        $("#progress").addClass("show");
+        $("#url").prop('disabled', true);
+        $("#crawlingsearch").toggleClass("hide");
+        $("#crawlingcancel").toggleClass("hide");
+
+        $("#cancelcrawling").removeAttr('disabled');
+
+        $("#emailTable").find("tr:gt(0)").remove();
+
+        var url = $("#url").val();
+
+        var startUrl = "${context}/main/emailcollector/async/begin";
+        var pollUrl = "${context}/main/emailcollector/async/update";
+        var scanningUrl = "${context}/main/emailcollector/async/updateUrlScanning";
+        var crawlingStatusUrl = "${context}/main/emailcollector/updateCrawlingStatus";
+        poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
+	}
+
+	function cancelcrawling() {
+        var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+
+        $("#scanning").removeClass("show");
+        $("#scanning").addClass("hide");
+
+        $("#terminating").removeClass("hide");
+        $("#terminating").addClass("show");
+
+        $("#cancelcrawling").attr('disabled', 'disabled');
+
+        $('#terminating span').text('Terminating site crawlers...Please wait..');
+
+        poll.cancelCrawling(cancelUrl);
+	}
 
 	function getEmailsInTable() {
         var table = $("#emailTable > tbody");

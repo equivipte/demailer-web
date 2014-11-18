@@ -104,7 +104,7 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public void updateUnsubscribeStatusFromMailgun(String emailAddress) {
-        if (mailgunService.isUnsubscribe(null, emailAddress)) {
+        if (mailgunService.checkIfEmailAddressHasBeenUnsubscribed(null, emailAddress)) {
             //Update unsubscribed in contact
             ContactEntity contactEntity = getContactEntityByEmailAddress(emailAddress);
             contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);

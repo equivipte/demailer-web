@@ -29,23 +29,15 @@ import java.util.List;
 @Service("mailgunJerseyService")
 public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
+    private static final String API_USERNAME = "api";
+    private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
+    private static final Logger LOG = LoggerFactory.getLogger(MailgunJerseyEmailServiceImpl.class);
     @Resource
     private WebConfiguration webConfiguration;
-
     @Resource
     private MailgunUtility mailgunUtility;
-
-    private static final String API_USERNAME = "api";
-
-    private static final String DOMAIN_SANDBOX = "sandbox80dd6c12cf4c4f99bdfa256bfea7cfeb.mailgun.org";
-
-    private static final ObjectMapper objectMapper = new ObjectMapper();
-
-    private static final Logger LOG = LoggerFactory.getLogger(MailgunJerseyEmailServiceImpl.class);
-
-    static {
-        objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
-    }
+    @Resource
+    private ObjectMapper objectMapper;
 
     @Override
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
@@ -70,6 +62,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
         MailgunResponseMessage mailgunResponseMessage = null;
         try {
+            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
         } catch (IOException e) {
             LOG.error(e.getMessage(),e);
@@ -145,6 +138,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
         MailgunResponseMessage mailgunResponseMessage = null;
         try {
+            objectMapper.configure(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES, false);
             mailgunResponseMessage = objectMapper.readValue(responseBody, MailgunResponseMessage.class);
         } catch (IOException e) {
            LOG.error(e.getMessage(),e);
@@ -170,7 +164,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
     }
 
     @Override
-    public boolean isUnsubscribe(String domain, String emailAddress) {
+    public boolean checkIfEmailAddressHasBeenUnsubscribed(String domain, String emailAddress) {
         return false;
     }
 

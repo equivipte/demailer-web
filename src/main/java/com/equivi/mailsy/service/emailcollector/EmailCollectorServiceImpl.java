@@ -1,23 +1,26 @@
 package com.equivi.mailsy.service.emailcollector;
 
+import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.shutdown.Hook;
 import com.equivi.mailsy.shutdown.ShutdownService;
 import com.equivi.mailsy.util.EmailCrawler;
 import com.equivi.mailsy.util.WebConfigUtil;
+import com.google.common.collect.Lists;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.Random;
+import java.util.*;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,7 +31,8 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 	private static final Logger logger = LoggerFactory.getLogger(EmailCollectorServiceImpl.class);
 
 	private final BlockingQueue<DeferredResult<EmailCollectorMessage>> resultQueue = new LinkedBlockingQueue<>();
-    private final BlockingQueue<EmailCollectorMessage> duplicateQueue = new LinkedBlockingQueue<>();
+
+    private static final Set<EmailCollectorMessage> duplicateEmails = new HashSet<>();
 
 	private Thread thread;
 	
@@ -48,26 +52,36 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 		while(hook.keepRunning()) {
 			try {
 				DeferredResult<EmailCollectorMessage> result = resultQueue.take();
-				EmailCollectorMessage message = EmailCrawler.queue.take();
 
-                if(duplicateQueue.isEmpty() || !duplicateQueue.contains(message)) {
+                if(duplicateEmails.isEmpty()) {
+                    EmailCollectorMessage message = EmailCrawler.queue.take();
+
                     result.setResult(message);
-                }
 
-                if(EmailCrawler.queue.contains(message)) {
-                    for (EmailCollectorMessage messageFromQueue : EmailCrawler.queue) {
-                        if(message.equals(messageFromQueue)) {
-                            EmailCrawler.queue.remove(messageFromQueue);
+                    duplicateEmails.add(message);
+                } else {
+                    Iterator<EmailCollectorMessage> it = EmailCrawler.queue.iterator();
+
+                    List<String> emails = Lists.newArrayList();
+
+                    while(it.hasNext()) {
+                        EmailCollectorMessage message = it.next();
+
+                        if(!duplicateEmails.contains(message)) {
+                            duplicateEmails.add(message);
+                            emails.add(message.getEmail());
                         }
+
+                        it.remove();
+                    }
+
+
+                    if(!emails.isEmpty()) {
+                        EmailCollectorMessage message = new EmailCollectorMessage(StringUtils.join(emails, ","));
+
+                        result.setResult(message);
                     }
                 }
-
-                if(!resultQueue.isEmpty()) {
-                    resultQueue.clear();
-                }
-
-                duplicateQueue.add(message);
-
 			} catch (InterruptedException e) {
 				logger.warn("Interrupted when waiting for latest update. "
                         + e.getMessage());
@@ -155,9 +169,9 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
     private void clearQueue() {
         EmailScanningServiceImpl.resultUrlQueue.clear();
         resultQueue.clear();
-        duplicateQueue.clear();
         EmailCrawler.queue.clear();
         EmailCrawler.urlQueue.clear();
+        duplicateEmails.clear();
     }
 
 }
