@@ -60,10 +60,21 @@
             </button>
         </a>
     </div>
+
+    </br>
+    </br>
+    </br>
+
+    <div id="quota" class="panel panel-primary">
+        <div class="panel-heading">
+            <h3 class="panel-title">Quota Information</h3>
+          </div>
+          <div class="panel-body">
+            You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You already used <span class="label label-danger">${quota.currentEmailsVerified}</span> emails.
+          </div>
+    </div>
 </c:if>
-</br>
-</br>
-</br>
+
 <style>
     div#sb-container {
         z-index: 10000;

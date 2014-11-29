@@ -16,9 +16,13 @@ function Poll() {
         if(table.find('tr').length > 0) {
             $("#buttons").removeClass("hide");
             $("#buttons").addClass("show");
+            $("#quota").removeClass("hide");
+            $("#quota").addClass("show");
         } else {
             $("#buttons").removeClass("show");
             $("#buttons").addClass("hide");
+            $("#quota").removeClass("show");
+            $("#quota").addClass("hide");
         }
     };
 

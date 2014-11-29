@@ -1,8 +1,12 @@
 package com.equivi.mailsy.web.controller;
 
+import com.equivi.mailsy.data.entity.QuotaEntity;
 import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
+import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
+import com.equivi.mailsy.service.quota.QuotaService;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -26,6 +30,9 @@ public class EmailVerifierController {
     @Resource(name = "bytePlantVerifierService")
     private VerifierService verifierService;
 
+    @Autowired
+    private QuotaService quotaService;
+
     @RequestMapping(value = "emailverifier", method = RequestMethod.GET)
     public String getEmailVerifierPage(Model model) {
         return "emailVerifierPage";
@@ -34,9 +41,7 @@ public class EmailVerifierController {
     @RequestMapping(value = "emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public
-    @ResponseBody
-    EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
+    public @ResponseBody EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
         return verifierService.getEmailAddressStatus(emailVerifierResult.getEmailAddress());
     }
 
@@ -46,6 +51,13 @@ public class EmailVerifierController {
         List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 
         if (resultEmails != null && !resultEmails.isEmpty()) {
+            QuotaDTO quotaDTO = new QuotaDTO();
+            quotaDTO.setCurrentEmailsVerified(resultEmails.size());
+
+            quotaDTO = quotaService.saveQuotaEntity(quotaDTO);
+
+            model.addAttribute("quota", quotaDTO);
+
             for (String email : resultEmails) {
                 emailVerifierResponses.add(new EmailVerifierResult()
                         .setEmailAddressResult(email)

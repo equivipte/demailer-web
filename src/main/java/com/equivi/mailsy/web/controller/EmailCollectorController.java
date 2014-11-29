@@ -1,12 +1,15 @@
 package com.equivi.mailsy.web.controller;
 
+import com.equivi.mailsy.data.entity.QuotaEntity;
 import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.dto.emailer.EmailCollectorStatusMessage;
 import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
+import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningService;
 import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
+import com.equivi.mailsy.service.quota.QuotaService;
 import org.apache.commons.lang3.BooleanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,6 +45,9 @@ public class EmailCollectorController {
 
     @Autowired
     private EmailScanningService emailScanningService;
+
+    @Autowired
+    private QuotaService quotaService;
     
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
     public String loadNewPage(Model model, HttpServletRequest request) {
@@ -65,6 +71,9 @@ public class EmailCollectorController {
     public String loadPopup(Model model, HttpServletRequest request) {
         String url = (String) request.getSession().getAttribute(SESSION_SITE_URL);
         model.addAttribute(SITE_URL, url);
+
+        QuotaDTO quota = quotaService.getQuota();
+        model.addAttribute("quota", quota);
 
         return EMAIL_COLLECTOR_POPUP;
     }

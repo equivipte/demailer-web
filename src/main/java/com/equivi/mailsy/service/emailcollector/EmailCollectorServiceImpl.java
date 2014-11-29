@@ -1,6 +1,5 @@
 package com.equivi.mailsy.service.emailcollector;
 
-import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.shutdown.Hook;
