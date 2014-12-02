@@ -247,7 +247,7 @@ public class MailgunRestTemplateEmailServiceImpl implements MailgunService {
             for (UnsubscribeResponseItems item : responseBody.getItems()) {
                 unsubscribeEmailAddressList.add(item.getAddress());
             }
-
+            return unsubscribeEmailAddressList;
         }
         return Lists.newArrayList();
     }
