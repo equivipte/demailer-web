@@ -12,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -20,19 +19,15 @@ import java.util.List;
 @Component
 public class CampaignUpdateWorker {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CampaignUpdateWorker.class);
     @Resource
     private QueueCampaignService queueCampaignService;
-
     @Resource
     private CampaignActivityService campaignActivityService;
-
     @Resource
     private ContactManagementService contactManagementService;
-
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(CampaignUpdateWorker.class);
 
     @Scheduled(fixedDelay = 30000)
     public void collectCampaignQueueAndSendMail() {
@@ -45,7 +40,7 @@ public class CampaignUpdateWorker {
         }
     }
 
-    @Scheduled(fixedDelay = 120000)
+    @Scheduled(fixedDelay = 50000)
     public void updateUnsubscribeStatus() {
 
         LOG.info("Update unsubscribe status");
