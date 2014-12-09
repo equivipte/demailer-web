@@ -19,10 +19,10 @@
     </h1>
 </div>
 
-<div id="dialog-message" class="hide">
-    <p>
-        Nothing to select
-    </p>
+<div id="info-keyword" class="alert alert-info">
+    <strong>
+        <spring:message code="label.full.url.info"/>
+    </strong>
 </div>
 
 <div id="progresspanel" class="hide">
