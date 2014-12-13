@@ -96,12 +96,24 @@
 </br>
 </br>
 
+<input type="hidden" id="emailVerifyQuota" value="${quota.emailVerifyQuota}">
+<input type="hidden" id="emailVerifyQuotaUsed" value="${quota.currentEmailsVerified}">
+
 <div id="quota" class="panel panel-primary">
     <div class="panel-heading">
         <h3 class="panel-title">Quota Information</h3>
       </div>
       <div class="panel-body">
         You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You already used <span class="label label-danger">${quota.currentEmailsVerified}</span> emails.
+      </div>
+</div>
+
+<div id="quota-exceeded" class="panel panel-primary">
+    <div class="panel-heading">
+        <h3 class="panel-title">Quota Information</h3>
+      </div>
+      <div class="panel-body">
+        You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You have exceeded your quota. Please contact your administrator.
       </div>
 </div>
 
@@ -173,8 +185,6 @@
 		});
 
 		$(window).bind('beforeunload', function(){
-		    cancelcrawling();
-
             $.ajax({
                 url : "${context}/main/emailcollector/terminatePopupSession",
                 type : "GET",
@@ -185,6 +195,8 @@
                     console.log("Crawling session termination - the following error occured: " + textStatus, errorThrown);
                 }
             });
+
+            cancelcrawling();
         });
 	});
 
