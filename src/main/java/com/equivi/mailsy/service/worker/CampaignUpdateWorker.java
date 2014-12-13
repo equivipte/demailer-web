@@ -51,8 +51,11 @@ public class CampaignUpdateWorker {
             //Update unsubscribe status
             for (String unsubscribeEmailAddress : unsubscribeEmailAddressList) {
                 ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(unsubscribeEmailAddress);
-                contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
-                contactManagementService.saveContactEntity(contactEntity);
+
+                if(contactEntity != null) {
+                    contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
+                    contactManagementService.saveContactEntity(contactEntity);
+                }
             }
         }
 
