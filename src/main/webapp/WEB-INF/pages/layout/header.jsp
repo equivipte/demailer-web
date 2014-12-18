@@ -11,11 +11,14 @@
     </script>
 
     <div class="navbar-container" id="navbar-container">
+
         <div class="navbar-header pull-left">
             <a href="#" class="navbar-brand">
                 <small>
                     <i class="icon-envelope"></i>
                     <spring:message code="label.product.name"/>
+                    &copy;
+                    <img src="${pageContext.request.contextPath}/resources/images/equivi_logo.png"/>
                 </small>
             </a><!-- /.brand -->
         </div>

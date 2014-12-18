@@ -22,6 +22,7 @@
                         <span class="white"><spring:message code="label.product.name"/></span>
                     </h1>
                     <h4 class="blue"><spring:message code="label.copyright"/></h4>
+                    <img src="${pageContext.request.contextPath}/resources/images/equivi_logo.png"/>
                 </div>
 
                 <div class="space-6"></div>
