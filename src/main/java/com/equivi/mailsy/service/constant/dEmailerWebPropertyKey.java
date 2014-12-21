@@ -8,6 +8,7 @@ public enum dEmailerWebPropertyKey {
     PASSWORD_CHANGED_EMAIL_SUBJECT("password.changed.email.subject"),
     NEW_USER_EMAIL_SUBJECT("new.user.email.subject"),
     EMAIL_VERIFIER_IMPORT_LOCATION("email.verifier.import.location"),
+    EMAIL_VERIFIER_SERVICE("email.verifier.service"),
     EMAIL_VERIFIER_API_KEY("email.verifier.api.key"),
     EMAIL_VERIFIER_API_TIMEOUT("email.verifier.api.timeout"),
     EMAIL_VERIFIER_URL("email.verifier.url"),

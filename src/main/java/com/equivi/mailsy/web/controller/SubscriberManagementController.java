@@ -37,11 +37,6 @@ import java.util.Map;
 @Controller
 public class SubscriberManagementController extends AbstractController {
 
-    private static SimpleDateFormat sdf;
-
-    static {
-        sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
-    }
     @Resource
     private WebConfiguration webConfiguration;
     @Resource
@@ -160,7 +155,7 @@ public class SubscriberManagementController extends AbstractController {
                 } else {
                     subscriberGroupDTO.setSubscriberGroupStatus(GenericStatus.INACTIVE.getStatusDescription());
                 }
-                SubscriberGroupEntity subscriberGroupEntity = subscriberService.saveSubscriberGroup(subscriberGroupDTO);
+                subscriberService.saveSubscriberGroup(subscriberGroupDTO);
 
                 modelAndView = new ModelAndView();
                 String redirectData = "redirect:/main/merchant/subscriber_management/1";
@@ -193,6 +188,7 @@ public class SubscriberManagementController extends AbstractController {
     private List<SubscriberGroupDTO> convertToSubscribeGroupDTOList(List<SubscriberGroupEntity> subscriberGroupEntityList) {
         List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
 
+        SimpleDateFormat sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
         if (subscriberGroupEntityList != null && !subscriberGroupEntityList.isEmpty()) {
             for (SubscriberGroupEntity subscriberGroupEntity : subscriberGroupEntityList) {
                 SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();

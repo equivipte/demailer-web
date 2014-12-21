@@ -5,6 +5,7 @@ import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.rest.client.DemailerRestTemplate;
 import com.equivi.mailsy.util.WebConfigUtil;
+import com.google.common.collect.Lists;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-@Service("webEmailVerifierImpl")
-public class WebEmailVerifierImpl implements VerifierService {
+@Service(value = "webEmailVerifierService")
+public class WebEmailVerifierServiceImpl implements VerifierService {
 
-    private static final Logger LOG = LoggerFactory.getLogger(WebEmailVerifierImpl.class);
+    private static final Logger LOG = LoggerFactory.getLogger(WebEmailVerifierServiceImpl.class);
 
     private static final String OPERATION = "CheckEmail";
 
@@ -37,7 +38,7 @@ public class WebEmailVerifierImpl implements VerifierService {
             }
             return emailVerifierResponseList;
         }
-        return new ArrayList<>();
+        return Lists.newArrayList();
     }
 
 
@@ -56,11 +57,24 @@ public class WebEmailVerifierImpl implements VerifierService {
             LOG.info("Result:" + emailVerifierResponse.getBody());
 
             WebEmailVerifierResponse emailVerifierResponseEntity = objectMapper.readValue(emailVerifierResponse.getBody(), WebEmailVerifierResponse.class);
-            return new EmailVerifierResult();
+            return convertToEmailResult(emailAddress, emailVerifierResponseEntity);
         } catch (IOException e) {
             LOG.error(e.getMessage(), e);
         }
         return null;
+    }
+
+    private EmailVerifierResult convertToEmailResult(String emailAddress, WebEmailVerifierResponse emailVerifierResponseEntity) {
+        EmailVerifierResult emailVerifierResult = new EmailVerifierResult();
+        emailVerifierResult.setEmailAddress(emailAddress);
+        if (emailVerifierResponseEntity.getStatusCode().equals("Success")) {
+            emailVerifierResult.setStatus("Valid");
+        } else {
+            emailVerifierResult.setStatus("Invalid");
+        }
+        emailVerifierResult.setStatusDescription(emailVerifierResponseEntity.getStatus());
+
+        return emailVerifierResult;
     }
 
     private String buildVerifyEmailAddressQueryString(String emailAddress) {

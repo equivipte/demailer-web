@@ -1,10 +1,12 @@
 package com.equivi.mailsy.web.controller;
 
-import com.equivi.mailsy.data.entity.QuotaEntity;
 import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
 import com.equivi.mailsy.dto.quota.QuotaDTO;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
+import com.equivi.mailsy.service.emailverifier.EmailVerifierServiceFactory;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
 import com.equivi.mailsy.service.quota.QuotaService;
+import com.equivi.mailsy.util.WebConfigUtil;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -27,8 +29,8 @@ import java.util.Map;
 @RequestMapping("/main/merchant")
 public class EmailVerifierController {
 
-    @Resource(name = "bytePlantVerifierService")
-    private VerifierService verifierService;
+    @Resource(name = "emailVerifierServiceFactory")
+    private EmailVerifierServiceFactory emailVerifierServiceFactory;
 
     @Autowired
     private QuotaService quotaService;
@@ -41,7 +43,10 @@ public class EmailVerifierController {
     @RequestMapping(value = "emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
             produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
+    public
+    @ResponseBody
+    EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
+        VerifierService verifierService = emailVerifierServiceFactory.getEmailVerifierService(WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_SERVICE));
         return verifierService.getEmailAddressStatus(emailVerifierResult.getEmailAddress());
     }
 
