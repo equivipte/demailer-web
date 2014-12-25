@@ -14,19 +14,25 @@ function Poll() {
         var table = $("#emailTable > tbody");
 
         if(table.find('tr').length > 0) {
-            var emailVerifyQuota = $("#emailVerifyQuota").val();
-            var emailVerifyQuotaUsed = $("#emailVerifyQuotaUsed").val();
+            var emailVerifyQuota = parseInt($("#emailVerifyQuota").val());
+            var emailVerifyQuotaUsed = parseInt($("#emailVerifyQuotaUsed").val());
 
             $("#buttons").removeClass("hide");
             $("#buttons").addClass("show");
 
             if(emailVerifyQuotaUsed >= emailVerifyQuota) {
+                $("#quota").removeClass("show");
+                $("#quota").addClass("hide");
+
                 $("#quota-exceeded").removeClass("hide");
                 $("#quota-exceeded").addClass("show");
 
                 $("#buttons").removeClass("show0");
                 $("#verify-emails-btn").addClass("hide");
             } else {
+                $("#quota-exceeded").removeClass("show");
+                $("#quota-exceeded").addClass("hide");
+
                 $("#quota").removeClass("hide");
                 $("#quota").addClass("show");
             }

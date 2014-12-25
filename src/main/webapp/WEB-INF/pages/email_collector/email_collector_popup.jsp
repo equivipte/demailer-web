@@ -99,21 +99,21 @@
 <input type="hidden" id="emailVerifyQuota" value="${quota.emailVerifyQuota}">
 <input type="hidden" id="emailVerifyQuotaUsed" value="${quota.currentEmailsVerified}">
 
-<div id="quota" class="panel panel-primary">
+<div id="quota" class="alert alert-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Quota Information</h3>
-      </div>
-      <div class="panel-body">
-        You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You already used <span class="label label-danger">${quota.currentEmailsVerified}</span> emails.
-      </div>
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+    </div>
+    <div class="panel-body">
+        <spring:message code="label.quota.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+    </div>
 </div>
 
-<div id="quota-exceeded" class="panel panel-primary">
+<div id="quota-exceeded" class="alert alert-info">
     <div class="panel-heading">
-        <h3 class="panel-title">Quota Information</h3>
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
       </div>
       <div class="panel-body">
-        You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You have exceeded your quota. Please contact your administrator.
+        <spring:message code="label.quota.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
       </div>
 </div>
 
@@ -139,6 +139,15 @@
 
             $("#scanning").removeClass("hide");
             $("#scanning").addClass("show");
+
+            $("#buttons").removeClass("show");
+            $("#buttons").addClass("hide");
+
+            $("#quota").removeClass("show");
+            $("#quota").addClass("hide");
+
+            $("#quota-exceeded").removeClass("show");
+            $("#quota-exceeded").addClass("hide");
 
             $('#scanning span').text('');
 

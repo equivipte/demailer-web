@@ -65,12 +65,23 @@
     </br>
     </br>
 
-    <div id="quota" class="panel panel-primary">
+    <input type="hidden" id="partiallyVerified" value="${partiallyVerified}">
+
+    <div id="quota" class="alert alert-info hide">
         <div class="panel-heading">
-            <h3 class="panel-title">Quota Information</h3>
+            <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+        </div>
+        <div class="panel-body">
+            <spring:message code="label.quota.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+        </div>
+    </div>
+
+    <div id="quota-partially-verified" class="alert alert-info hide">
+        <div class="panel-heading">
+            <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
           </div>
           <div class="panel-body">
-            You have <span class="label label-info">${quota.emailVerifyQuota}</span> quota for email verification. You already used <span class="label label-danger">${quota.currentEmailsVerified}</span> emails.
+            <spring:message code="label.quota.partiallyverified" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
           </div>
     </div>
 </c:if>
@@ -173,6 +184,15 @@
                     }
                 });
             });
+
+            // quota info
+            var partiallyVerified = $("#partiallyVerified").val();
+
+            if(partiallyVerified === 'true') {
+                $("#quota-partially-verified").toggleClass("hide");
+            } else {
+                $("#quota").toggleClass("hide");
+            }
         }
 
         $("#export-btn").click(function() {
