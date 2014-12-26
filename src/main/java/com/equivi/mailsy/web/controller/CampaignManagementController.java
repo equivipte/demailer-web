@@ -8,6 +8,7 @@ import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
+import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
 import com.equivi.mailsy.service.campaign.CampaignSearchFilter;
@@ -16,6 +17,7 @@ import com.equivi.mailsy.service.constant.ConstantProperty;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.exception.InvalidDataException;
 import com.equivi.mailsy.service.mailgun.MailgunService;
+import com.equivi.mailsy.service.quota.QuotaService;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupSearchFilter;
 import com.equivi.mailsy.service.subsriber.SubscriberGroupService;
 import com.equivi.mailsy.util.WebConfigUtil;
@@ -24,6 +26,7 @@ import com.equivi.mailsy.web.message.ErrorMessage;
 import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -67,6 +70,8 @@ public class CampaignManagementController extends AbstractController {
     private MailgunService mailgunJerseyService;
     @Resource
     private SubscriberGroupService subscriberGroupService;
+    @Autowired
+    private QuotaService quotaService;
 
     @RequestMapping(value = "/main/merchant/campaignmanagement", method = RequestMethod.GET)
     public String getCampaignManagementPage() {
@@ -81,6 +86,9 @@ public class CampaignManagementController extends AbstractController {
         setCampaignList(model, campaignPage);
 
         setPagination(model, campaignPage);
+
+        QuotaDTO quota = quotaService.getQuota();
+        model.addAttribute("quota", quota);
 
         return "campaignManagementPage";
     }

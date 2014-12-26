@@ -104,7 +104,7 @@
         <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
     </div>
     <div class="panel-body">
-        <spring:message code="label.quota.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+        <spring:message code="label.quota.emailverify.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
     </div>
 </div>
 
@@ -113,7 +113,7 @@
         <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
       </div>
       <div class="panel-body">
-        <spring:message code="label.quota.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
+        <spring:message code="label.quota.emailverify.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
       </div>
 </div>
 
@@ -155,7 +155,7 @@
         });
 
 		$("#cancelcrawling").click(function() {
-            cancelcrawling();
+            cancelcrawling(false);
 		});
 
 		$("#verify-emails-btn").click(function() {
@@ -194,18 +194,7 @@
 		});
 
 		$(window).bind('beforeunload', function(){
-            $.ajax({
-                url : "${context}/main/emailcollector/terminatePopupSession",
-                type : "GET",
-                success: function() {
-                    console.log("Crawling session is terminated");
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Crawling session termination - the following error occured: " + textStatus, errorThrown);
-                }
-            });
-
-            cancelcrawling();
+            cancelcrawling(true);
         });
 	});
 
@@ -231,8 +220,8 @@
         poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
 	}
 
-	function cancelcrawling() {
-        var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+	function cancelcrawling(closePopup) {
+        var cancelUrl = "${context}/main/emailcollector/cancelCrawling?close_popup=" + closePopup;
 
         $("#scanning").removeClass("show");
         $("#scanning").addClass("hide");

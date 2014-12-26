@@ -72,7 +72,7 @@
             <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
         </div>
         <div class="panel-body">
-            <spring:message code="label.quota.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+            <spring:message code="label.quota.emailverify.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
         </div>
     </div>
 
@@ -81,7 +81,7 @@
             <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
           </div>
           <div class="panel-body">
-            <spring:message code="label.quota.partiallyverified" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
+            <spring:message code="label.quota.emailverify.partiallyverified" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
           </div>
     </div>
 </c:if>

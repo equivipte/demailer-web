@@ -134,17 +134,16 @@ public class EmailCollectorController {
 
     @RequestMapping(value = "cancelCrawling", method = RequestMethod.DELETE)
     @ResponseStatus(HttpStatus.OK)
-    public void cancelCrawling(HttpServletRequest request) {
+    public void cancelCrawling(@RequestParam("close_popup") boolean closePopup, HttpServletRequest request) {
+
+        if(closePopup) {
+            request.getSession().setAttribute(SESSION_POPUP, Boolean.FALSE);
+        }
+
         emailCollectorService.cancel();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.FALSE);
         request.getSession().removeAttribute(SESSION_SITE_URL);
-    }
-
-    @RequestMapping(value = "terminatePopupSession", method = RequestMethod.GET)
-    @ResponseStatus(HttpStatus.OK)
-    public void terminatePopupSession(HttpServletRequest request) {
-        request.getSession().setAttribute(SESSION_POPUP, Boolean.FALSE);
     }
 
     @RequestMapping(value = "putResultToSession", method = RequestMethod.POST)

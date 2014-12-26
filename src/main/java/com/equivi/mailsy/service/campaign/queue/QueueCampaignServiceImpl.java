@@ -5,11 +5,14 @@ import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
 import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QQueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
+import com.equivi.mailsy.dto.quota.QuotaDTO;
+import com.equivi.mailsy.service.quota.QuotaService;
 import com.google.common.collect.Lists;
 import com.mysema.query.BooleanBuilder;
 import com.mysema.query.types.Predicate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +28,9 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
 
     @Resource
     private QueueCampaignMailerConverter queueCampaignMailerConverter;
+
+    @Autowired
+    private QuotaService quotaService;
 
     private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignServiceImpl.class);
 
@@ -48,12 +54,18 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
     @Override
     @Transactional(readOnly = true)
     public List<QueueCampaignMailerEntity> getEmailQueueToSend() {
+        QuotaDTO quota = quotaService.getQuota();
+        long emailSendingQuota = quota.getEmailSendingQuota();
+        long currentEmailsSent = quota.getCurrentEmailsSent();
 
-        Iterable<QueueCampaignMailerEntity> queueCampaignMailerEntityIterable = queueCampaignMailerDao.findAll(getEmailQueueToSendPredicate());
+        if(currentEmailsSent < emailSendingQuota) {
+            Iterable<QueueCampaignMailerEntity> queueCampaignMailerEntityIterable = queueCampaignMailerDao.findAll(getEmailQueueToSendPredicate());
 
-        if (queueCampaignMailerEntityIterable.iterator().hasNext()) {
-            return Lists.newArrayList(queueCampaignMailerEntityIterable);
+            if (queueCampaignMailerEntityIterable.iterator().hasNext()) {
+                return Lists.newArrayList(queueCampaignMailerEntityIterable);
+            }
         }
+
         return null;
     }
 
