@@ -16,7 +16,8 @@ public enum dEmailerWebPropertyKey {
     MAILGUN_API_KEY("mailgun.api.key"),
     ADMIN_EMAIL_FROM("admin.email.from"),
     EMAIL_CRAWLING_STORAGE("email.crawling.storage.dir"),
-    EMAIL_CONTENT_PARAMS("emailcontent.params");
+    EMAIL_CONTENT_PARAMS("emailcontent.params"),
+    EMAIL_CRAWLING_FILTER("emailcrawling.filter");
 
 
     private String keyName;
