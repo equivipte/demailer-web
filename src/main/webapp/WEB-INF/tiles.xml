@@ -100,13 +100,22 @@
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_1.jsp"/>
     </definition>
 
-    <!--CAMPAIGN MANAGEMENT STEP 2-->
-    <definition name="campaignManagementEmailContentPage" extends="base.definition">
+    <!--CAMPAIGN MANAGEMENT STEP 2 Rich Text Template -->
+    <definition name="campaignManagementRichTextEmailContentPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb"
                        value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
-        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2a.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 2 Downloadable Email Template -->
+    <definition name="campaignManagementDownloadbleTemplateEmailContentPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2b.jsp"/>
     </definition>
 
     <!--CAMPAIGN MANAGEMENT STEP 3-->

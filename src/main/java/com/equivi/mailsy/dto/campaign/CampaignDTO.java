@@ -21,6 +21,8 @@ public class CampaignDTO implements Serializable {
     @NotEmpty(message = "campaign.emailfrom.empty")
     private String emailFrom;
 
+    private String emailTemplateType;
+
     private String emailContent;
 
     private String campaignStatus;
@@ -49,6 +51,14 @@ public class CampaignDTO implements Serializable {
 
     public void setEmailSubject(String emailSubject) {
         this.emailSubject = emailSubject;
+    }
+
+    public String getEmailTemplateType() {
+        return emailTemplateType;
+    }
+
+    public void setEmailTemplateType(String emailTemplateType) {
+        this.emailTemplateType = emailTemplateType;
     }
 
     public String getEmailContent() {

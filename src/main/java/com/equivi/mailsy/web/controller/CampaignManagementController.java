@@ -51,8 +51,10 @@ import java.util.StringTokenizer;
 @Controller
 public class CampaignManagementController extends AbstractController {
 
-    private static final String EMAIL_CONTENT_PAGE = "campaignManagementEmailContentPage";
+    private static final String RICH_TEXT_EMAIL_CONTENT_PAGE = "campaignManagementRichTextEmailContentPage";
+    private static final String DOWNLOADABLE_EMAIL_CONTENT_PAGE = "campaignManagementDownloadbleTemplateEmailContentPage";
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
+    private static final String SESSION_EMAIL_TEMPLATE_TYPE = "emailTemplateType";
     private static SimpleDateFormat dateTimeFormat;
 
     static {
@@ -105,13 +107,14 @@ public class CampaignManagementController extends AbstractController {
     }
 
     @RequestMapping(value = "/main/merchant/campaign_management/goToFinishPage", method = RequestMethod.GET)
-    public String goToFinishPage(ModelAndView modelAndView) {
+    public String goToFinishPage(ModelAndView modelAndView, HttpServletRequest request) {
+        request.getSession().removeAttribute(SESSION_EMAIL_TEMPLATE_TYPE);
 
         return "campaignManagementFinishPage";
     }
 
     @RequestMapping(value = "/main/merchant/campaign_management/saveAddCampaign", method = RequestMethod.POST)
-    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale) {
+    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale, HttpServletRequest request) {
 
         ModelAndView modelAndView;
         try {
@@ -119,15 +122,26 @@ public class CampaignManagementController extends AbstractController {
                 modelAndView = new ModelAndView("campaignManagementAddPage");
                 modelAndView.addObject("errors", errorMessage.buildFormValidationErrorMessages(result, locale));
             } else {
+                String emailTemplateType = campaignDTO.getEmailTemplateType();
 
                 campaignDTO.setCampaignStatus(CampaignStatus.DRAFT.getCampaignStatusDescription());
                 campaignDTO.setEmailContent("</br></br></br></br></br></br></br></br></br></br><a href=\"%unsubscribe_url%\">Click here</> to unsubscribe");
                 campaignDTO = campaignManagementService.saveCampaignDTO(campaignDTO);
 
                 modelAndView = new ModelAndView();
-                String redirectData = "redirect:" + campaignDTO.getId().toString() + "/" + EMAIL_CONTENT_PAGE;
+
+                String previousPage = RICH_TEXT_EMAIL_CONTENT_PAGE;
+
+                if(StringUtils.equalsIgnoreCase("DownloadableTemplate", emailTemplateType)) {
+                    previousPage = DOWNLOADABLE_EMAIL_CONTENT_PAGE;
+                }
+
+                String redirectData = "redirect:" + campaignDTO.getId().toString() + "/" + previousPage;
 
                 modelAndView.setViewName(redirectData);
+
+                request.getSession().setAttribute(SESSION_EMAIL_TEMPLATE_TYPE, emailTemplateType);
+
                 return modelAndView;
             }
         } catch (InvalidDataException idex) {

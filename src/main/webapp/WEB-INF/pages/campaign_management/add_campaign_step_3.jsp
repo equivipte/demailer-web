@@ -95,6 +95,8 @@
     </div>
 </div>
 
+<input type="hidden" id="emailTemplateType" value="${emailTemplateType}">
+
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
 
@@ -162,7 +164,17 @@
     }
 
     function goToStep2(campaignId){
-        window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementEmailContentPage");
+        var emailTemplateType = $("#emailTemplateType").val();
+
+        var previousPage;
+
+        if('RichText' === emailTemplateType) {
+            previousPage = 'campaignManagementRichTextEmailContentPage';
+        } else if('DownloadableTemplate') {
+            previousPage = 'campaignManagementDownloadbleTemplateEmailContentPage';
+        }
+
+        window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/" + previousPage);
     }
 
     $(document).ready(function () {
