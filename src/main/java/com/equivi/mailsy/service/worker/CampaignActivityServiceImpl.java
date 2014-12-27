@@ -5,16 +5,19 @@ import com.equivi.mailsy.data.dao.QueueCampaignMailerDao;
 import com.equivi.mailsy.data.entity.CampaignTrackerEntity;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.QueueProcessed;
+import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
 import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.mailgun.response.EventAPIType;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseItem;
+import com.equivi.mailsy.service.quota.QuotaService;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
 
@@ -37,6 +40,8 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
 
+    @Autowired
+    private QuotaService quotaService;
 
     private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
 
@@ -54,8 +59,14 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
                 updateQueueCampaignStatus(queueCampaignMailerEntity);
 
                 campaignTrackerService.createCampaignTracker(messageId, queueCampaignMailerEntity.getCampaignId(), queueCampaignMailerEntity.getRecipient());
+
             }
         }
+
+        QuotaDTO quotaDTO = new QuotaDTO();
+        quotaDTO.setCurrentEmailsSent(queueCampaignMailerEntityList.size());
+
+        quotaService.saveQuotaEntity(quotaDTO);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class CampaignUpdateWorker {
         List<QueueCampaignMailerEntity> emailQueueToSend = queueCampaignService.getEmailQueueToSend();
 
         if (emailQueueToSend != null && !emailQueueToSend.isEmpty()) {
-            campaignActivityService. sendEmail(emailQueueToSend);
+            campaignActivityService.sendEmail(emailQueueToSend);
         }
     }
 

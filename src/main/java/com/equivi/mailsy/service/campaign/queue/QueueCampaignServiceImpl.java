@@ -2,9 +2,9 @@ package com.equivi.mailsy.service.campaign.queue;
 
 import com.equivi.mailsy.data.dao.QueueCampaignMailerDao;
 import com.equivi.mailsy.data.entity.CampaignSubscriberGroupEntity;
-import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.data.entity.QQueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
+import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.quota.QuotaService;
 import com.google.common.collect.Lists;
@@ -62,7 +62,14 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
             Iterable<QueueCampaignMailerEntity> queueCampaignMailerEntityIterable = queueCampaignMailerDao.findAll(getEmailQueueToSendPredicate());
 
             if (queueCampaignMailerEntityIterable.iterator().hasNext()) {
-                return Lists.newArrayList(queueCampaignMailerEntityIterable);
+                int remainingEmailQuota = (int) (emailSendingQuota - currentEmailsSent);
+                List<QueueCampaignMailerEntity> queueCampaignMailerEntities = Lists.newArrayList(queueCampaignMailerEntityIterable);
+
+                if(remainingEmailQuota > queueCampaignMailerEntities.size()) {
+                    return queueCampaignMailerEntities.subList(0, remainingEmailQuota);
+                } else {
+                    return queueCampaignMailerEntities;
+                }
             }
         }
 
