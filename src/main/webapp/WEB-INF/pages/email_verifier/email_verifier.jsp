@@ -28,6 +28,18 @@
 </div>
 </br>
 </br>
+
+<input type="hidden" id="quotaExceeded" value="${quotaExceeded}">
+
+<div id="quota-exceeded" class="alert alert-info hide">
+        <div class="panel-heading">
+            <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+          </div>
+          <div class="panel-body">
+            <spring:message code="label.quota.emailverify.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
+          </div>
+    </div>
+
 <c:if test="${emailVerifierList.size() > 0 }">
     <div id="table_result" class="table-responsive">
         <table id="table-transaction" class="table table-striped table-bordered table-hover">
@@ -126,6 +138,15 @@
             //console.log($(this).data('ace_input_files'));
             //console.log($(this).data('ace_input_method'));
         });
+
+        // quota
+        var quotaExceeded = $("#quotaExceeded").val();
+
+        if(quotaExceeded === 'true') {
+            $("#id-input-file-2").prop('disabled', true);
+            $("#id-btn-upload").prop('disabled', true);
+            $("#quota-exceeded").toggleClass("hide");
+        }
     });
 
     jQuery(function ($) {

@@ -38,6 +38,16 @@ public class EmailVerifierController {
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.GET)
     public String getEmailVerifierPage(Model model) {
+
+        QuotaDTO quota = quotaService.getQuota();
+        long emailVerifyQuota = quota.getEmailVerifyQuota();
+        long currentEmailsVerified = quota.getCurrentEmailsVerified();
+
+        boolean quotaExceeded = currentEmailsVerified >= emailVerifyQuota ? true : false;
+
+        model.addAttribute("quotaExceeded", quotaExceeded);
+        model.addAttribute("quota", quota);
+
         return "emailVerifierPage";
     }
 
