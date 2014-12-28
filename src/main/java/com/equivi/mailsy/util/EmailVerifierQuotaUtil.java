@@ -67,9 +67,9 @@ public class EmailVerifierQuotaUtil {
         return quotaDTO;
     }
 
-    private List<String> getEmailToBeVerified(List<String> emailAddressList, boolean emailVerifyHaveNotMeetQuota) {
+    private List<String> getEmailToBeVerified(List<String> emailAddressList, boolean partiallyVerified) {
         List<String> emailsToBeVerified;
-        if (emailVerifyHaveNotMeetQuota) {
+        if (partiallyVerified) {
             emailsToBeVerified = emailAddressList.subList(0, quotaService.getEmailVerifierRemainingLimit().intValue());
         } else {
             emailsToBeVerified = emailAddressList;
