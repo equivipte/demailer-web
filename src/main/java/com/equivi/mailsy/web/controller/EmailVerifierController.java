@@ -1,15 +1,11 @@
 package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
-import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import com.equivi.mailsy.service.emailverifier.EmailVerifierServiceFactory;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
-import com.equivi.mailsy.service.quota.QuotaService;
+import com.equivi.mailsy.util.EmailVerifierQuotaUtil;
 import com.equivi.mailsy.util.WebConfigUtil;
-import com.google.common.collect.Lists;
-import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,23 +29,17 @@ public class EmailVerifierController {
     @Resource(name = "emailVerifierServiceFactory")
     private EmailVerifierServiceFactory emailVerifierServiceFactory;
 
-    @Autowired
-    private QuotaService quotaService;
+    @Resource
+    private EmailVerifierQuotaUtil emailVerifierQuotaUtil;
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.GET)
     public String getEmailVerifierPage(Model model) {
 
-        QuotaDTO quota = quotaService.getQuota();
-        long emailVerifyQuota = quota.getEmailVerifyQuota();
-        long currentEmailsVerified = quota.getCurrentEmailsVerified();
-
-        boolean quotaExceeded = currentEmailsVerified >= emailVerifyQuota ? true : false;
-
-        model.addAttribute("quotaExceeded", quotaExceeded);
-        model.addAttribute("quota", quota);
+        emailVerifierQuotaUtil.validateExceedQuota(model);
 
         return "emailVerifierPage";
     }
+
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
@@ -63,45 +53,9 @@ public class EmailVerifierController {
 
     @RequestMapping(value = "emailverifier/verify", method = RequestMethod.GET)
     public String verifyEmail(HttpServletRequest request, Model model) {
-        List<EmailVerifierResult> emailVerifierResponses = Lists.newArrayList();
         List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 
-        boolean partiallyVerified = false;
-
-        if (CollectionUtils.isNotEmpty(resultEmails)) {
-            List<String> emailsToBeVerified;
-
-            QuotaDTO quota = quotaService.getQuota();
-            long emailVerifyQuota = quota.getEmailVerifyQuota();
-            long currentEmailsVerified = quota.getCurrentEmailsVerified();
-            int remainingEmailsToBeVerified = (int) (emailVerifyQuota - currentEmailsVerified);
-
-            if(remainingEmailsToBeVerified < resultEmails.size()) {
-                partiallyVerified = true;
-
-                emailsToBeVerified = resultEmails.subList(0, remainingEmailsToBeVerified);
-            } else {
-                emailsToBeVerified = resultEmails;
-            }
-
-            QuotaDTO quotaDTO = new QuotaDTO();
-            quotaDTO.setCurrentEmailsVerified(emailsToBeVerified.size());
-
-            quotaDTO = quotaService.saveQuotaEntity(quotaDTO);
-
-            model.addAttribute("quota", quotaDTO);
-
-            for (String email : emailsToBeVerified) {
-                emailVerifierResponses.add(new EmailVerifierResult()
-                        .setEmailAddressResult(email)
-                        .setStatusResult("UNAVAILABLE")
-                        .setInfoDetailResult("Not Available"));
-            }
-
-            model.addAttribute("emailVerifierList", emailVerifierResponses);
-        }
-
-        model.addAttribute("partiallyVerified", partiallyVerified);
+        emailVerifierQuotaUtil.updateEmailVerificationModel(model, resultEmails);
 
         request.getSession().removeAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 

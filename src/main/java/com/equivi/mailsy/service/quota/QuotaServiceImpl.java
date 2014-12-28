@@ -41,11 +41,11 @@ public class QuotaServiceImpl implements QuotaService {
     public QuotaDTO saveQuotaEntity(QuotaDTO quotaDTO) {
         QuotaEntity quotaEntity = quotaDao.findAll().get(0);
 
-        if(quotaDTO.getCurrentEmailsVerified() > 0) {
+        if (quotaDTO.getCurrentEmailsVerified() > 0) {
             quotaEntity.setCurrentEmailsVerified(quotaEntity.getCurrentEmailsVerified() + quotaDTO.getCurrentEmailsVerified());
         }
 
-        if(quotaDTO.getCurrentEmailsSent() > 0) {
+        if (quotaDTO.getCurrentEmailsSent() > 0) {
             quotaEntity.setCurrentEmailsSent(quotaEntity.getCurrentEmailsSent() + quotaDTO.getCurrentEmailsSent());
         }
 
@@ -62,5 +62,13 @@ public class QuotaServiceImpl implements QuotaService {
         }
 
         return quotaDTO;
+    }
+
+    @Override
+    public Long getEmailVerifierRemainingLimit() {
+        QuotaDTO quota = getQuota();
+        long emailVerifyQuota = quota.getEmailVerifyQuota();
+        long currentEmailsVerified = quota.getCurrentEmailsVerified();
+        return (emailVerifyQuota - currentEmailsVerified);
     }
 }

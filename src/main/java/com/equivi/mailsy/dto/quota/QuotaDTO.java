@@ -3,6 +3,8 @@ package com.equivi.mailsy.dto.quota;
 import java.io.Serializable;
 
 public class QuotaDTO implements Serializable {
+    private static final long serialVersionUID = 77453603352814971L;
+
     private long emailVerifyQuota;
 
     private long emailSendingQuota;

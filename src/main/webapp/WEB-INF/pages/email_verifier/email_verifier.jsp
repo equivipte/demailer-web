@@ -31,7 +31,7 @@
 
 <input type="hidden" id="quotaExceeded" value="${quotaExceeded}">
 
-<div id="quota-exceeded" class="alert alert-info hide">
+<div id="quota-exceeded" class="alert alert-danger hide">
         <div class="panel-heading">
             <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
           </div>
@@ -88,7 +88,7 @@
         </div>
     </div>
 
-    <div id="quota-partially-verified" class="alert alert-info hide">
+    <div id="quota-partially-verified" class="alert alert-warning hide">
         <div class="panel-heading">
             <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
           </div>
