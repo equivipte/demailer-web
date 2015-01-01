@@ -26,7 +26,6 @@ import com.equivi.mailsy.web.message.ErrorMessage;
 import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -72,7 +71,7 @@ public class CampaignManagementController extends AbstractController {
     private MailgunService mailgunJerseyService;
     @Resource
     private SubscriberGroupService subscriberGroupService;
-    @Autowired
+    @Resource
     private QuotaService quotaService;
 
     @RequestMapping(value = "/main/merchant/campaignmanagement", method = RequestMethod.GET)
@@ -89,10 +88,14 @@ public class CampaignManagementController extends AbstractController {
 
         setPagination(model, campaignPage);
 
-        QuotaDTO quota = quotaService.getQuota();
-        model.addAttribute("quota", quota);
+        updateModelQuota(model);
 
         return "campaignManagementPage";
+    }
+
+    private void updateModelQuota(Model model) {
+        QuotaDTO quota = quotaService.getQuota();
+        model.addAttribute("quota", quota);
     }
 
     @RequestMapping(value = "/main/merchant/campaign_management/create", method = RequestMethod.GET)
@@ -192,12 +195,14 @@ public class CampaignManagementController extends AbstractController {
     }
 
     @RequestMapping(value = "/main/merchant/campaign_management/{campaignId}/{pageName}", method = RequestMethod.GET)
-    public ModelAndView goToEditCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId, @PathVariable String pageName, final HttpServletRequest httpServletRequest) {
+    public ModelAndView goToEditCampaignPage(ModelAndView modelAndView, @PathVariable Long campaignId, @PathVariable String pageName, final HttpServletRequest httpServletRequest, Model model) {
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
 
         setPredefinedData(modelAndView, campaignDTO);
 
         modelAndView.setViewName(pageName);
+
+        updateModelQuota(model);
         return modelAndView;
     }
 
