@@ -17,7 +17,8 @@ public enum dEmailerWebPropertyKey {
     ADMIN_EMAIL_FROM("admin.email.from"),
     EMAIL_CRAWLING_STORAGE("email.crawling.storage.dir"),
     EMAIL_CONTENT_PARAMS("emailcontent.params"),
-    EMAIL_CRAWLING_FILTER("emailcrawling.filter");
+    EMAIL_CRAWLING_FILTER("emailcrawling.filter"),
+    EMAIL_TEMPLATE_DIR("emailtemplate.dir");
 
 
     private String keyName;

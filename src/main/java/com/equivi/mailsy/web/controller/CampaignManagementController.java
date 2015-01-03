@@ -1,13 +1,10 @@
 package com.equivi.mailsy.web.controller;
 
 
-import com.equivi.mailsy.data.entity.CampaignEntity;
-import com.equivi.mailsy.data.entity.CampaignStatus;
-import com.equivi.mailsy.data.entity.ContactEntity;
-import com.equivi.mailsy.data.entity.SubscribeStatus;
-import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
+import com.equivi.mailsy.data.entity.*;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
+import com.equivi.mailsy.dto.campaign.EmailTemplateDTO;
 import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.dto.subscriber.SubscriberGroupDTO;
 import com.equivi.mailsy.service.campaign.CampaignManagementService;
@@ -25,27 +22,30 @@ import com.equivi.mailsy.web.constant.WebConfiguration;
 import com.equivi.mailsy.web.message.ErrorMessage;
 import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.client.utils.URIUtils;
+import org.apache.http.protocol.HTTP;
+import org.apache.velocity.texen.util.FileUtil;
+import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.util.UriUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import javax.ws.rs.core.UriBuilder;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 @Controller
 public class CampaignManagementController extends AbstractController {
@@ -54,6 +54,7 @@ public class CampaignManagementController extends AbstractController {
     private static final String DOWNLOADABLE_EMAIL_CONTENT_PAGE = "campaignManagementDownloadbleTemplateEmailContentPage";
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
     private static final String SESSION_EMAIL_TEMPLATE_TYPE = "emailTemplateType";
+    private static final String SESSION_EMAIL_TEMPLATES = "emailTemplates";
     private static SimpleDateFormat dateTimeFormat;
 
     static {
@@ -112,12 +113,13 @@ public class CampaignManagementController extends AbstractController {
     @RequestMapping(value = "/main/merchant/campaign_management/goToFinishPage", method = RequestMethod.GET)
     public String goToFinishPage(ModelAndView modelAndView, HttpServletRequest request) {
         request.getSession().removeAttribute(SESSION_EMAIL_TEMPLATE_TYPE);
+        request.getSession().removeAttribute(SESSION_EMAIL_TEMPLATES);
 
         return "campaignManagementFinishPage";
     }
 
     @RequestMapping(value = "/main/merchant/campaign_management/saveAddCampaign", method = RequestMethod.POST)
-    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale, HttpServletRequest request) {
+    public ModelAndView saveAddCampaign(@Valid CampaignDTO campaignDTO, BindingResult result, Locale locale, HttpServletRequest request) throws UnsupportedEncodingException {
 
         ModelAndView modelAndView;
         try {
@@ -144,6 +146,9 @@ public class CampaignManagementController extends AbstractController {
                 modelAndView.setViewName(redirectData);
 
                 request.getSession().setAttribute(SESSION_EMAIL_TEMPLATE_TYPE, emailTemplateType);
+
+                // Get email templates
+                getEmailTemplates(request);
 
                 return modelAndView;
             }
@@ -366,6 +371,31 @@ public class CampaignManagementController extends AbstractController {
         }
 
         return subscriberGroupIdList;
+    }
+
+    private void getEmailTemplates(HttpServletRequest request) throws UnsupportedEncodingException {
+        List<EmailTemplateDTO> emailTemplates = Lists.newArrayList();
+        File emailTemplateDir = new File(WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_TEMPLATE_DIR));
+        String[] extensions = new String[] {"html"};
+        String encodedDir = UriUtils.encodeQueryParam(emailTemplateDir.getAbsolutePath(), StandardCharsets.UTF_8.displayName());
+        String todayDateTime = String.valueOf(DateTime.now().getMillis());
+
+        Iterator<File> iterator = FileUtils.iterateFiles(emailTemplateDir, extensions, false);
+
+        while(iterator.hasNext()) {
+            File next = iterator.next();
+            String fileName = next.getName();
+
+            String htmlSuffix = ".html";
+            if(StringUtils.endsWith(fileName, htmlSuffix)) {
+                String templateName = StringUtils.removeEnd(fileName, htmlSuffix);
+
+                EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(templateName + ".png", fileName, encodedDir, todayDateTime);
+                emailTemplates.add(emailTemplateDTO);
+            }
+        }
+
+        request.getSession().setAttribute(SESSION_EMAIL_TEMPLATES, emailTemplates);
     }
 
 }
