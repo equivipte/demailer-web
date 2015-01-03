@@ -377,7 +377,7 @@ public class CampaignManagementController extends AbstractController {
         List<EmailTemplateDTO> emailTemplates = Lists.newArrayList();
         File emailTemplateDir = new File(WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_TEMPLATE_DIR));
         String[] extensions = new String[] {"html"};
-        String encodedDir = UriUtils.encodeQueryParam(emailTemplateDir.getAbsolutePath(), StandardCharsets.UTF_8.displayName());
+        String encodedDir = StringUtils.replace(emailTemplateDir.getAbsolutePath(), "/", "%2f");
         String todayDateTime = String.valueOf(DateTime.now().getMillis());
 
         Iterator<File> iterator = FileUtils.iterateFiles(emailTemplateDir, extensions, false);
