@@ -29,7 +29,7 @@ public class QueueCampaignMailerConverterTest {
     }
 
     @Test
-    public void testConvertToQueueCampaignMailerList() throws Exception {
+    public void testBuildUnsubscribeURL() throws Exception {
 
     }
 }

@@ -3,6 +3,8 @@ package com.equivi.mailsy.service.constant;
 
 public enum dEmailerWebPropertyKey {
 
+    DOMAIN_NAME("domain.name"),
+    MAILSY_SERVER_URL("mailsy.server.url"),
     PAGING_MAX_RECORDS("paging.max.records"),
     FORGOT_PASSWORD_EMAIL_SUBJECT("forgot.password.email.subject"),
     PASSWORD_CHANGED_EMAIL_SUBJECT("password.changed.email.subject"),

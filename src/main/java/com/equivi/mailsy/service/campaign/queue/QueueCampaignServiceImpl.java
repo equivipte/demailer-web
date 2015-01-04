@@ -23,16 +23,13 @@ import java.util.List;
 @Service
 public class QueueCampaignServiceImpl implements QueueCampaignService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignServiceImpl.class);
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
-
     @Resource
     private QueueCampaignMailerConverter queueCampaignMailerConverter;
-
     @Autowired
     private QuotaService quotaService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(QueueCampaignServiceImpl.class);
 
     @Override
     @Transactional(readOnly = false)
@@ -58,14 +55,15 @@ public class QueueCampaignServiceImpl implements QueueCampaignService {
         long emailSendingQuota = quota.getEmailSendingQuota();
         long currentEmailsSent = quota.getCurrentEmailsSent();
 
-        if(currentEmailsSent < emailSendingQuota) {
+        if (currentEmailsSent <= emailSendingQuota) {
             Iterable<QueueCampaignMailerEntity> queueCampaignMailerEntityIterable = queueCampaignMailerDao.findAll(getEmailQueueToSendPredicate());
 
             if (queueCampaignMailerEntityIterable.iterator().hasNext()) {
                 int remainingEmailQuota = (int) (emailSendingQuota - currentEmailsSent);
                 List<QueueCampaignMailerEntity> queueCampaignMailerEntities = Lists.newArrayList(queueCampaignMailerEntityIterable);
 
-                if(remainingEmailQuota > queueCampaignMailerEntities.size()) {
+                if (remainingEmailQuota < queueCampaignMailerEntities.size()) {
+
                     return queueCampaignMailerEntities.subList(0, remainingEmailQuota);
                 } else {
                     return queueCampaignMailerEntities;

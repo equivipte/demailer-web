@@ -33,6 +33,5 @@ public class MailgunJerseyEmailServiceImplSpringTest {
 
     @Test
     public void testSendMessage() throws Exception {
-        String eventMessageId = mailgunEmailService.sendMessage(CAMPAIGN_ID, DOMAIN_SANDBOX,FROM, TO_LIST_STRING, CC_LIST_STRING, BCC_LIST_STRING,SUBJECT,MAIL_MESSAGE);
     }
 }
