@@ -41,11 +41,11 @@ public class EmailVerifierQuotaUtil {
 
         if (quotaExceeded) {
             model.addAttribute("quotaExceeded", quotaExceeded);
-            model.addAttribute("quota", quota);
         }
-
+        model.addAttribute("quota", quota);
         return model;
     }
+
 
     private List<EmailVerifierResult> buildEmailVerifierResponse(List<String> emailsToBeVerified) {
         List<EmailVerifierResult> emailVerifierResponses = Lists.newArrayList();
