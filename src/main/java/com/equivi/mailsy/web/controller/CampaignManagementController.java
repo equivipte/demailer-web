@@ -60,11 +60,7 @@ public class CampaignManagementController extends AbstractController {
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
     private static final String SESSION_EMAIL_TEMPLATE_TYPE = "emailTemplateType";
     private static final String SESSION_EMAIL_TEMPLATES = "emailTemplates";
-    private static SimpleDateFormat dateTimeFormat;
 
-    static {
-        dateTimeFormat = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
-    }
     @Resource
     private WebConfiguration webConfiguration;
     @Resource
@@ -306,6 +302,7 @@ public class CampaignManagementController extends AbstractController {
     private List<SubscriberGroupDTO> convertToSubscribeGroupDTOList(List<SubscriberGroupEntity> subscriberGroupEntityList, List<Long> subscriberGroupList) {
         List<SubscriberGroupDTO> subscriberGroupDTOList = new ArrayList<>();
 
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
         if (subscriberGroupEntityList != null && !subscriberGroupEntityList.isEmpty()) {
             for (SubscriberGroupEntity subscriberGroupEntity : subscriberGroupEntityList) {
                 SubscriberGroupDTO subscriberGroupDTO = new SubscriberGroupDTO();
@@ -351,6 +348,8 @@ public class CampaignManagementController extends AbstractController {
 
     private List<CampaignDTO> convertToCampaignDTO(List<CampaignEntity> content) {
         List<CampaignDTO> campaignDTOList = new ArrayList<>();
+        SimpleDateFormat dateTimeFormat = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
+
         if (content != null && !content.isEmpty()) {
             for (CampaignEntity campaignEntity : content) {
                 CampaignDTO campaignDTO = new CampaignDTO();

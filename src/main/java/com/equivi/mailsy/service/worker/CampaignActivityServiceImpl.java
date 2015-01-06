@@ -49,6 +49,7 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
 
             if (!StringUtils.isEmpty(messageId)) {
 
+                LOG.info("Campaign email has been sent to mailgun,queue id:" + queueCampaignMailerEntity.getId() + " message id :" + messageId);
                 //Update mail delivery status
                 updateQueueCampaignStatus(queueCampaignMailerEntity);
 
