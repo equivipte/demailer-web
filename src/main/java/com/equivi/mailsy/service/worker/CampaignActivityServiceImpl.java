@@ -7,7 +7,6 @@ import com.equivi.mailsy.data.entity.QueueCampaignMailerEntity;
 import com.equivi.mailsy.data.entity.QueueProcessed;
 import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.campaign.tracker.CampaignTrackerService;
-import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.mailgun.MailgunService;
 import com.equivi.mailsy.service.mailgun.response.EventAPIType;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
@@ -28,22 +27,17 @@ import java.util.List;
 @Service
 public class CampaignActivityServiceImpl implements CampaignActivityService {
 
+    private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
     @Resource(name = "mailgunRestTemplateEmailService")
     private MailgunService mailgunService;
-
     @Resource(name = "mailgunJerseyService")
     private MailgunService mailgunJerseyService;
-
     @Resource
     private CampaignTrackerService campaignTrackerService;
-
     @Resource
     private QueueCampaignMailerDao queueCampaignMailerDao;
-
     @Autowired
     private QuotaService quotaService;
-
-    private static final Logger LOG = LoggerFactory.getLogger(CampaignActivityServiceImpl.class);
 
     @Override
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {

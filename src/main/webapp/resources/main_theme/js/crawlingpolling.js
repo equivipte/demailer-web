@@ -20,7 +20,7 @@ function Poll() {
             $("#buttons").removeClass("hide");
             $("#buttons").addClass("show");
 
-            if(emailVerifyQuotaUsed >= emailVerifyQuota) {
+            if (emailVerifyQuotaUsed >= emailVerifyQuota) {
                 $("#quota").removeClass("show");
                 $("#quota").addClass("hide");
 
@@ -131,9 +131,9 @@ function Poll() {
 
             allowScanning = true;
         });
-	};
+    }
 
-	function getUpdate() {
+    function getUpdate() {
 		
 		console.log("Get update...");
 																	
@@ -160,18 +160,16 @@ function Poll() {
 
                  $('#emailTable > tbody:last').append(update);
             }
-		};
-		
+        }
 
-		request.fail(function(jqXHR, textStatus, errorThrown) {
+        request.fail(function (jqXHR, textStatus, errorThrown) {
 			console.log("Polling - the following error occured: " + textStatus, errorThrown);
 		});
 
 		request.always(function() {
 			getUpdateCrawlerStatus();
 		});
-	};
-
+    }
     function getUpdateCrawlerStatus() {
         console.log("Get update crawling status");
 
@@ -205,11 +203,10 @@ function Poll() {
                 console.log("Polling - the following error occured: " + textStatus, errorThrown);
             });
 
-    };
-
+    }
     this.getCrawlingCompleteStatus = function getCrawlingCompleteStatus(crawlingStatus) {
         crawlingStatusUrl = crawlingStatus;
         getUpdateCrawlerStatus();
     }
 
-};
+}

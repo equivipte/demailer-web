@@ -104,17 +104,18 @@
         <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
     </div>
     <div class="panel-body">
-        <spring:message code="label.quota.emailverify.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+        <spring:message code="label.quota.emailverify.nonexceed"
+                        arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
     </div>
 </div>
 
 <div id="quota-exceeded" class="alert alert-info">
     <div class="panel-heading">
         <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
-      </div>
-      <div class="panel-body">
+    </div>
+    <div class="panel-body">
         <spring:message code="label.quota.emailverify.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
-      </div>
+    </div>
 </div>
 
 <style>
@@ -220,7 +221,7 @@
         poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
 	}
 
-	function cancelcrawling(closePopup) {
+    function cancelcrawling(closePopup) {
         var cancelUrl = "${context}/main/emailcollector/cancelCrawling?close_popup=" + closePopup;
 
         $("#scanning").removeClass("show");

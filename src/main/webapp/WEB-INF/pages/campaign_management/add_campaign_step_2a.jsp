@@ -179,7 +179,7 @@
                         .on('keydown', function () {
                             destroyResizable();
                         });
-            }
+            };
 
             enableImageResize();
 

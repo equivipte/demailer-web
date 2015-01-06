@@ -1,7 +1,11 @@
 package com.equivi.mailsy.web.controller;
 
 
-import com.equivi.mailsy.data.entity.*;
+import com.equivi.mailsy.data.entity.CampaignEntity;
+import com.equivi.mailsy.data.entity.CampaignStatus;
+import com.equivi.mailsy.data.entity.ContactEntity;
+import com.equivi.mailsy.data.entity.SubscribeStatus;
+import com.equivi.mailsy.data.entity.SubscriberGroupEntity;
 import com.equivi.mailsy.dto.campaign.CampaignDTO;
 import com.equivi.mailsy.dto.campaign.CampaignStatisticDTO;
 import com.equivi.mailsy.dto.campaign.EmailTemplateDTO;
@@ -23,29 +27,30 @@ import com.equivi.mailsy.web.message.ErrorMessage;
 import com.google.common.collect.Lists;
 import gnu.trove.map.hash.THashMap;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.client.utils.URIUtils;
-import org.apache.http.protocol.HTTP;
-import org.apache.velocity.texen.util.FileUtil;
-import org.joda.time.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.util.UriUtils;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import javax.ws.rs.core.UriBuilder;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.io.File;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
+import java.util.StringTokenizer;
 
 @Controller
 public class CampaignManagementController extends AbstractController {
@@ -137,7 +142,7 @@ public class CampaignManagementController extends AbstractController {
 
                 String previousPage = RICH_TEXT_EMAIL_CONTENT_PAGE;
 
-                if(StringUtils.equalsIgnoreCase("DownloadableTemplate", emailTemplateType)) {
+                if (StringUtils.equalsIgnoreCase("DownloadableTemplate", emailTemplateType)) {
                     previousPage = DOWNLOADABLE_EMAIL_CONTENT_PAGE;
                 }
 
@@ -376,17 +381,17 @@ public class CampaignManagementController extends AbstractController {
     private void getEmailTemplates(HttpServletRequest request) throws UnsupportedEncodingException {
         List<EmailTemplateDTO> emailTemplates = Lists.newArrayList();
         File emailTemplateDir = new File(WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_TEMPLATE_DIR));
-        String[] extensions = new String[] {"html"};
+        String[] extensions = new String[]{"html"};
         String encodedDir = StringUtils.replace(emailTemplateDir.getAbsolutePath(), "/", "%2f");
 
         Iterator<File> iterator = FileUtils.iterateFiles(emailTemplateDir, extensions, false);
 
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             File next = iterator.next();
             String fileName = next.getName();
 
             String htmlSuffix = ".html";
-            if(StringUtils.endsWith(fileName, htmlSuffix)) {
+            if (StringUtils.endsWith(fileName, htmlSuffix)) {
                 String templateName = StringUtils.removeEnd(fileName, htmlSuffix);
 
                 EmailTemplateDTO emailTemplateDTO = new EmailTemplateDTO(templateName + ".png", fileName, encodedDir);

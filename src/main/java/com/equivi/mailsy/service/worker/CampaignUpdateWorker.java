@@ -52,7 +52,7 @@ public class CampaignUpdateWorker {
             for (String unsubscribeEmailAddress : unsubscribeEmailAddressList) {
                 ContactEntity contactEntity = contactManagementService.getContactEntityByEmailAddress(unsubscribeEmailAddress);
 
-                if(contactEntity != null) {
+                if (contactEntity != null) {
                     contactEntity.setSubscribeStatus(SubscribeStatus.UNSUBSCRIBED);
                     contactManagementService.saveContactEntity(contactEntity);
                 }

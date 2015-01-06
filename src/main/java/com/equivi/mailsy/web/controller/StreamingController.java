@@ -10,33 +10,35 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 @Controller
 @RequestMapping("/main/streaming")
 public class StreamingController {
     private static final int BUFFER_SIZE = 4096;
 
-    @RequestMapping(value = "loadImage", method = RequestMethod.GET, produces=MediaType.IMAGE_PNG_VALUE)
+    @RequestMapping(value = "loadImage", method = RequestMethod.GET, produces = MediaType.IMAGE_PNG_VALUE)
     @ResponseBody
     public byte[] loadImageFromFileSystem(HttpServletRequest request, @RequestParam("dirName") String directoryName, @RequestParam("imageName") String imageName) throws IOException {
         InputStream in = new FileInputStream(directoryName + "/" + imageName);
         try {
             return IOUtils.toByteArray(in);
-        }
-        finally {
+        } finally {
             in.close();
         }
     }
 
-    @RequestMapping(value = "loadHTML", method = RequestMethod.GET, produces=MediaType.TEXT_HTML_VALUE)
+    @RequestMapping(value = "loadHTML", method = RequestMethod.GET, produces = MediaType.TEXT_HTML_VALUE)
     @ResponseBody
     public byte[] loadHTMLFromFileSystem(HttpServletRequest request, @RequestParam("dirName") String directoryName, @RequestParam("htmlName") String htmlName) throws IOException {
         InputStream in = new FileInputStream(directoryName + "/" + htmlName);
         try {
             return IOUtils.toByteArray(in);
-        }
-        finally {
+        } finally {
             in.close();
         }
     }

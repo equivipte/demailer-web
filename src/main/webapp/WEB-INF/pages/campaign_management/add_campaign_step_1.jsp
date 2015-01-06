@@ -98,16 +98,18 @@
 
             <div class="form-group">
                 <label class="col-sm-3 control-label no-padding-right" for="form-email-subject"><spring:message
-                                        code="label.campaign.email.template.type"></spring:message></label>
+                        code="label.campaign.email.template.type"></spring:message></label>
 
                 <div class="col-sm-9">
                     <form:select
-                        id="form-email-template-type"
-                        path="emailTemplateType"
-                        class="form-control width-35">
+                            id="form-email-template-type"
+                            path="emailTemplateType"
+                            class="form-control width-35">
 
-                        <form:option value="RichText"><spring:message code="label.campaign.email.template.option1"/></form:option>
-                        <form:option value="DownloadableTemplate"><spring:message code="label.campaign.email.template.option2"/></form:option>
+                        <form:option value="RichText"><spring:message
+                                code="label.campaign.email.template.option1"/></form:option>
+                        <form:option value="DownloadableTemplate"><spring:message
+                                code="label.campaign.email.template.option2"/></form:option>
                     </form:select>
                 </div>
 
@@ -138,10 +140,10 @@
 
 <script type="text/javascript">
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         var emailTemplateType = $("#emailTemplateType").val();
 
-        if(emailTemplateType) {
+        if (emailTemplateType) {
             $("#form-email-template-type").val(emailTemplateType);
         }
     });

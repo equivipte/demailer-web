@@ -38,7 +38,6 @@
 </div>
 
 
-
 <input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
 
 <script type="text/javascript">

@@ -24,12 +24,15 @@
     <c:forEach items="${emailTemplates}" var="template">
         <div class="" page="">
             <div class="thumbnail">
-              <img origsrc="${context}/main/streaming/loadImage?dirName=${template.dirName}&imageName=${template.imageName}" alt="" class="templateImg">
+                <img origsrc="${context}/main/streaming/loadImage?dirName=${template.dirName}&imageName=${template.imageName}"
+                     alt="" class="templateImg">
             </div>
             <div class="caption blue center">
                 <h5>
-                    <a href="${context}/main/streaming/loadHTML?dirName=${template.dirName}&htmlName=${template.htmlName}" target="_blank"><spring:message code="label.email.template.download.view"/></a> |
-                    <a href="${context}/main/streaming/downloadFile?dirName=${template.dirName}&fileName=${template.htmlName}"><spring:message code="label.email.template.download.download"/></a>
+                    <a href="${context}/main/streaming/loadHTML?dirName=${template.dirName}&htmlName=${template.htmlName}"
+                       target="_blank"><spring:message code="label.email.template.download.view"/></a> |
+                    <a href="${context}/main/streaming/downloadFile?dirName=${template.dirName}&fileName=${template.htmlName}"><spring:message
+                            code="label.email.template.download.download"/></a>
                 </h5>
             </div>
         </div>
@@ -49,14 +52,14 @@
     var totalPages = 0;
     var cssItem = "col-xs-6 col-md-3";
 
-    $(document).ready(function() {
+    $(document).ready(function () {
         disableImageCache();
         setPageAndCssAttribute();
         handlePagination();
     });
 
     function disableImageCache() {
-        $(".templateImg", "#emailTemplatesDiv").each(function() {
+        $(".templateImg", "#emailTemplatesDiv").each(function () {
             var imgSrc = $(this).attr("origsrc") + '&' + (new Date().getTime());
             $(this).attr("src", imgSrc);
             $(this).removeAttr("origsrc");
@@ -64,13 +67,13 @@
     }
 
     function setPageAndCssAttribute() {
-        $("[page]", "#emailTemplatesDiv").each(function(index, value) {
+        $("[page]", "#emailTemplatesDiv").each(function (index, value) {
             var page = Math.ceil((index + 1) / numOfItemsInPage);
 
             $(this).attr("page", page);
             $(this).attr("class", cssItem + " " + "show");
 
-            if(page > 1) {
+            if (page > 1) {
                 $(this).attr("class", cssItem + " " + "hide");
             }
         });
@@ -81,13 +84,13 @@
 
         var tmpPagination = emailTemplatesSize / numOfItemsInPage;
 
-        if(tmpPagination > 1) {
+        if (tmpPagination > 1) {
             totalPages = Math.ceil(tmpPagination);
         }
 
         var visiblePages = 10;
 
-        if(emailTemplatesSize > visiblePages) {
+        if (emailTemplatesSize > visiblePages) {
             visiblePages = emailTemplatesSize;
         }
 
@@ -101,16 +104,16 @@
     }
 
     function movePage(page) {
-        for(var i = 1; i <= totalPages; i++) {
+        for (var i = 1; i <= totalPages; i++) {
             var item = $("#emailTemplatesDiv").find("[page='" + i + "']");
 
-            if(i == page) {
-                item.each(function() {
+            if (i == page) {
+                item.each(function () {
                     $(this).removeClass("hide");
                     $(this).addClass("show");
                 });
             } else {
-                item.each(function() {
+                item.each(function () {
                     $(this).removeClass("show");
                     $(this).addClass("hide");
                 });

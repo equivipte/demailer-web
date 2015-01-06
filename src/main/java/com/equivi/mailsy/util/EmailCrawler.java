@@ -2,7 +2,6 @@ package com.equivi.mailsy.util;
 
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
-import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
 import edu.uci.ics.crawler4j.crawler.Page;
 import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.HtmlParseData;
@@ -16,8 +15,8 @@ import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 
-import static com.equivi.mailsy.util.EmailCrawlingUtil.PATTERN_MAIL_FILTERS;
 import static com.equivi.mailsy.util.EmailCrawlingUtil.PATTERN_MAIL;
+import static com.equivi.mailsy.util.EmailCrawlingUtil.PATTERN_MAIL_FILTERS;
 
 public class EmailCrawler extends WebCrawler {
 
@@ -72,23 +71,23 @@ public class EmailCrawler extends WebCrawler {
         Elements links = doc.select("a[href]");
 
         // find email from text
-	    Matcher m = PATTERN_MAIL.matcher(doc.text());
+		Matcher m = PATTERN_MAIL.matcher(doc.text());
 
 	    while(m.find()) {
-			if(passKeywordFilter(m.group(0))) {
-            	addIntoQueue(m);
+			if (passKeywordFilter(m.group(0))) {
+				addIntoQueue(m);
 			}
-	    }
+		}
 
         // find email from links
         for (Element link : links) {
-            m = PATTERN_MAIL.matcher(link.attr("href"));
-            while(m.find()) {
-				if(passKeywordFilter(m.group(0))) {
+			m = PATTERN_MAIL.matcher(link.attr("href"));
+			while (m.find()) {
+				if (passKeywordFilter(m.group(0))) {
 					addIntoQueue(m);
 				}
-            }
-        }
+			}
+		}
 	}
 
     private void addIntoQueue(Matcher m) {

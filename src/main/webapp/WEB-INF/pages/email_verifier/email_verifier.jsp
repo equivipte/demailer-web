@@ -148,7 +148,7 @@
         // quota
         var quotaExceeded = $("#quotaExceeded").val();
 
-        if(quotaExceeded === 'true') {
+        if (quotaExceeded === 'true') {
             $("#id-input-file-2").prop('disabled', true);
             $("#id-btn-upload").prop('disabled', true);
             $("#quota-exceeded").toggleClass("hide");
@@ -215,7 +215,7 @@
             // quota info
             var partiallyVerified = $("#partiallyVerified").val();
 
-            if(partiallyVerified === 'true') {
+            if (partiallyVerified === 'true') {
                 $("#quota-partially-verified").toggleClass("hide");
             } else {
                 $("#quota").toggleClass("hide");

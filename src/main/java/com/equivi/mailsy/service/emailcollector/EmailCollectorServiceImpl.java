@@ -19,7 +19,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.*;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Random;
+import java.util.Set;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,14 +32,11 @@ import java.util.concurrent.LinkedBlockingQueue;
 @Service
 public class EmailCollectorServiceImpl implements EmailCollectorService, Runnable {
 	private static final Logger logger = LoggerFactory.getLogger(EmailCollectorServiceImpl.class);
-
-	private final BlockingQueue<DeferredResult<EmailCollectorMessage>> resultQueue = new LinkedBlockingQueue<>();
-
     private static final Set<EmailCollectorMessage> duplicateEmails = new HashSet<>();
+    private final BlockingQueue<DeferredResult<EmailCollectorMessage>> resultQueue = new LinkedBlockingQueue<>();
+    private Thread thread;
 
-	private Thread thread;
-	
-	private volatile boolean start = true;
+    private volatile boolean start = true;
 	
 	@Autowired
 	private ShutdownService shutdownService;

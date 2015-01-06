@@ -132,7 +132,7 @@
         }
         else {
             showNothingToSelect();
-            return;
+
         }
     }
 
@@ -168,9 +168,9 @@
 
         var previousPage;
 
-        if('RichText' === emailTemplateType) {
+        if ('RichText' === emailTemplateType) {
             previousPage = 'campaignManagementRichTextEmailContentPage';
-        } else if('DownloadableTemplate') {
+        } else if ('DownloadableTemplate') {
             previousPage = 'campaignManagementDownloadbleTemplateEmailContentPage';
         }
 
