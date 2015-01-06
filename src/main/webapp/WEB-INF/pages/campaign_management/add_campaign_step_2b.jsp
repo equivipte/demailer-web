@@ -17,13 +17,13 @@
     <h3 class="header smaller lighter blue">
         <span>
             <i class="icon-cloud-download"></i>
-            Email Templates Download
+            <spring:message code="label.email.template.download.header"/>
         </span>
     </h3>
 </div>
 
 <div id="info-keyword" class="alert alert-info">
-    Following are samples of email templates which you can download and use on your own.
+    <spring:message code="label.email.template.download.info"/>
 </div>
 
 <div class="row">
@@ -34,8 +34,8 @@
             </div>
             <div class="caption blue center">
                 <h5>
-                    <a href="${context}/main/streaming/loadHTML?dirName=${template.dirName}&htmlName=${template.htmlName}" target="_blank">View</a> |
-                    <a href="#">Download</a>
+                    <a href="${context}/main/streaming/loadHTML?dirName=${template.dirName}&htmlName=${template.htmlName}" target="_blank"><spring:message code="label.email.template.download.view"/></a> |
+                    <a href="${context}/main/streaming/downloadFile?dirName=${template.dirName}&fileName=${template.htmlName}"><spring:message code="label.email.template.download.download"/></a>
                 </h5>
             </div>
         </div>
@@ -49,13 +49,13 @@
     <h3 class="header smaller lighter blue">
         <span>
             <i class="icon-cloud-upload"></i>
-            Email Template Upload
+            <spring:message code="label.email.template.upload.header"/>
         </span>
     </h3>
 </div>
 
 <div id="info-keyword" class="alert alert-info">
-    Upload your email template and see preview on the next step.
+    <spring:message code="label.email.template.upload.info"/>
 </div>
 
 
