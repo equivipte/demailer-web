@@ -12,52 +12,11 @@
 
 <jsp:include page="campaign_wizard_header_step2.jsp"/>
 
-<!-- Email templates -->
-<div>
-    <h3 class="header smaller lighter blue">
-        <span>
-            <i class="icon-cloud-download"></i>
-            <spring:message code="label.email.template.download.header"/>
-        </span>
-    </h3>
-</div>
-
-<div id="info-keyword" class="alert alert-info">
-    <spring:message code="label.email.template.download.info"/>
-</div>
-
-<div id="emailTemplatesDiv" class="row">
-    <c:forEach items="${emailTemplates}" var="template">
-        <div class="col-xs-6 col-md-3">
-            <div class="thumbnail">
-              <img origsrc="${context}/main/streaming/loadImage?dirName=${template.dirName}&imageName=${template.imageName}" alt="" class="templateImg">
-            </div>
-            <div class="caption blue center">
-                <h5>
-                    <a href="${context}/main/streaming/loadHTML?dirName=${template.dirName}&htmlName=${template.htmlName}" target="_blank"><spring:message code="label.email.template.download.view"/></a> |
-                    <a href="${context}/main/streaming/downloadFile?dirName=${template.dirName}&fileName=${template.htmlName}"><spring:message code="label.email.template.download.download"/></a>
-                </h5>
-            </div>
-        </div>
-    </c:forEach>
-</div>
+<jsp:include page="emailtemplate_download.jsp"/>
 
 </br>
 
-<!-- Upload email templates -->
-<div>
-    <h3 class="header smaller lighter blue">
-        <span>
-            <i class="icon-cloud-upload"></i>
-            <spring:message code="label.email.template.upload.header"/>
-        </span>
-    </h3>
-</div>
-
-<div id="info-keyword" class="alert alert-info">
-    <spring:message code="label.email.template.upload.info"/>
-</div>
-
+<jsp:include page="emailtemplate_upload.jsp"/>
 
 </br>
 </br>
@@ -83,15 +42,6 @@
 <input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
 
 <script type="text/javascript">
-
-    $(document).ready(function() {
-        $(".templateImg", "#emailTemplatesDiv").each(function() {
-            var imgSrc = $(this).attr("origsrc") + '&' + (new Date().getTime());
-            $(this).attr("src", imgSrc);
-            $(this).removeAttr("origsrc");
-        });
-    });
-
     function goToStep3(campaignId) {
         var emailContent = $('div#editor1').html();
 
@@ -112,11 +62,8 @@
         });
     }
 
-
     function goToStep1(campaignId) {
         window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/campaignManagementAddPage");
     }
-
-
 </script>
 
