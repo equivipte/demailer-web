@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 public class WebEmailVerifierResultImplSpringTest {
 
     @Resource
-    private WebEmailVerifierImpl webEmailVerifier;
+    private WebEmailVerifierServiceImpl webEmailVerifier;
 
 
     @Test

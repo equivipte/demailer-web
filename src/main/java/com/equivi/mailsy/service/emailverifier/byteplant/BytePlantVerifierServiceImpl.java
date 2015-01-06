@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Service(value = "bytePlantVerifierService")
+@Service("bytePlantVerifierService")
 public class BytePlantVerifierServiceImpl implements VerifierService {
 
     private static final Logger LOG = LoggerFactory.getLogger(BytePlantVerifierServiceImpl.class);
@@ -31,6 +31,7 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
     private static final String TIMEOUT = "Timeout";
 
     private static final String TIMEOUT_DEFAULT = "900000";
+
     @Resource
     private DemailerRestTemplate restTemplate;
 
@@ -46,25 +47,12 @@ public class BytePlantVerifierServiceImpl implements VerifierService {
         return new ArrayList<>();
     }
 
-//    @Override
-//    public EmailVerifierResponse getEmailAddressStatus(String emailAddress) {
-//        EmailVerifierResponse emailVerifierResponse = new EmailVerifierResponse();
-//        emailVerifierResponse.setAddress(emailAddress);
-//        emailVerifierResponse.setStatus("Valid Email");
-//        emailVerifierResponse.setInfoDetails("VALID");
-//
-//        return emailVerifierResponse;
-//    }
-
     @Override
     public EmailVerifierResult getEmailAddressStatus(String emailAddress) {
         Map<String, String> parameters = new THashMap<>();
         parameters.put(API_KEY, getApiKey());
         parameters.put(EMAIL_ADDRESS, emailAddress);
         parameters.put(TIMEOUT, getApiTimeout());
-
-//        HttpHeaders headers = new HttpHeaders();
-//        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
 
         ResponseEntity<String> emailVerifierResponse = restTemplate.getForEntity(buildVerifyEmailAddressQueryString(emailAddress), String.class);
         LOG.info("Result:" + emailVerifierResponse);

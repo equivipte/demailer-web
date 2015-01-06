@@ -12,6 +12,38 @@
     </h1>
 </div>
 
+<input type="hidden" id="partiallyVerified" value="${partiallyVerified}">
+
+<div id="quota" class="alert alert-info hide">
+    <div class="panel-heading">
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+    </div>
+    <div class="panel-body">
+        <spring:message code="label.quota.emailverify.nonexceed"
+                        arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+    </div>
+</div>
+
+<div id="quota-partially-verified" class="alert alert-warning hide">
+    <div class="panel-heading">
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+    </div>
+    <div class="panel-body">
+        <spring:message code="label.quota.emailverify.partiallyverified" arguments="${quota.emailVerifyQuota}"
+                        htmlEscape="false"/>
+    </div>
+</div>
+
+<div id="quota-exceeded" class="alert alert-danger hide">
+    <div class="panel-heading">
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+    </div>
+    <div class="panel-body">
+        <spring:message code="label.quota.emailverify.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
+    </div>
+</div>
+
+
 <div class="row">
     <div class="col-xs-12">
         <form method="POST" enctype="multipart/form-data" action="${url}">
@@ -28,6 +60,10 @@
 </div>
 </br>
 </br>
+
+<input type="hidden" id="quotaExceeded" value="${quotaExceeded}">
+
+
 <c:if test="${emailVerifierList.size() > 0 }">
     <div id="table_result" class="table-responsive">
         <table id="table-transaction" class="table table-striped table-bordered table-hover">
@@ -60,10 +96,14 @@
             </button>
         </a>
     </div>
+
+    </br>
+    </br>
+    </br>
+
+
 </c:if>
-</br>
-</br>
-</br>
+
 <style>
     div#sb-container {
         z-index: 10000;
@@ -104,6 +144,15 @@
             //console.log($(this).data('ace_input_files'));
             //console.log($(this).data('ace_input_method'));
         });
+
+        // quota
+        var quotaExceeded = $("#quotaExceeded").val();
+
+        if(quotaExceeded === 'true') {
+            $("#id-input-file-2").prop('disabled', true);
+            $("#id-btn-upload").prop('disabled', true);
+            $("#quota-exceeded").toggleClass("hide");
+        }
     });
 
     jQuery(function ($) {
@@ -162,6 +211,15 @@
                     }
                 });
             });
+
+            // quota info
+            var partiallyVerified = $("#partiallyVerified").val();
+
+            if(partiallyVerified === 'true') {
+                $("#quota-partially-verified").toggleClass("hide");
+            } else {
+                $("#quota").toggleClass("hide");
+            }
         }
 
         $("#export-btn").click(function() {

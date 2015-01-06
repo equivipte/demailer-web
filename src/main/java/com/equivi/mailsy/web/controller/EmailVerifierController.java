@@ -1,8 +1,11 @@
 package com.equivi.mailsy.web.controller;
 
 import com.equivi.mailsy.dto.emailer.EmailVerifierResult;
+import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
+import com.equivi.mailsy.service.emailverifier.EmailVerifierServiceFactory;
 import com.equivi.mailsy.service.emailverifier.VerifierService;
-import com.google.common.collect.Lists;
+import com.equivi.mailsy.util.EmailVerifierQuotaUtil;
+import com.equivi.mailsy.util.WebConfigUtil;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,13 +26,20 @@ import java.util.Map;
 @RequestMapping("/main/merchant")
 public class EmailVerifierController {
 
-    @Resource(name = "bytePlantVerifierService")
-    private VerifierService verifierService;
+    @Resource(name = "emailVerifierServiceFactory")
+    private EmailVerifierServiceFactory emailVerifierServiceFactory;
+
+    @Resource
+    private EmailVerifierQuotaUtil emailVerifierQuotaUtil;
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.GET)
     public String getEmailVerifierPage(Model model) {
+
+        emailVerifierQuotaUtil.validateExceedQuota(model);
+
         return "emailVerifierPage";
     }
+
 
     @RequestMapping(value = "emailverifier", method = RequestMethod.POST,
             headers = {"Content-type=application/json"},
@@ -37,24 +47,15 @@ public class EmailVerifierController {
     public
     @ResponseBody
     EmailVerifierResult verifyEmail(@RequestBody EmailVerifierResult emailVerifierResult) {
+        VerifierService verifierService = emailVerifierServiceFactory.getEmailVerifierService(WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_VERIFIER_SERVICE));
         return verifierService.getEmailAddressStatus(emailVerifierResult.getEmailAddress());
     }
 
     @RequestMapping(value = "emailverifier/verify", method = RequestMethod.GET)
     public String verifyEmail(HttpServletRequest request, Model model) {
-        List<EmailVerifierResult> emailVerifierResponses = Lists.newArrayList();
         List<String> resultEmails = (List<String>) request.getSession().getAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 
-        if (resultEmails != null && !resultEmails.isEmpty()) {
-            for (String email : resultEmails) {
-                emailVerifierResponses.add(new EmailVerifierResult()
-                        .setEmailAddressResult(email)
-                        .setStatusResult("UNAVAILABLE")
-                        .setInfoDetailResult("Not Available"));
-            }
-
-            model.addAttribute("emailVerifierList", emailVerifierResponses);
-        }
+        emailVerifierQuotaUtil.updateEmailVerificationModel(model, resultEmails);
 
         request.getSession().removeAttribute(EmailCollectorController.SESSION_RESULT_EMAILS);
 

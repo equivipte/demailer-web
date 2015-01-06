@@ -17,8 +17,8 @@
         <put-attribute name="body" value=""/>
     </definition>
 
-    <definition name="base.popup"
-                template="/WEB-INF/pages/layout/base_popup.jsp">
+    <definition name="base.no.tiles"
+                template="/WEB-INF/pages/layout/base_no_tiles.jsp">
         <put-attribute name="title" value=""/>
         <put-attribute name="body" value=""/>
     </definition>
@@ -78,7 +78,7 @@
         <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector.jsp"/>
     </definition>
 
-    <definition name="emailCollectorPopup" extends="base.popup">
+    <definition name="emailCollectorPopup" extends="base.no.tiles">
         <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="body" value="/WEB-INF/pages/email_collector/email_collector_popup.jsp"/>
     </definition>
@@ -100,13 +100,22 @@
         <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_1.jsp"/>
     </definition>
 
-    <!--CAMPAIGN MANAGEMENT STEP 2-->
-    <definition name="campaignManagementEmailContentPage" extends="base.definition">
+    <!--CAMPAIGN MANAGEMENT STEP 2 Rich Text Template -->
+    <definition name="campaignManagementRichTextEmailContentPage" extends="base.definition">
         <put-attribute name="title" value="Mailsy"/>
         <put-attribute name="breadcrumb"
                        value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
         <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
-        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2a.jsp"/>
+    </definition>
+
+    <!--CAMPAIGN MANAGEMENT STEP 2 Downloadable Email Template -->
+    <definition name="campaignManagementDownloadbleTemplateEmailContentPage" extends="base.definition">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="breadcrumb"
+                       value="/WEB-INF/pages/campaign_management/campaign_management_breadcrumb.jsp"/>
+        <put-attribute name="menu" value="/WEB-INF/pages/layout/menu.jsp"/>
+        <put-attribute name="body" value="/WEB-INF/pages/campaign_management/add_campaign_step_2b.jsp"/>
     </definition>
 
     <!--CAMPAIGN MANAGEMENT STEP 3-->
@@ -215,4 +224,14 @@
         <put-attribute name="body" value="/WEB-INF/pages/user/user_edit.jsp"/>
     </definition>
 
+
+    <definition name="unsubscribedPage" extends="base.no.tiles">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="body" value="/WEB-INF/pages/unsubscribe/unsubscribe_page.jsp"/>
+    </definition>
+
+    <definition name="unsubscribeNotificationPage" extends="base.no.tiles">
+        <put-attribute name="title" value="Mailsy"/>
+        <put-attribute name="body" value="/WEB-INF/pages/unsubscribe/unsubscribe_notification_page.jsp"/>
+    </definition>
 </tiles-definitions>

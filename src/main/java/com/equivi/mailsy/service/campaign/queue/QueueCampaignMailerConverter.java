@@ -69,8 +69,10 @@ public class QueueCampaignMailerConverter {
         QueueCampaignMailerEntity queueCampaignMailerEntity = new QueueCampaignMailerEntity();
         queueCampaignMailerEntity.setCampaignId(campaignSubscriberGroupEntity.getCampaignEntity().getId());
 
-        queueCampaignMailerEntity.setContent(replaceEmailContentWithParams(subscriberContactEntity,
-                campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent()));
+        String replaceContent = replaceEmailContentWithParams(subscriberContactEntity, campaignSubscriberGroupEntity.getCampaignEntity().getEmailContent());
+        replaceContent = replaceUnsubscribeURL(subscriberContactEntity, replaceContent);
+
+        queueCampaignMailerEntity.setContent(replaceContent);
         queueCampaignMailerEntity.setSubject(campaignSubscriberGroupEntity.getCampaignEntity().getEmailSubject());
         queueCampaignMailerEntity.setEmailFrom(campaignSubscriberGroupEntity.getCampaignEntity().getEmailFrom());
         queueCampaignMailerEntity.setRecipient(subscriberContactEntity.getContactEntity().getEmailAddress());
@@ -99,6 +101,25 @@ public class QueueCampaignMailerConverter {
                 contactEntity.getContactEntity().getLastName(), contactEntity.getContactEntity().getCompanyName()};
 
         return StringUtils.replaceEachRepeatedly(emailContent, arrParams, arrValues);
+    }
+
+    private String replaceUnsubscribeURL(SubscriberContactEntity contactEntity, String emailContent) {
+        String unsubscribeURL = buildUnsubscribeURL(contactEntity.getContactEntity().getEmailAddress());
+
+        return StringUtils.replace(emailContent, "%unsubscribe_url%", unsubscribeURL);
+    }
+
+    String buildUnsubscribeURL(String emailAddress) {
+
+        StringBuilder sbUnsubscribeURL = new StringBuilder();
+        sbUnsubscribeURL.append(WebConfigUtil.getValue(dEmailerWebPropertyKey.MAILSY_SERVER_URL));
+        sbUnsubscribeURL.append("/unsubscribe");
+        sbUnsubscribeURL.append("?emailToUnsubscribe=");
+        sbUnsubscribeURL.append(emailAddress);
+        sbUnsubscribeURL.append("&domainName=");
+        sbUnsubscribeURL.append(WebConfigUtil.getValue(dEmailerWebPropertyKey.DOMAIN_NAME));
+
+        return sbUnsubscribeURL.toString();
     }
 
 }

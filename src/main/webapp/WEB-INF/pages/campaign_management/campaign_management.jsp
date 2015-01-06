@@ -14,11 +14,14 @@
 </div>
 
 
+<jsp:include page="email_quota.jsp"/>
+
 <!-- /.page-header -->
 <jsp:include page="campaign_search_form_non_IE.jsp"/>
 
 </br>
 </br>
+
 <div class="table-responsive">
 <table id="table-subscriber" class="table table-striped table-bordered table-hover">
 <thead>
@@ -178,6 +181,8 @@
 <c:set var="context" value="${pageContext.request.contextPath}"/>
 <script type="text/javascript">
     $(document).ready(function () {
+
+
         $(".editCampaign").click(function () {
             var campaignId = $(this).attr("id");
             redirectToEdit(campaignId)
@@ -193,6 +198,7 @@
             viewCampaign(campaignId)
         });
     });
+
 
     function redirectToEdit(id) {
         window.location.replace("${context}/main/merchant/campaign_management/"+id+"/campaignManagementAddPage");

@@ -95,6 +95,28 @@
 </br>
 </br>
 </br>
+
+<input type="hidden" id="emailVerifyQuota" value="${quota.emailVerifyQuota}">
+<input type="hidden" id="emailVerifyQuotaUsed" value="${quota.currentEmailsVerified}">
+
+<div id="quota" class="alert alert-info">
+    <div class="panel-heading">
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+    </div>
+    <div class="panel-body">
+        <spring:message code="label.quota.emailverify.nonexceed" arguments="${quota.emailVerifyQuota},${quota.currentEmailsVerified}" htmlEscape="false"/>
+    </div>
+</div>
+
+<div id="quota-exceeded" class="alert alert-info">
+    <div class="panel-heading">
+        <h3 class="panel-title"><spring:message code="label.quota.header"/></h3>
+      </div>
+      <div class="panel-body">
+        <spring:message code="label.quota.emailverify.exceed" arguments="${quota.emailVerifyQuota}" htmlEscape="false"/>
+      </div>
+</div>
+
 <style>
     div#sb-container {
         z-index: 10000;
@@ -118,13 +140,22 @@
             $("#scanning").removeClass("hide");
             $("#scanning").addClass("show");
 
+            $("#buttons").removeClass("show");
+            $("#buttons").addClass("hide");
+
+            $("#quota").removeClass("show");
+            $("#quota").addClass("hide");
+
+            $("#quota-exceeded").removeClass("show");
+            $("#quota-exceeded").addClass("hide");
+
             $('#scanning span').text('');
 
             runCrawling();
         });
 
 		$("#cancelcrawling").click(function() {
-            cancelcrawling();
+            cancelcrawling(false);
 		});
 
 		$("#verify-emails-btn").click(function() {
@@ -163,18 +194,7 @@
 		});
 
 		$(window).bind('beforeunload', function(){
-		    cancelcrawling();
-
-            $.ajax({
-                url : "${context}/main/emailcollector/terminatePopupSession",
-                type : "GET",
-                success: function() {
-                    console.log("Crawling session is terminated");
-                },
-                error: function(jqXHR, textStatus, errorThrown) {
-                    console.log("Crawling session termination - the following error occured: " + textStatus, errorThrown);
-                }
-            });
+            cancelcrawling(true);
         });
 	});
 
@@ -200,8 +220,8 @@
         poll.start(startUrl,pollUrl, url, scanningUrl, crawlingStatusUrl);
 	}
 
-	function cancelcrawling() {
-        var cancelUrl = "${context}/main/emailcollector/cancelCrawling";
+	function cancelcrawling(closePopup) {
+        var cancelUrl = "${context}/main/emailcollector/cancelCrawling?close_popup=" + closePopup;
 
         $("#scanning").removeClass("show");
         $("#scanning").addClass("hide");

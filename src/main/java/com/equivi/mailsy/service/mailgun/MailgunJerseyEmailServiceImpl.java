@@ -18,6 +18,7 @@ import org.codehaus.jackson.map.DeserializationConfig;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,7 +44,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
     public String sendMessage(String campaignId, String domain, String from, List<String> recipientList, List<String> ccList, List<String> bccList, String subject, String message) {
 
         Client client = prepareClient();
-        WebResource webResource = client.resource(getWebConfigAPIUrlMessage(getDomain(domain)));
+        WebResource webResource = client.resource(getWebConfigAPIUrlMessage(getDomain(domain), MailgunAPIType.MESSAGES));
 
         MultivaluedMapImpl form = new MultivaluedMapImpl();
         form.add(MailgunParameters.FROM.getValue(), from);
@@ -77,13 +78,14 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
         return client;
     }
 
-    private String getWebConfigAPIUrlMessage(String domain) {
+    private String getWebConfigAPIUrlMessage(String domain, MailgunAPIType mailgunAPIType) {
         StringBuilder sbEndPointURL = new StringBuilder();
 
         sbEndPointURL.append(webConfiguration.getWebConfig(dEmailerWebPropertyKey.MAILGUN_WEB_URL));
         sbEndPointURL.append("/");
         sbEndPointURL.append(domain);
-        sbEndPointURL.append("/messages");
+        sbEndPointURL.append("/");
+        sbEndPointURL.append(mailgunAPIType.getValue());
 
         return sbEndPointURL.toString();
     }
@@ -99,7 +101,7 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
 
         Client client = prepareClient();
 
-        WebResource webResource = client.resource(getWebConfigAPIUrlMessage(getDomain(domain)));
+        WebResource webResource = client.resource(getWebConfigAPIUrlMessage(getDomain(domain), MailgunAPIType.MESSAGES));
         FormDataMultiPart form = new FormDataMultiPart();
         form.field(MailgunParameters.FROM.getValue(), from);
         form.field(MailgunParameters.TO.getValue(), MailsyStringUtil.buildStringWithSeparator(recipientList, ','));
@@ -151,11 +153,26 @@ public class MailgunJerseyEmailServiceImpl implements MailgunService {
     @Override
     public void deleteUnsubscribe(String domain, String emailAddress) {
 
+        throw new IllegalAccessError("Unable to access this method");
     }
 
     @Override
     public void registerUnsubscribe(String domain, String emailAddress) {
+        Client client = prepareClient();
+        WebResource webResource = client.resource(getWebConfigAPIUrlMessage(getDomain(domain), MailgunAPIType.UNSUBSCRIBES));
 
+        MultivaluedMapImpl form = new MultivaluedMapImpl();
+        form.add(MailgunParameters.ADDRESS.getValue(), emailAddress);
+        form.add(MailgunParameters.TAG.getValue(), "*");
+
+        ClientResponse clientResponse = webResource.post(ClientResponse.class, form);
+        String responseBody = clientResponse.getEntity(String.class);
+
+        LOG.info("Response Body :" + responseBody);
+
+        if (clientResponse.getStatus() != HttpStatus.OK.value()) {
+            throw new MailgunServiceException(MailgunServiceException.UNABLE_TO_UNSUBSCRIBE_EMAIL_ADDRESS);
+        }
     }
 
     @Override

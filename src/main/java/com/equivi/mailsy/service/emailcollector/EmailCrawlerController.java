@@ -17,7 +17,7 @@ public class EmailCrawlerController implements Runnable {
             String[] crawlerDomains = new String[] { site };
             controller.setCustomData(crawlerDomains);
             controller.addSeed(site);
-            controller.startNonBlocking(EmailCrawler.class, 5);
+            controller.startNonBlocking(EmailCrawler.class, 20);
             controller.waitUntilFinish();
         } catch (Exception e) {
             e.printStackTrace();
