@@ -40,7 +40,7 @@ public class CampaignUpdateWorker {
         }
     }
 
-    @Scheduled(fixedDelay = 50000)
+    @Scheduled(fixedDelay = 20000)
     public void updateUnsubscribeStatus() {
 
         LOG.info("Update unsubscribe status");
@@ -61,7 +61,7 @@ public class CampaignUpdateWorker {
 
     }
 
-    @Scheduled(fixedDelay = 45000)
+    @Scheduled(fixedDelay = 5000)
     public void updateTracker() {
         LOG.info("Campaign Update tracker");
         try {
