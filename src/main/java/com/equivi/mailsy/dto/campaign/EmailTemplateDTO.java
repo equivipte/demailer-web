@@ -10,14 +10,10 @@ public class EmailTemplateDTO implements Serializable {
     private String htmlName;
     private String dirName;
 
-    // This is needed to prevent browser doing image caching
-    private String dateTime;
-
-    public EmailTemplateDTO(String imageName, String htmlName, String dirName, String dateTime) {
+    public EmailTemplateDTO(String imageName, String htmlName, String dirName) {
         this.imageName = imageName;
         this.htmlName = htmlName;
         this.dirName = dirName;
-        this.dateTime = dateTime;
     }
 
     public String getImageName() {
@@ -44,11 +40,4 @@ public class EmailTemplateDTO implements Serializable {
         this.dirName = dirName;
     }
 
-    public String getDateTime() {
-        return dateTime;
-    }
-
-    public void setDateTime(String dateTime) {
-        this.dateTime = dateTime;
-    }
 }

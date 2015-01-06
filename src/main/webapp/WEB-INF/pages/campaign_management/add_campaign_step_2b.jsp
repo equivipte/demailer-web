@@ -26,11 +26,11 @@
     <spring:message code="label.email.template.download.info"/>
 </div>
 
-<div class="row">
+<div id="emailTemplatesDiv" class="row">
     <c:forEach items="${emailTemplates}" var="template">
         <div class="col-xs-6 col-md-3">
             <div class="thumbnail">
-              <img src="${context}/main/streaming/loadImage?dirName=${template.dirName}&imageName=${template.imageName}&${template.dateTime}" alt="">
+              <img origsrc="${context}/main/streaming/loadImage?dirName=${template.dirName}&imageName=${template.imageName}" alt="" class="templateImg">
             </div>
             <div class="caption blue center">
                 <h5>
@@ -83,6 +83,14 @@
 <input type="hidden" id="email-content" value="${campaignDTO.emailContent}">
 
 <script type="text/javascript">
+
+    $(document).ready(function() {
+        $(".templateImg", "#emailTemplatesDiv").each(function() {
+            var imgSrc = $(this).attr("origsrc") + '&' + (new Date().getTime());
+            $(this).attr("src", imgSrc);
+            $(this).removeAttr("origsrc");
+        });
+    });
 
     function goToStep3(campaignId) {
         var emailContent = $('div#editor1').html();
