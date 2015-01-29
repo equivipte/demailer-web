@@ -60,7 +60,7 @@ public class CampaignManagementController extends AbstractController {
     private static final String DELIVERY_PAGE = "campaignManagementEmailDeliveryPage";
     private static final String SESSION_EMAIL_TEMPLATE_TYPE = "emailTemplateType";
     private static final String SESSION_EMAIL_TEMPLATES = "emailTemplates";
-
+    private static final String UNSUBSCRIBE_URL = "%unsubscribe_url%";
     @Resource
     private WebConfiguration webConfiguration;
     @Resource
@@ -131,7 +131,7 @@ public class CampaignManagementController extends AbstractController {
                 String emailTemplateType = campaignDTO.getEmailTemplateType();
 
                 campaignDTO.setCampaignStatus(CampaignStatus.DRAFT.getCampaignStatusDescription());
-                campaignDTO.setEmailContent("</br></br></br></br></br></br></br></br></br></br><a href=\"%unsubscribe_url%\">Click here</> to unsubscribe");
+                campaignDTO.setEmailContent("</br></br></br></br></br></br></br></br></br></br><a href=\"" + UNSUBSCRIBE_URL + "\">Click here</> to unsubscribe");
                 campaignDTO = campaignManagementService.saveCampaignDTO(campaignDTO);
 
                 modelAndView = new ModelAndView();
@@ -258,8 +258,9 @@ public class CampaignManagementController extends AbstractController {
 
         CampaignDTO campaignDTO = campaignManagementService.getCampaign(campaignId);
 
-
-        mailgunJerseyService.sendMessageWithAttachment(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), replaceEmailContentWithDefaultParams(campaignDTO.getEmailContent()));
+        String replacedContent = replaceEmailContentWithDefaultParams(campaignDTO.getEmailContent());
+        replacedContent = replaceUnsubscribeUrlLink(replacedContent);
+        mailgunJerseyService.sendMessageWithAttachment(campaignId.toString(), null, campaignDTO.getEmailFrom(), Lists.newArrayList(emailTo), null, null, campaignDTO.getEmailSubject(), replacedContent);
 
         return "SUCCESS";
     }
@@ -270,6 +271,10 @@ public class CampaignManagementController extends AbstractController {
         String[] arrValues = new String[]{"First Name","Last Name", "Company Name"};
 
         return StringUtils.replaceEachRepeatedly(emailContent, arrParams, arrValues);
+    }
+
+    private String replaceUnsubscribeUrlLink(String emailContent) {
+        return emailContent.replace(UNSUBSCRIBE_URL, "#");
     }
 
     private void setPredefinedData(ModelAndView modelAndView, CampaignDTO campaignDTO) {
