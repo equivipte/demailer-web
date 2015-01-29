@@ -45,6 +45,7 @@
         <jsoup.version>1.8.1</jsoup.version>
         <crawler.version>3.5</crawler.version>
         <jersey.version>1.18.1</jersey.version>
+        <java.mail.api>1.4.7</java.mail.api>
     </properties>
 
 
@@ -314,6 +315,12 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.4</version>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.mail</groupId>
+            <artifactId>mail</artifactId>
+            <version>${java.mail.api}</version>
         </dependency>
 
 
