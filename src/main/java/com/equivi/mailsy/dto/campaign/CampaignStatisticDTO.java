@@ -2,6 +2,7 @@ package com.equivi.mailsy.dto.campaign;
 
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CampaignStatisticDTO implements Serializable {
 
@@ -44,6 +45,17 @@ public class CampaignStatisticDTO implements Serializable {
     private Double deliverMailPercentage;
 
     private Double failedMailPercentage;
+
+    private List<String> openedEmailList;
+
+    private List<String> clickedEmailList;
+
+    private List<String> unsubscriberEmailList;
+
+    private List<String> failedToDeliverEmailList;
+
+    private List<String> deliveredList;
+
 
     public Double getOpenMailPercentage() {
         return openMailPercentage;
@@ -195,5 +207,45 @@ public class CampaignStatisticDTO implements Serializable {
 
     public void setOpenUsingTabletPercentage(Double openUsingTabletPercentage) {
         this.openUsingTabletPercentage = openUsingTabletPercentage;
+    }
+
+    public List<String> getOpenedEmailList() {
+        return openedEmailList;
+    }
+
+    public void setOpenedEmailList(List<String> openedEmailList) {
+        this.openedEmailList = openedEmailList;
+    }
+
+    public List<String> getClickedEmailList() {
+        return clickedEmailList;
+    }
+
+    public void setClickedEmailList(List<String> clickedEmailList) {
+        this.clickedEmailList = clickedEmailList;
+    }
+
+    public List<String> getUnsubscriberEmailList() {
+        return unsubscriberEmailList;
+    }
+
+    public void setUnsubscriberEmailList(List<String> unsubscriberEmailList) {
+        this.unsubscriberEmailList = unsubscriberEmailList;
+    }
+
+    public List<String> getFailedToDeliverEmailList() {
+        return failedToDeliverEmailList;
+    }
+
+    public void setFailedToDeliverEmailList(List<String> failedToDeliverEmailList) {
+        this.failedToDeliverEmailList = failedToDeliverEmailList;
+    }
+
+    public List<String> getDeliveredList() {
+        return deliveredList;
+    }
+
+    public void setDeliveredList(List<String> deliveredList) {
+        this.deliveredList = deliveredList;
     }
 }

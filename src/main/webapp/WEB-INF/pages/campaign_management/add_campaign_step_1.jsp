@@ -96,25 +96,6 @@
 
             <hr>
 
-            <div class="form-group">
-                <label class="col-sm-3 control-label no-padding-right" for="form-email-subject"><spring:message
-                        code="label.campaign.email.template.type"></spring:message></label>
-
-                <div class="col-sm-9">
-                    <form:select
-                            id="form-email-template-type"
-                            path="emailTemplateType"
-                            class="form-control width-35">
-
-                        <form:option value="RichText"><spring:message
-                                code="label.campaign.email.template.option1"/></form:option>
-                        <form:option value="DownloadableTemplate"><spring:message
-                                code="label.campaign.email.template.option2"/></form:option>
-                    </form:select>
-                </div>
-
-            </div>
-
             <div class="clearfix form-actions">
                 <div class="col-md-offset-3 col-md-9">
                     <button id="back_to_user_id_list" class="btn" onclick="backToCampaignList()" type="reset">

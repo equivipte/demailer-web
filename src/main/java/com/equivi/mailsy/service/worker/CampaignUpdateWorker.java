@@ -7,6 +7,7 @@ import com.equivi.mailsy.data.entity.SubscribeStatus;
 import com.equivi.mailsy.service.campaign.queue.QueueCampaignService;
 import com.equivi.mailsy.service.contact.ContactManagementService;
 import com.equivi.mailsy.service.mailgun.MailgunService;
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.orm.hibernate3.HibernateOptimisticLockingFailureException;
@@ -35,7 +36,7 @@ public class CampaignUpdateWorker {
         LOG.info("Collect Campaign Queue and send email");
         List<QueueCampaignMailerEntity> emailQueueToSend = queueCampaignService.getEmailQueueToSend();
 
-        if (emailQueueToSend != null && !emailQueueToSend.isEmpty()) {
+        if (CollectionUtils.isNotEmpty(emailQueueToSend)) {
             campaignActivityService.sendEmail(emailQueueToSend);
         }
     }

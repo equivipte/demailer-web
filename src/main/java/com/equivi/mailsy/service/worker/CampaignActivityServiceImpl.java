@@ -13,6 +13,7 @@ import com.equivi.mailsy.service.mailgun.response.MailgunResponseEventMessage;
 import com.equivi.mailsy.service.mailgun.response.MailgunResponseItem;
 import com.equivi.mailsy.service.quota.QuotaService;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,25 +44,27 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {
 
         for (QueueCampaignMailerEntity queueCampaignMailerEntity : queueCampaignMailerEntityList) {
-            //String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
-
-            String messageId = mailgunJerseyService.sendMessageWithAttachment(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
-
-            if (!StringUtils.isEmpty(messageId)) {
-
-                LOG.info("Campaign email has been sent to mailgun,queue id:" + queueCampaignMailerEntity.getId() + " message id :" + messageId);
-                //Update mail delivery status
-                updateQueueCampaignStatus(queueCampaignMailerEntity);
-
-                campaignTrackerService.createCampaignTracker(messageId, queueCampaignMailerEntity.getCampaignId(), queueCampaignMailerEntity.getRecipient());
-
-            }
+            sendAndTrackEmailToMailgun(queueCampaignMailerEntity);
         }
 
         QuotaDTO quotaDTO = new QuotaDTO();
         quotaDTO.setCurrentEmailsSent(queueCampaignMailerEntityList.size());
 
         quotaService.saveQuotaEntity(quotaDTO);
+    }
+
+    private void sendAndTrackEmailToMailgun(QueueCampaignMailerEntity queueCampaignMailerEntity) {
+        String messageId = mailgunJerseyService.sendMessageWithAttachment(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, StringEscapeUtils.unescapeHtml4(queueCampaignMailerEntity.getSubject()), queueCampaignMailerEntity.getContent());
+
+        if (!StringUtils.isEmpty(messageId)) {
+
+            LOG.info("Campaign email has been sent to mailgun,queue id:" + queueCampaignMailerEntity.getId() + " message id :" + messageId);
+            //Update mail delivery status
+            updateQueueCampaignStatus(queueCampaignMailerEntity);
+
+            campaignTrackerService.createCampaignTracker(messageId, queueCampaignMailerEntity.getCampaignId(), queueCampaignMailerEntity.getRecipient());
+
+        }
     }
 
     @Override

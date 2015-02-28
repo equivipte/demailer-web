@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -97,7 +98,10 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         Long totalOpenUsingDesktop = 0L;
         Long totalOpenUsingTablet = 0L;
         Long totalOpenUsingUnknownDevice = 0L;
-
+        List<String> openReceipientList = new ArrayList<>();
+        List<String> unsubscribedList = new ArrayList<>();
+        List<String> failedList = new ArrayList<>();
+        List<String> deliveredList = new ArrayList<>();
 
         if (campaignTrackerEntities != null && campaignTrackerEntities.iterator().hasNext()) {
             for (CampaignTrackerEntity campaignTrackerEntity : campaignTrackerEntities) {
@@ -113,16 +117,22 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
                     } else {
                         totalOpenUsingUnknownDevice += 1;
                     }
+
+                    openReceipientList.add(campaignTrackerEntity.getRecipient());
                 }
                 if (campaignTrackerEntity.isBounced()) {
                     totalBounced += 1L;
+                    failedList.add(campaignTrackerEntity.getRecipient());
                 }
                 if (campaignTrackerEntity.isUnsubscribed()) {
                     totalUnsubscribed += 1L;
+                    unsubscribedList.add(campaignTrackerEntity.getRecipient());
                 }
                 if (campaignTrackerEntity.isDelivered()) {
                     totalDelivered += 1L;
+                    deliveredList.add(campaignTrackerEntity.getRecipient());
                 }
+
             }
         }
 
@@ -136,6 +146,10 @@ public class CampaignTrackerServiceImpl implements CampaignTrackerService {
         campaignStatisticDTO.setTotalOpenUsingOthers(totalOpenUsingUnknownDevice);
         campaignStatisticDTO.setTotalUnsubscribed(totalUnsubscribed);
         campaignStatisticDTO.setTotalSent(totalSent);
+        campaignStatisticDTO.setOpenedEmailList(openReceipientList);
+        campaignStatisticDTO.setUnsubscriberEmailList(unsubscribedList);
+        campaignStatisticDTO.setFailedToDeliverEmailList(failedList);
+        campaignStatisticDTO.setDeliveredList(deliveredList);
 
         //Set Percentage
         Double openPercentage = 0D;

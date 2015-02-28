@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/demailer.ico"/>
+    <link rel="shortcut icon" href="${pageContext.request.contextPath}/resources/images/mailsy.ico"/>
 
     <title><tiles:insertAttribute name="title" ignore="true"/></title>
 

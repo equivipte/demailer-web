@@ -29,6 +29,7 @@ import gnu.trove.map.hash.THashMap;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -37,12 +38,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,9 +141,9 @@ public class CampaignManagementController extends AbstractController {
 
                 String previousPage = RICH_TEXT_EMAIL_CONTENT_PAGE;
 
-                if (StringUtils.equalsIgnoreCase("DownloadableTemplate", emailTemplateType)) {
-                    previousPage = DOWNLOADABLE_EMAIL_CONTENT_PAGE;
-                }
+//                if(StringUtils.equalsIgnoreCase("DownloadableTemplate", emailTemplateType)) {
+//                    previousPage = DOWNLOADABLE_EMAIL_CONTENT_PAGE;
+//                }
 
                 String redirectData = "redirect:" + campaignDTO.getId().toString() + "/" + previousPage;
 
@@ -220,8 +223,11 @@ public class CampaignManagementController extends AbstractController {
 
         setPredefinedData(modelAndView, campaignDTO);
         modelAndView.addObject("campaignStatisticDTO", campaignStatisticDTO);
+        modelAndView.addObject("openedList", campaignStatisticDTO.getOpenedEmailList());
+        modelAndView.addObject("failEmailRecipientList", campaignStatisticDTO.getFailedToDeliverEmailList());
+        modelAndView.addObject("unsubscribedList", campaignStatisticDTO.getUnsubscriberEmailList());
+        modelAndView.addObject("deliveredList", campaignStatisticDTO.getDeliveredList());
 
-        modelAndView.addObject("recipientList", getContactDTOList(campaignDTO));
         modelAndView.setViewName("campaignManagementViewPage");
         return modelAndView;
     }
@@ -406,4 +412,23 @@ public class CampaignManagementController extends AbstractController {
         request.getSession().setAttribute(SESSION_EMAIL_TEMPLATES, emailTemplates);
     }
 
+
+    @RequestMapping(value = "/main/merchant/opened_email/putResultToSession", method = RequestMethod.POST)
+    @ResponseStatus(HttpStatus.OK)
+    public void putResultToSession(@RequestBody ArrayList<String> emails, HttpServletRequest request) {
+        request.getSession().setAttribute(SESSION_RESULT_EMAILS, emails);
+    }
+
+    @RequestMapping(value = "/main/merchant/opened_email/exportToExcel", method = RequestMethod.GET)
+    public ModelAndView exportToExcel(Map<String, Object> model, HttpServletRequest request) throws IOException {
+        List<String> resultEmails = (List<String>) request.getSession().getAttribute(SESSION_RESULT_EMAILS);
+
+
+        model.put(KEY_RESULT_EMAILS, resultEmails);
+
+        ModelAndView mav = new ModelAndView("collectorResultExcelView");
+        request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
+
+        return mav;
+    }
 }
