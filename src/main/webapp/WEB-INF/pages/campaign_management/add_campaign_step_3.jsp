@@ -132,7 +132,7 @@
         }
         else {
             showNothingToSelect();
-            return;
+
         }
     }
 
@@ -164,16 +164,17 @@
     }
 
     function goToStep2(campaignId){
-        var emailTemplateType = $("#emailTemplateType").val();
+//        var emailTemplateType = $("#emailTemplateType").val();
+//
+//        var previousPage;
+//
+//        if('RichText' === emailTemplateType) {
+//            previousPage = 'campaignManagementRichTextEmailContentPage';
+//        } else if('DownloadableTemplate') {
+//            previousPage = 'campaignManagementDownloadbleTemplateEmailContentPage';
+//        }
 
-        var previousPage;
-
-        if('RichText' === emailTemplateType) {
-            previousPage = 'campaignManagementRichTextEmailContentPage';
-        } else if('DownloadableTemplate') {
-            previousPage = 'campaignManagementDownloadbleTemplateEmailContentPage';
-        }
-
+        var previousPage = 'campaignManagementRichTextEmailContentPage';
         window.location.replace("${context}/main/merchant/campaign_management/" + campaignId + "/" + previousPage);
     }
 

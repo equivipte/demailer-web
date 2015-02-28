@@ -1,6 +1,5 @@
 package com.equivi.mailsy.web.controller;
 
-import com.equivi.mailsy.data.entity.QuotaEntity;
 import com.equivi.mailsy.dto.emailer.EmailCollector;
 import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.dto.emailer.EmailCollectorStatusMessage;
@@ -15,7 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -29,17 +33,14 @@ import java.util.Map;
 @Controller
 @RequestMapping("/main/emailcollector")
 public class EmailCollectorController {
+    public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
+    public static final String KEY_RESULT_EMAILS = "resultEmails";
+    public static final String SESSION_SITE_URL = "sessionSiteUrl";
     private static final String SITE_URL = "siteUrl";
     private static final String EMAIL_COLLECTOR_PAGE = "emailCollectorPage";
     private static final String EMAIL_COLLECTOR_POPUP = "emailCollectorPopup";
     private static final String SESSION_CRAWLING = "sessionCrawling";
     private static final String SESSION_POPUP = "sessionPopup";
-
-    public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
-    public static final String KEY_RESULT_EMAILS = "resultEmails";
-
-    public static final String SESSION_SITE_URL = "sessionSiteUrl";
-
     @Autowired
     private EmailCollectorService emailCollectorService;
 

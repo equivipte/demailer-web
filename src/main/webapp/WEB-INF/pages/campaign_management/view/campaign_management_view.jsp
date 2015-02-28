@@ -47,6 +47,19 @@
                 <a data-toggle="tab" href="#subscriberGroupList"><spring:message
                         code="label.campaign.email.recipients"/></a>
             </li>
+            <li>
+                <a data-toggle="tab" href="#openedEmailList"><spring:message
+                        code="label.campaign.email.opened_email"/></a>
+            </li>
+            <li>
+                <a data-toggle="tab" href="#failEmailList"><spring:message
+                        code="label.campaign.email.failure_email"/></a>
+            </li>
+            <%--<li>--%>
+            <%--<a data-toggle="tab" href="#unsubscribedEmailList"><spring:message--%>
+            <%--code="label.campaign.email.unsubscriber"/></a>--%>
+            <%--</li>--%>
+
         </ul>
 
         <div class="tab-content">
@@ -59,6 +72,16 @@
             <div id="subscriberGroupList" class="tab-pane">
                 <jsp:include page="recipient_list.jsp"/>
             </div>
+            <div id="openedEmailList" class="tab-pane">
+                <jsp:include page="opened_list.jsp"/>
+            </div>
+            <div id="failEmailList" class="tab-pane">
+                <jsp:include page="failed_email_list.jsp"/>
+            </div>
+            <%--<div id="unsubscribedEmailList" class="tab-pane">--%>
+            <%--<jsp:include page="unsubscribed_list.jsp"/>--%>
+            <%--</div>--%>
+
         </div>
     </div>
 </div>

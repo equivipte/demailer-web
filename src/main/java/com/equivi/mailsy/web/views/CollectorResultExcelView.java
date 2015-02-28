@@ -4,7 +4,6 @@ import com.equivi.mailsy.web.controller.EmailCollectorController;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
 import org.joda.time.LocalDate;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -44,7 +43,7 @@ public class CollectorResultExcelView extends AbstractExcelView {
         LocalDate now = new LocalDate();
         DateTimeFormatter dtf = DateTimeFormat.forPattern("MM_dd_yyyy");
 
-        String fileName = String.format("ImportedEmails_%s.xls", now.toString(dtf));
+        String fileName = String.format("ExportedEmails_%s.xls", now.toString(dtf));
 
         return fileName;
     }

@@ -8,6 +8,9 @@ import org.springframework.ui.Model;
 public abstract class AbstractController {
 
 
+    public static final String SESSION_RESULT_EMAILS = "sessionEmailResults";
+    public static final String KEY_RESULT_EMAILS = "resultEmails";
+
     protected void setPagination(Model model, Page<? extends BaseEntity> page) {
         int current = page.getNumber() + 1;
         int begin = Math.max(1, current - 5);
