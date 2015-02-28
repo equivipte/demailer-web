@@ -15,7 +15,7 @@
         <div class="navbar-header pull-left">
             <a href="#" class="navbar-brand">
                 <small>
-                    <i class="icon-envelope"></i>
+                    <img src="${pageContext.request.contextPath}/resources/images/mailsy_header.png"/>
                     <spring:message code="label.product.name"/>
                     &copy;
                     <img src="${pageContext.request.contextPath}/resources/images/equivi_logo.png"/>

@@ -19,7 +19,7 @@
             <div class="login-container">
                 <div class="center">
                     <h1>
-                        <span class="white"><spring:message code="label.product.name"/></span>
+                        <img src="${pageContext.request.contextPath}/resources/images/mailsy_front.png"/>
                     </h1>
                     <h4 class="blue"><spring:message code="label.copyright"/></h4>
                     <img src="${pageContext.request.contextPath}/resources/images/equivi_logo.png"/>

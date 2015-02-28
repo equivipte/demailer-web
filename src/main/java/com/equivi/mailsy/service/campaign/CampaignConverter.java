@@ -21,24 +21,13 @@ import java.util.UUID;
 @Component
 public class CampaignConverter {
 
+    static final Logger LOG = LoggerFactory.getLogger(CampaignConverter.class);
     @Resource
     private CampaignDao campaignDao;
 
-    static SimpleDateFormat dateFormat;
-
-    static SimpleDateFormat timeFormat;
-
-    static final Logger LOG = LoggerFactory.getLogger(CampaignConverter.class);
-
-    static SimpleDateFormat sdf = null;
-
-    static {
-        sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
-        dateFormat = new SimpleDateFormat(ConstantProperty.DATE_FORMAT.getValue());
-        timeFormat = new SimpleDateFormat(ConstantProperty.TIME_FORMAT.getValue());
-    }
-
     public CampaignEntity convertToCampaignEntity(CampaignDTO campaignDTO) {
+
+        SimpleDateFormat sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
 
         CampaignEntity campaignEntity;
         if (campaignDTO.getId() != null) {
@@ -53,9 +42,9 @@ public class CampaignConverter {
             campaignEntity.setEmailContent(StringEscapeUtils.escapeHtml4(emailContent));
         }
 
+        campaignEntity.setEmailSubject(StringEscapeUtils.escapeHtml4(campaignDTO.getEmailSubject()));
         campaignEntity.setCampaignName(campaignDTO.getCampaignName());
         campaignEntity.setEmailFrom(campaignDTO.getEmailFrom());
-        campaignEntity.setEmailSubject(campaignDTO.getEmailSubject());
         campaignEntity.setCampaignStatus(CampaignStatus.getStatusByDescription(campaignDTO.getCampaignStatus()));
 
 
@@ -71,6 +60,10 @@ public class CampaignConverter {
 
     public CampaignDTO convertToCampaignDTO(CampaignEntity campaignEntity) {
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat(ConstantProperty.DATE_FORMAT.getValue());
+        SimpleDateFormat timeFormat = new SimpleDateFormat(ConstantProperty.TIME_FORMAT.getValue());
+        SimpleDateFormat sdf = new SimpleDateFormat(ConstantProperty.DATE_TIME_FORMAT.getValue());
+
         CampaignDTO campaignDTO = new CampaignDTO();
 
         campaignDTO.setId(campaignEntity.getId());
@@ -81,7 +74,7 @@ public class CampaignConverter {
         if (StringUtils.isNotEmpty(campaignEntity.getEmailContent())) {
             campaignDTO.setEmailContent(campaignEntity.getEmailContent());
         }
-        campaignDTO.setEmailSubject(campaignEntity.getEmailSubject());
+        campaignDTO.setEmailSubject(StringEscapeUtils.unescapeHtml4(campaignEntity.getEmailSubject()));
 
         Date scheduledSendDate = campaignEntity.getScheduledSendDate();
         if (scheduledSendDate == null) {

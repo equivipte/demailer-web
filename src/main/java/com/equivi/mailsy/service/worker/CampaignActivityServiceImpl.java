@@ -43,25 +43,27 @@ public class CampaignActivityServiceImpl implements CampaignActivityService {
     public void sendEmail(List<QueueCampaignMailerEntity> queueCampaignMailerEntityList) {
 
         for (QueueCampaignMailerEntity queueCampaignMailerEntity : queueCampaignMailerEntityList) {
-            //String messageId = mailgunService.sendMessage(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
-
-            String messageId = mailgunJerseyService.sendMessageWithAttachment(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
-
-            if (!StringUtils.isEmpty(messageId)) {
-
-                LOG.info("Campaign email has been sent to mailgun,queue id:" + queueCampaignMailerEntity.getId() + " message id :" + messageId);
-                //Update mail delivery status
-                updateQueueCampaignStatus(queueCampaignMailerEntity);
-
-                campaignTrackerService.createCampaignTracker(messageId, queueCampaignMailerEntity.getCampaignId(), queueCampaignMailerEntity.getRecipient());
-
-            }
+            sendAndTrackEmailToMailgun(queueCampaignMailerEntity);
         }
 
         QuotaDTO quotaDTO = new QuotaDTO();
         quotaDTO.setCurrentEmailsSent(queueCampaignMailerEntityList.size());
 
         quotaService.saveQuotaEntity(quotaDTO);
+    }
+
+    private void sendAndTrackEmailToMailgun(QueueCampaignMailerEntity queueCampaignMailerEntity) {
+        String messageId = mailgunJerseyService.sendMessageWithAttachment(queueCampaignMailerEntity.getCampaignId().toString(), null, queueCampaignMailerEntity.getEmailFrom(), Lists.newArrayList(queueCampaignMailerEntity.getRecipient()), null, null, queueCampaignMailerEntity.getSubject(), queueCampaignMailerEntity.getContent());
+
+        if (!StringUtils.isEmpty(messageId)) {
+
+            LOG.info("Campaign email has been sent to mailgun,queue id:" + queueCampaignMailerEntity.getId() + " message id :" + messageId);
+            //Update mail delivery status
+            updateQueueCampaignStatus(queueCampaignMailerEntity);
+
+            campaignTrackerService.createCampaignTracker(messageId, queueCampaignMailerEntity.getCampaignId(), queueCampaignMailerEntity.getRecipient());
+
+        }
     }
 
     @Override
