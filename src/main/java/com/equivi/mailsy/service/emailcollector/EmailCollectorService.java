@@ -6,8 +6,6 @@ import org.springframework.web.context.request.async.DeferredResult;
 public interface EmailCollectorService {
 	void subscribe(String site) throws Exception;
 	
-	void getUpdate(DeferredResult<EmailCollectorMessage> deferredResult);
-
 	boolean getUpdateCrawlingStatus();
 
     void cancel();

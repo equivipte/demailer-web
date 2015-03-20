@@ -6,28 +6,24 @@ import com.equivi.mailsy.dto.emailer.EmailCollectorStatusMessage;
 import com.equivi.mailsy.dto.emailer.EmailCollectorUrlMessage;
 import com.equivi.mailsy.dto.quota.QuotaDTO;
 import com.equivi.mailsy.service.emailcollector.EmailCollectorService;
-import com.equivi.mailsy.service.emailcollector.EmailScanningService;
-import com.equivi.mailsy.service.emailcollector.EmailScanningServiceImpl;
 import com.equivi.mailsy.service.quota.QuotaService;
+import com.equivi.mailsy.util.EmailCrawler;
+import com.google.common.collect.Lists;
 import org.apache.commons.lang3.BooleanUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.context.request.async.DeferredResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 
 @Controller
@@ -41,11 +37,14 @@ public class EmailCollectorController {
     private static final String EMAIL_COLLECTOR_POPUP = "emailCollectorPopup";
     private static final String SESSION_CRAWLING = "sessionCrawling";
     private static final String SESSION_POPUP = "sessionPopup";
-    @Autowired
-    private EmailCollectorService emailCollectorService;
+
+    public static final Queue<DeferredResult<EmailCollectorMessage>> resultQueue = new ConcurrentLinkedQueue<>();
+    public static final Queue<DeferredResult<EmailCollectorUrlMessage>> resultUrlQueue = new ConcurrentLinkedQueue<>();
+
+    private static final Set<EmailCollectorMessage> duplicateEmails = new HashSet<>();
 
     @Autowired
-    private EmailScanningService emailScanningService;
+    private EmailCollectorService emailCollectorService;
 
     @Autowired
     private QuotaService quotaService;
@@ -82,8 +81,8 @@ public class EmailCollectorController {
     @RequestMapping(value = "async/begin", method = RequestMethod.POST, headers = {"Content-type=application/json"})
     @ResponseStatus(value = HttpStatus.OK)
     public void start(@RequestBody EmailCollector emailCollector, HttpServletRequest request) throws Exception {
+        duplicateEmails.clear();
     	emailCollectorService.subscribe(emailCollector.getSite());
-        emailScanningService.subscribe();
 
         request.getSession().setAttribute(SESSION_CRAWLING, Boolean.TRUE);
         request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
@@ -93,7 +92,7 @@ public class EmailCollectorController {
     @RequestMapping(value = "async/update", method = RequestMethod.GET)
     public @ResponseBody DeferredResult<EmailCollectorMessage> getUpdate(HttpServletRequest request) {
     	final DeferredResult<EmailCollectorMessage> result = new DeferredResult<>();
-    	emailCollectorService.getUpdate(result);
+        resultQueue.add(result);
         return result;
     	
     }
@@ -104,10 +103,8 @@ public class EmailCollectorController {
         final DeferredResult<EmailCollectorUrlMessage> result = new DeferredResult<>();
 
         if(BooleanUtils.isTrue(crawlingStatus)) {
-            emailScanningService.getUrlScanningUpdate(result);
+            resultUrlQueue.add(result);
         } else {
-            EmailScanningServiceImpl.resultUrlQueue.clear();
-
             EmailCollectorUrlMessage urlMessage = new EmailCollectorUrlMessage("FINISH");
             result.setResult(urlMessage);
         }
@@ -164,5 +161,59 @@ public class EmailCollectorController {
         request.getSession().removeAttribute(SESSION_RESULT_EMAILS);
 
         return mav;
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void processResultQueue() throws InterruptedException {
+        DeferredResult<EmailCollectorMessage> result = resultQueue.poll();
+
+        if(result != null) {
+            if(duplicateEmails.isEmpty()) {
+                EmailCollectorMessage message = EmailCrawler.queue.poll();
+
+                if(message != null) {
+                    result.setResult(message);
+                    duplicateEmails.add(message);
+                }
+
+            } else {
+                Iterator<EmailCollectorMessage> it = EmailCrawler.queue.iterator();
+
+                List<String> emails = Lists.newArrayList();
+
+                while(it.hasNext()) {
+                    EmailCollectorMessage message = it.next();
+
+                    if(message != null && !duplicateEmails.contains(message)) {
+                        duplicateEmails.add(message);
+                        emails.add(message.getEmail());
+                    }
+
+                    it.remove();
+                }
+
+
+                if(!emails.isEmpty()) {
+                    EmailCollectorMessage message = new EmailCollectorMessage(StringUtils.join(emails, ","));
+
+                    result.setResult(message);
+                }
+            }
+
+        }
+
+    }
+
+    @Scheduled(fixedRate = 1000)
+    public void processUrlResultQueue() throws InterruptedException {
+        DeferredResult<EmailCollectorUrlMessage> result = resultUrlQueue.poll();
+
+        if(result != null) {
+            EmailCollectorUrlMessage urlMessage = EmailCrawler.urlQueue.poll();
+
+            if(urlMessage != null) {
+                result.setResult(urlMessage);
+            }
+        }
     }
 }

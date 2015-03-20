@@ -1,97 +1,33 @@
 package com.equivi.mailsy.service.emailcollector;
 
-import com.equivi.mailsy.dto.emailer.EmailCollectorMessage;
 import com.equivi.mailsy.service.constant.dEmailerWebPropertyKey;
-import com.equivi.mailsy.shutdown.Hook;
-import com.equivi.mailsy.shutdown.ShutdownService;
 import com.equivi.mailsy.util.EmailCrawler;
 import com.equivi.mailsy.util.WebConfigUtil;
-import com.google.common.collect.Lists;
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
 import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.request.async.DeferredResult;
 
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Random;
-import java.util.Set;
-import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.LinkedBlockingQueue;
 
 @Service
-public class EmailCollectorServiceImpl implements EmailCollectorService, Runnable {
+public class EmailCollectorServiceImpl implements EmailCollectorService {
 	private static final Logger logger = LoggerFactory.getLogger(EmailCollectorServiceImpl.class);
-    private static final Set<EmailCollectorMessage> duplicateEmails = new HashSet<>();
-    private final BlockingQueue<DeferredResult<EmailCollectorMessage>> resultQueue = new LinkedBlockingQueue<>();
-    private Thread thread;
 
-    private volatile boolean start = true;
-	
-	@Autowired
-	private ShutdownService shutdownService;
-	
-	private Hook hook;
-	
-	private ExecutorService executor;
-    private CrawlController controller;
-	
-	@Override
-	public void run() {
-		logger.info("EmailCollectorServiceImpl - Thread running");
-		while(hook.keepRunning()) {
-			try {
-				DeferredResult<EmailCollectorMessage> result = resultQueue.take();
+	private static final ExecutorService executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private static CrawlController controller;
 
-                if(duplicateEmails.isEmpty()) {
-                    EmailCollectorMessage message = EmailCrawler.queue.take();
-
-                    result.setResult(message);
-
-                    duplicateEmails.add(message);
-                } else {
-                    Iterator<EmailCollectorMessage> it = EmailCrawler.queue.iterator();
-
-                    List<String> emails = Lists.newArrayList();
-
-                    while(it.hasNext()) {
-                        EmailCollectorMessage message = it.next();
-
-                        if(!duplicateEmails.contains(message)) {
-                            duplicateEmails.add(message);
-                            emails.add(message.getEmail());
-                        }
-
-                        it.remove();
-                    }
-
-
-                    if(!emails.isEmpty()) {
-                        EmailCollectorMessage message = new EmailCollectorMessage(StringUtils.join(emails, ","));
-
-                        result.setResult(message);
-                    }
-                }
-			} catch (InterruptedException e) {
-				logger.warn("Interrupted when waiting for latest update. "
-                        + e.getMessage());
-			}
-		}
-	}
-	
 	@Override
 	public void subscribe(String site) throws Exception { 
 		logger.info("Starting email crawler...");
+
+        clearQueue();
 
         String crawlStorageFolder = WebConfigUtil.getValue(dEmailerWebPropertyKey.EMAIL_CRAWLING_STORAGE);
 
@@ -110,42 +46,22 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
         RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
         RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
 
-        controller = new CrawlController(config, pageFetcher, robotstxtServer);
+        try {
+            controller= new CrawlController(config, pageFetcher, robotstxtServer);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
+        }
 
 		EmailCrawlerController emailCrawlerController = new EmailCrawlerController();
 		emailCrawlerController.setSite(site);
         emailCrawlerController.setController(controller);
 		
-		executor = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-		executor.execute(emailCrawlerController); 
-		executor.shutdown();
-
-        startThread();
-	}
-	
-	private void startThread() {
-		if(start) {
-			synchronized (this) {
-				start = false;
-				
-				thread = new Thread(this, "CollectorService");
-				hook = shutdownService.createHook(thread);
-				
-				thread.start();
-			}
-		}
-	}
-
-
-
-	@Override
-	public void getUpdate(DeferredResult<EmailCollectorMessage> result) {
-		resultQueue.add(result);
+		executor.execute(emailCrawlerController);
 	}
 
     @Override
 	public boolean getUpdateCrawlingStatus() {
-		boolean terminated = executor.isTerminated();
+		boolean terminated = controller.isFinished();
 
 		if(terminated) {
             clearQueue();
@@ -156,22 +72,17 @@ public class EmailCollectorServiceImpl implements EmailCollectorService, Runnabl
 
     @Override
     public void cancel() {
-        if(executor != null && !executor.isTerminated() && controller != null) {
+        if(controller != null && !controller.isFinished()) {
             controller.shutdown();
             controller.waitUntilFinish();
-
-            executor.shutdown();
 
             clearQueue();
         }
     }
 
     private void clearQueue() {
-        EmailScanningServiceImpl.resultUrlQueue.clear();
-        resultQueue.clear();
         EmailCrawler.queue.clear();
         EmailCrawler.urlQueue.clear();
-        duplicateEmails.clear();
     }
 
 }

@@ -84,14 +84,14 @@ function Poll() {
 				        allowScanning = false;
 						getUpdateUrlScanning();
 				    }
-				}, 500);
+				}, 1000);
 
 				setInterval(function() {
 					if (allow === true) {
 						allow = false;
 						getUpdate();
 					}
-				}, 500);
+				}, 1000);
 			},
 			error: function(jqXHR, textStatus, errorThrown) {
 				console.log("Start - the following error occured: " + textStatus, errorThrown);

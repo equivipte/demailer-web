@@ -11,7 +11,9 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 
@@ -20,8 +22,8 @@ import static com.equivi.mailsy.util.EmailCrawlingUtil.PATTERN_MAIL_FILTERS;
 
 public class EmailCrawler extends WebCrawler {
 
-	public static final BlockingQueue<EmailCollectorMessage> queue = new LinkedBlockingQueue<>();
-    public static final BlockingQueue<EmailCollectorUrlMessage> urlQueue = new LinkedBlockingQueue<>();
+	public static final Queue<EmailCollectorMessage> queue = new ConcurrentLinkedQueue<>();
+    public static final Queue<EmailCollectorUrlMessage> urlQueue = new ConcurrentLinkedQueue<>();
 
 	private String[] crawlDomains;
 
