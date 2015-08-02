@@ -26,7 +26,7 @@
     <task:executor id="mailsyExecutor" pool-size="5"/>
     <task:scheduler id="mailsyScheduler" pool-size="10"/>
 
-    <bean id="objectMapper" class="org.codehaus.jackson.map.ObjectMapper"/>
+    <bean id="objectMapper" class="com.fasterxml.jackson.databind.ObjectMapper"/>
 
     <bean class="org.springframework.beans.factory.config.ServiceLocatorFactoryBean" id="emailVerifierServiceFactory">
         <property name="serviceLocatorInterface"
