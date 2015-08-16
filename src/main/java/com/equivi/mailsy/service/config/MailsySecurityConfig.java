@@ -1,4 +1,4 @@
-package com.equivi.mailsy.config;
+package com.equivi.mailsy.service.config;
 
 import com.equivi.mailsy.data.dao.UserDao;
 import com.equivi.mailsy.service.authentication.AuthenticationPredicate;

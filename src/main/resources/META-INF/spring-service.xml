@@ -15,7 +15,8 @@
                            http://www.springframework.org/schema/task/spring-task.xsd">
 
     <!--Import dEmailer Web Data Access-->
-    <import resource="demailer-web-data-access.xml"/>
+    <import resource="mailsy-web-data-access.xml"/>
+
     <context:component-scan base-package="com.equivi.mailsy"/>
 
     <util:properties id="applicationProps" location="file:/opt/demailer/conf/demailer_web.properties"/>

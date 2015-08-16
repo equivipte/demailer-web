@@ -186,6 +186,7 @@ public class CampaignManagementController extends AbstractController {
         campaignDTO.setScheduledSendDateTime(scheduleDeliveryTime);
 
         campaignManagementService.saveCampaign(campaignDTO);
+
         campaignManagementService.sendCampaignToQueueMailer(Long.valueOf(campaignId));
 
         return "SUCCESS";
@@ -292,21 +293,6 @@ public class CampaignManagementController extends AbstractController {
         Page<SubscriberGroupEntity> subscriberContactEntities = subscriberGroupService.listSubscriberGroup(new THashMap<SubscriberGroupSearchFilter, String>(), 1, webConfiguration.getMaxRecordsPerPage());
 
         return convertToSubscribeGroupDTOList(subscriberContactEntities.getContent(), campaignDTO.getSubscriberGroupIds());
-    }
-
-    private List<String> getContactDTOList(CampaignDTO campaignDTO) {
-        List<ContactEntity> contactEntityList = subscriberGroupService.getContactListBySubscriberGroupIdList(campaignDTO.getSubscriberGroupIds());
-        List<String> recipientList = new ArrayList<>();
-
-        if (contactEntityList != null && !contactEntityList.isEmpty()) {
-            for (ContactEntity contactEntity : contactEntityList) {
-                if (contactEntity.getSubscribeStatus().equals(SubscribeStatus.SUBSCRIBED)) {
-                    recipientList.add(contactEntity.getEmailAddress());
-                }
-            }
-        }
-
-        return recipientList;
     }
 
     //TODO: move duplicated code in SubscriberManagementController to converter
