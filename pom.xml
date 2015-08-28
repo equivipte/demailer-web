@@ -31,7 +31,7 @@
         <hibernate.validator.version>4.2.0.Final</hibernate.validator.version>
         <velocity.version>1.6.2</velocity.version>
         <mail.version>1.4.4</mail.version>
-        <jackson.version>2.6.0</jackson.version>
+        <jackson.version>2.6.1</jackson.version>
         <itext.version>5.5.0</itext.version>
         <poi.version>3.10-FINAL</poi.version>
         <ehcache.version>2.8.1</ehcache.version>
@@ -142,7 +142,7 @@
         <dependency>
             <groupId>javax.mail</groupId>
             <artifactId>mail</artifactId>
-            <version>${mail.version}</version>
+            <version>${java.mail.api}</version>
         </dependency>
 
 
